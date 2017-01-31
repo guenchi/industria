@@ -290,8 +290,8 @@ The @code{(weinholt compression zip)} library provides procedures for
 reading and writing ZIP archives.
 
 This library exports bindings that aren't easily identified as having
-to do with ZIP archives, so I suggest you use a prefix as described in
-@ref{Conflicting names}.
+to do with ZIP archives, so I suggest to import them with a prefix
+using @code{(import (prefix (weinholt compression zip) zip:) ...)}.
 
 The @code{(weinholt compression zip extra)} library is used to set and
 retrieve file attributes, look for absolute/relative path attacks,
