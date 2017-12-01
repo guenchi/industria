@@ -1,7 +1,7 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
 ;; Semi-interactive demonstration SSH client
-;; Copyright © 2010, 2011 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -37,8 +37,7 @@
         (weinholt net ssh transport)
         (weinholt net ssh userauth)
         (weinholt net tcp)
-        (weinholt text base64)
-        (xitomatl AS-match))
+        (weinholt text base64))
 
 (define (print . x) (for-each display x) (newline))
 
