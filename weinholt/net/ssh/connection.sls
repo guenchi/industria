@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010, 2011, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2012, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -255,7 +255,7 @@
     (protocol
      (lambda (p)
        (lambda (data)
-         ((p SSH-MSG-REQUEST-SUCCESS))))))
+         ((p SSH-MSG-REQUEST-SUCCESS) data)))))
 
   (define (parse-request-success b)
     (make-channel-success (read-bytevector b)))
@@ -273,7 +273,7 @@
          ((p SSH-MSG-REQUEST-FAILURE))))))
 
   (define (parse-request-failure b)
-    (make-channel-success))
+    (make-request-failure))
 
   (define (put-request-failure p m)
     (put-u8 p SSH-MSG-REQUEST-FAILURE))

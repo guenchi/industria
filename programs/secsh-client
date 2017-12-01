@@ -207,7 +207,11 @@
                  (rec-w 4096)
                  (rec-max 32768))
              (put-ssh conn (make-channel-open/session rec-id rec-w rec-max))
-             (let ((x (get-ssh conn)))
+             (let ((x (let lp ()
+                        (let ((x (get-ssh conn)))
+                          (if (channel-open-confirmation? x)
+                              x
+                              (lp))))))
                (let ((send-id (channel-open-confirmation-sender x))
                      (send-w (channel-open-confirmation-initial-window-size x))
                      (send-max (channel-open-confirmation-maximum-packet-size x)))
