@@ -1,0 +1,12 @@
+#!r6rs ;; -*-scheme-*-
+(import (akku format lockfile))
+(projects
+ ((name "chez-srfi")
+  (location (git "https://github.com/akeep/chez-srfi.git"))
+  (revision "42d6d4cf4f506ce41152f16e30e0d7e059faef95"))
+ ((name "struct-pack")
+  (location (git "https://github.com/weinholt/struct-pack.git"))
+  (revision "eec155b069d03c12be62444754514a8fff34d4ea"))
+ ((name "xitomatl")
+  (location (git "https://github.com/weinholt/xitomatl.git"))
+  (revision "763b124ab99f960e9f75139f52daa84580e2977c")))
