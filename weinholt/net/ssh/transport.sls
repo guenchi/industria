@@ -79,7 +79,7 @@
   (import (rnrs)
           (weinholt net buffer)
           (weinholt net ssh private)
-          (weinholt struct pack))
+          (struct pack))
 
   (define SSH-MSG-DISCONNECT 1)
   (define SSH-MSG-IGNORE 2)

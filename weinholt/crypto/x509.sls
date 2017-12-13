@@ -54,7 +54,7 @@
           (weinholt crypto sha-1)
           (weinholt crypto sha-2)
           (prefix (weinholt struct der) der:)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text base64))
 
   (define (print . x) (for-each display x) (newline))

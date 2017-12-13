@@ -44,7 +44,7 @@
           (weinholt crypto sha-2)
           (weinholt crypto ssh-public-key)
           (weinholt net buffer)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text strings))
 
   (define (private->public key)

@@ -147,13 +147,6 @@ after processing a block.
 The inverse of @code{aes-cbc-encrypt!}.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
-
 @c ======================================================================
 @node crypto arcfour
 @subsection ARCFOUR stream cipher
@@ -255,15 +248,6 @@ after processing a block.
 @deffn Procedure blowfish-cbc-decrypt! source source-start target target-start k schedule iv
 The inverse of @code{blowfish-cbc-encrypt!}.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version.
-@item
-@code{(0 1)} -- Added procedures for CBC mode.
-@end itemize
 
 @c ======================================================================
 @node crypto crc
@@ -384,19 +368,6 @@ Performs a sanity check and returns either
 @code{success}, @code{failure} or @code{no-self-test}.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version. Includes crc-32, crc-16,
- crc-16/ccitt, crc-32c, and crc-24.
-@item
-@code{(1 1)} -- Added crc-64 and the @code{-width} procedures. The
-@code{-update} procedures use fixnums if @code{(fixnum-width)} is
-larger than the CRC's width.
-@code{(1 2)} -- Added crc-64/ecma-182.
-@end itemize
-
 @c ======================================================================
 @node crypto des
 @subsection Data Encryption Standard
@@ -508,15 +479,6 @@ The @var{salt} must be a string of two characters from the alphabet
 A more general interface is also available, @pxref{crypto password}.
 @end deffn
 
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
-
-
 @c ======================================================================
 @node crypto dh
 @subsection Diffie-Hellman key exchange
@@ -566,14 +528,6 @@ modp-groupN-p (prime) where N is the number of the group. Groups 1, 2,
 different lengths and longer primes are more secure but also slower.
 See RFC 3526 for more on this.
 @cindex MODP groups
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
-
 
 @c ======================================================================
 @node crypto dsa
@@ -671,13 +625,6 @@ which the signature is signing.
 
 Returns @code{#t} if the signature matches, otherwise @code{#f}.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
 
 @c ======================================================================
 @node crypto ec
@@ -801,13 +748,6 @@ representation is sometimes hashed, e.g.@: in SSH public keys, so the
 canonical representation is used for compatibility with other
 software.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
 
 @c ======================================================================
 @node crypto ec dsa
@@ -935,13 +875,6 @@ Performs the same function as
 marked to be used with SHA-2.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
-
 @c ======================================================================
 @node crypto entropy
 @subsection Entropy and randomness
@@ -965,13 +898,6 @@ Returns a bytevector of length @var{k} with random content.
 @result{} #vu8(68 229 38 253 58 70 198 161)
 @end example
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
 
 @c ======================================================================
 @node crypto md5
@@ -1068,16 +994,6 @@ Like @code{md5-hash=?} except it only compares the leftmost 96 bits.
 An HMAC is a Hash-based Message Authentication Code. This procedure uses
 MD5 to generate such a code. The return value is an MD5 state.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@item
-@code{(1 1)} -- Added @code{md5-length}, @code{md5-96-copy-hash!},
-@code{md5-hash=?} and @code{md5-96-hash=?}.
-@end itemize
 
 @c ======================================================================
 @node crypto openpgp
@@ -1247,16 +1163,6 @@ preferred for PGP public key fingerprints.
 The 64-bit key ID of the OpenPGP public @var{key}.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@item
-@code{(1 1)} -- Added @code{get-openpgp-packet} and
-@code{port-ascii-armored?}.
-@end itemize
-
 @c ======================================================================
 @node crypto password
 @subsection Password hashing
@@ -1302,13 +1208,6 @@ To verify that a password matches a hash, you can do something like
 @end deffn
 
 @c TODO: there ought be a simple way to generate a fresh salt
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
 
 @c ======================================================================
 @node crypto rsa
@@ -1507,15 +1406,6 @@ decrypted signature as a DER encoded DigestInfo. The return value is a
 list containing a digest algorithm specifier and a digest.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@item
-@code{(1 1)} -- Implemented private key operations.
-@end itemize
-
 @c ======================================================================
 @node crypto sha-1
 @subsection Secure Hash Algorithm 1
@@ -1526,16 +1416,6 @@ prefixed by @code{sha-1} instead of @code{md5}. @xref{crypto md5}.
 SHA-1 also has a maximum message size of @math{2^{64}-1} bits, but
 the message digests are 160 bits instead of MD5's 128.
 @cindex SHA-1
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@item
-@code{(1 1)} -- Added @code{sha-1-length}, @code{sha-1-96-copy-hash!},
-@code{sha-1-hash=?} and @code{sha-1-96-hash=?}.
-@end itemize
 
 @c ======================================================================
 @node crypto sha-2
@@ -1554,26 +1434,6 @@ The message digests produced by SHA-224 are 224 bits, and so on.
 @cindex SHA-256
 @cindex SHA-384
 @cindex SHA-512
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version.
-@item
-@code{(1 1)} -- Added @code{sha-224-length}, @code{sha-256-length},
-@code{sha-384-length}, @code{sha-512-length} that return the length of
-a digest in bytes. Added the comparison predicates
-@code{sha-224-hash=?}, @code{sha-256-hash=?}, @code{sha-384-hash=?}
-@code{sha-512-hash=?} that run in constant time. Added procedures for
-truncated digests: @code{sha-224-128-hash=?},
-@code{sha-256-128-hash=?}, @code{sha-384-128-hash=?}
-@code{sha-512-128-hash=?}, @code{sha-224-128-copy-hash!},
-@code{sha-256-128-copy-hash!}, @code{sha-384-128-copy-hash!} and
-@code{sha-512-128-copy-hash!}. Now uses the correct definition of
-HMAC-SHA-384 and HMAC-SHA-512. The HMACs now also handle key lengths
-larger than the block size.
-@end itemize
 
 @c ======================================================================
 @node crypto ssh-public-key
@@ -1620,17 +1480,6 @@ fingerprints. This is the same art that OpenSSH's VisualHostKey
 feature displays.
 @cindex VisualHostKey
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@item
-@code{(1 1)} -- Added @code{ssh-public-key-algorithm}. Added support
-for ecdsa-sha2-* keys using the elliptic curves nistp256, nistp384,
-and nistp521.
-@end itemize
 
 @c ======================================================================
 @node crypto uuid
@@ -1920,10 +1769,3 @@ certificate is contained in the TBS data.
 Uses the public key of @var{issuer-cert} to decipher the signature on
 @var{subject-cert}.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version.
-@end itemize

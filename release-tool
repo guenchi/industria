@@ -48,8 +48,7 @@
     (weinholt net ssh kex-dh-gex)
     (weinholt net ssh kexdh)
     (weinholt net ssh private)
-    (weinholt net tls)
-    (weinholt struct pack-aux)))
+    (weinholt net tls)))
 
 (define *released-libraries*
   '((weinholt archive tar)
@@ -88,7 +87,6 @@
     (weinholt net tls simple)
     (weinholt net tls)
     (weinholt struct der)
-    (weinholt struct pack)
     (weinholt text base64)
     (weinholt text internet)
     ;;(weinholt text punycode)
@@ -309,6 +307,7 @@
     (match (import-name import)
       (('srfi . _) #t)
       (('rnrs . _) #t)
+      (('struct . _) #t)
       (('weinholt . _)
        (let ((v (find (lambda (lib)
                         (equal? (import-name import)

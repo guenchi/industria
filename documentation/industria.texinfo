@@ -101,7 +101,6 @@ DEALINGS IN THE SOFTWARE.
 @menu
 * Installation::       Where to put all the files
 * Usage::              How to make it go
-* Conflicting names::  When two exports have the same name
 @end menu
 
 @include starting.texinfo
@@ -114,7 +113,6 @@ DEALINGS IN THE SOFTWARE.
 * compression::        Data decompression
 * crypto::             Cryptographic primitives
 * net::                Network protocols
-* struct::             Binary structure utilities
 * text::               Textual structure utilities
 * types::              Data types and utilities
 @end menu
@@ -122,7 +120,6 @@ DEALINGS IN THE SOFTWARE.
 @include compression.texinfo
 @include crypto.texinfo
 @include net.texinfo
-@include struct.texinfo
 @include text.texinfo
 
 @include types.texinfo

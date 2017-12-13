@@ -300,14 +300,6 @@ make the key re-exchange interface better for clients. Suggestions are
 welcome.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
-
-
 @c ======================================================================
 @node net ssh connection
 @subsubsection Secure Shell Connection Protocol
@@ -1040,15 +1032,6 @@ terminal flow control. If the flag is false then flow control is done
 on the server.
 @end deffn
 
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
-
-
 @c ======================================================================
 @node net ssh transport
 @subsubsection Secure Shell Transport Layer Protocol
@@ -1278,14 +1261,6 @@ being used.
 @deffn Procedure newkeys? obj
 Returns @code{#t} if @var{obj} is a @var{newkeys} packet.
 @end deffn
-
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
 
 @c ======================================================================
 @node net ssh userauth
@@ -1557,11 +1532,3 @@ be a private DSA or ECDSA key (support for RSA signing is planned).
 The signed request uses the SSH connection's session ID and can
 therefore not be used with any other connection.
 @end deffn
-
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize

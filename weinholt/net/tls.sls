@@ -71,7 +71,7 @@
           (weinholt crypto x509)
           (weinholt net buffer)
           (weinholt net tls algorithms)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text base64))
 
 ;;; First the utilities

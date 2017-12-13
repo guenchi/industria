@@ -34,7 +34,7 @@ A chunk can be at most this large when uncompressed:
   (import (rnrs)
           (weinholt compression lzma)
           (weinholt compression sliding-buffer)
-          (weinholt struct pack))
+          (struct pack))
 
   (define-syntax trace
     (syntax-rules ()

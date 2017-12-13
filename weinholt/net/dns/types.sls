@@ -120,7 +120,7 @@
           (weinholt bytevectors)
           (weinholt net dns numbers)
           (weinholt net dns private)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text base64)
           (weinholt text internet))
 

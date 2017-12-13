@@ -26,7 +26,7 @@
         (srfi :78 lightweight-testing)
         (weinholt text internet)
         (weinholt text strings)
-        (weinholt struct pack))
+        (struct pack))
 
 (check (ipv6->string (string->ipv6 "::")) => "::")
 

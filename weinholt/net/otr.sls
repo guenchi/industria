@@ -67,7 +67,7 @@
           (only (weinholt crypto math) div-mod)
           (weinholt crypto sha-1)
           (weinholt crypto sha-2)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text base64)
           (weinholt text strings))
 

@@ -30,7 +30,7 @@
           ipv6->string string->ipv6)
   (import (rnrs)
           (only (srfi :13 strings) string-join string-prefix?)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text strings))
 
   (define (ipv4->string addr)

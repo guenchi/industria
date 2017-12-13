@@ -163,7 +163,7 @@
           (srfi :26 cut)
           (weinholt net buffer)
           (weinholt net ssh private)
-          (weinholt struct pack))
+          (struct pack))
 
   ;; Message numbers
   (define SSH-MSG-GLOBAL-REQUEST 80)

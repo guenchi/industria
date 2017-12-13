@@ -47,7 +47,7 @@
           (weinholt crypto ec dsa)
           (weinholt crypto md5)
           (weinholt crypto rsa)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text base64)
           (weinholt text random-art))
 

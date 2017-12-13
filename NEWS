@@ -12,10 +12,15 @@ More about Akku here: https://github.com/weinholt/akku
 ** (weinholt assembler *): Removed
 ** (weinholt binfmt elf): Removed
 ** (weinholt disassembler *): Removed
+** (weinholt struct pack): Removed
 
 The machine code utilities have been moved to a separate project:
 
 https://github.com/weinholt/machine-code
+
+The struct pack syntax has been moved to a separate project:
+
+https://github.com/weinholt/struct-pack
 
 * Changes in version 1.5
 

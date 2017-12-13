@@ -75,7 +75,7 @@
           (weinholt crypto sha-1)
           (weinholt crypto sha-2)
           (weinholt text base64)
-          (weinholt struct pack))
+          (struct pack))
 
   (define-syntax print
     (syntax-rules ()

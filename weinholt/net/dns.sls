@@ -78,7 +78,7 @@
           (weinholt net dns numbers)
           (weinholt net dns types)
           (weinholt net dns private)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text punycode))
 
   (define (print . x) (for-each display x) (newline))

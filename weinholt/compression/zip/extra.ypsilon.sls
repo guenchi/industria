@@ -34,7 +34,7 @@
           (only (core) create-directory file-directory?
                 file-executable? change-file-mode
                 file-stat-mtime file-stat-atime file-stat-ctime)
-          (weinholt struct pack))
+          (struct pack))
 
   (define os-dos 0)
   (define os-unix 3)

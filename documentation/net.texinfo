@@ -286,24 +286,6 @@ server's @code{ISUPPORT PREFIX} data.
 @end example
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@item
-@code{(2 0)} -- Replaced @code{swe-ascii-string-ci=?} with
-@code{string-irc=?}, which uses the @code{CASEMAPPING ISUPPORT}
-parameter. Added @code{string-upcase-irc}, @code{string-downcase-irc},
-@code{parse-isupport}, @code{isupport-defaults} and @code{ctcp-message?}.
-@item
-@code{(2 1)} -- Added @code{irc-match?}.
-@item
-@code{(2 2)} -- Added @code{parse-channel-mode} and fixed handling of
-intra-word whitespace in the parser and empty parameters in the
-formatter.
-@end itemize
-
 
 @c ======================================================================
 @node net irc fish
@@ -351,13 +333,6 @@ remote client. There is no protection against middleman attacks.
 The @var{str} is expanded and can then be used with
 @code{fish-decrypt-message} and @code{fish-encrypt-message}.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
 
 
 @c ======================================================================
@@ -654,12 +629,6 @@ Returns an input-port and an output-port. They are not guaranteed to
 be distinct.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version.
-@end itemize
 
 @c ======================================================================
 @node net tls simple
@@ -705,9 +674,3 @@ encrypted (i.e.@: STARTTLS). Some such protocols are SMTP, LDAP and
 XMPP.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version. Very slow indeed, but it works.
-@end itemize

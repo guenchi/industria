@@ -29,13 +29,6 @@ in @ref{crypto crc}. The exported bindings are @code{adler-32},
 @code{adler-32-init}, etc.
 @cindex Adler-32
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version
-@end itemize
-
 @c ======================================================================
 @node compression gzip
 @subsection GZIP custom input port
@@ -117,16 +110,6 @@ The id number of the operating system that created the file. It is
 e.g.@: 0 for DOS, 1 for Amiga, 2 for VMS, 3 for Unix.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version.
-@item
-@code{(1 0)} -- GZIP headers are returned as a record type.
-@code{extract-gzip} returns a list of headers.
-@end itemize
-
 @c ======================================================================
 @node compression inflate
 @subsection Decompress DEFLATE'd data
@@ -172,17 +155,6 @@ byte or two that does not belong to the inflate stream itself. Apply
 the symbol @code{get-buffer} to the returned procedure to recover
 those extra bytes as a bytevector.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version
-@item
-@code{(1 0)} -- @code{inflate} returns three values (backwards
-incompatible change). The inflater procedures gain a way to return any
-buffered bytes.
-@end itemize
 
 @c ======================================================================
 @node compression sliding-buffer
@@ -274,14 +246,6 @@ closed the @var{binary-input-port} will also be closed.
 Opens the file specified by @var{filename} and returns a binary input
 port that decompresses the file on-the-fly.
 @end deffn
-
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize
 
 @c ======================================================================
 @node compression zip
@@ -579,13 +543,6 @@ The number of records in the central directory for the whole archive.
 A textual comment associated with the whole archive.
 @end deffn
 
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version
-@end itemize
-
 @c ======================================================================
 @node compression zlib
 @subsection ZLIB custom input port
@@ -611,10 +568,3 @@ by containing byte sequences commonly found at the start of files. The
 @var{dictionaries} argument is an alist that maps Adler-32 checksums
 to bytevectors. @xref{compression adler-32}.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(0 0)} -- Initial version
-@end itemize

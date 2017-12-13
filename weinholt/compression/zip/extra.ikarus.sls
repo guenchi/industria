@@ -34,7 +34,7 @@
           (only (ikarus) make-directory file-directory?
                 file-executable? change-mode
                 file-mtime #;file-atime file-ctime)
-          (weinholt struct pack))
+          (struct pack))
 
   (define os-dos 0)
   (define os-unix 3)

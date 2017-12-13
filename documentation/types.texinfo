@@ -11,8 +11,7 @@
 @node bytevectors
 @subsection Bytevector utilities
 The @code{(weinholt bytevectors)} library contains utilities for
-working with @rnrs{} bytevectors. For constructing and deconstructing
-bytevectors, @pxref{struct pack}.
+working with @rnrs{} bytevectors.
 
 @deffn Procedure bytevector-append [bytevector ...]
 Appends the given bytevectors.
@@ -71,10 +70,3 @@ differences between the bytevectors. This kind of operation is most
 often needed when comparing fixed-length message digests, so the
 length comparison is done in the obvious (fast) way.
 @end deffn
-
-@noindent
-Version history:
-@itemize
-@item
-@code{(1 0)} -- Initial version.
-@end itemize

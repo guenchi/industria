@@ -28,6 +28,7 @@
 
 (import (rnrs)
         (srfi :19 time)
+        (struct pack)
         (weinholt bytevectors)
         (weinholt crypto dsa)
         (weinholt crypto ec dsa)
@@ -38,7 +39,6 @@
         (weinholt net ssh connection)
         (weinholt net ssh transport)
         (weinholt net ssh userauth)
-        (weinholt struct pack)
         (weinholt text strings)
         (weinholt text base64)
         (only (ikarus) tcp-server-socket fork
@@ -250,7 +250,7 @@
 (define (main socket . keys)
   ;; (identification-software-version "OpenSSH_5.1p1")
   ;; (identification-comments "Debian-5")
-  (ssh-debugging #b111) 
+  (ssh-debugging #b111)
   (print "Waiting for connections...")
   (let lp ((pid 0))
     (waitpid -1 #f #f)                  ;kill old zombies

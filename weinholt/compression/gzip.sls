@@ -41,7 +41,7 @@
           (weinholt bytevectors)
           (weinholt crypto crc)
           (weinholt compression inflate)
-          (weinholt struct pack))
+          (struct pack))
 
   (define-crc crc-32)
 

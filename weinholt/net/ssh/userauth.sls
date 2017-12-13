@@ -79,7 +79,7 @@
           (weinholt crypto ssh-public-key)
           (weinholt net buffer)
           (weinholt net ssh private)
-          (weinholt struct pack))
+          (struct pack))
 
   ;; Message numbers
   (define SSH-MSG-USERAUTH-REQUEST 50)

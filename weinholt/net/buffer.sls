@@ -49,7 +49,7 @@
           buffer-reset! buffer-seek! buffer-shorten!
           read-u8 read-u16 read-u24 read-u32)
   (import (rnrs)
-          (weinholt struct pack))
+          (struct pack))
 
   (define-record-type buffer
     (opaque #t)

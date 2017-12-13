@@ -41,7 +41,7 @@
           (weinholt crypto blowfish)
           (weinholt crypto dh)
           (weinholt crypto sha-2)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text base64))
 
   (define alphabet "./0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")

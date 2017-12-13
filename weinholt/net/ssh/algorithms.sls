@@ -69,7 +69,7 @@
           (weinholt net buffer)
           (weinholt net ssh kexdh)
           (weinholt net ssh kex-dh-gex)
-          (weinholt struct pack))
+          (struct pack))
 
   (define (algfilter valid)
     (cut filter (cut member <> valid) <>))

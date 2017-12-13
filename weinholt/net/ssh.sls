@@ -84,7 +84,7 @@
           (weinholt net ssh private)
           (weinholt net ssh transport)
           (weinholt net ssh userauth)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt text hexdump)
           (weinholt text strings))
 

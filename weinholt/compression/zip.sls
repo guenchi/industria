@@ -95,7 +95,7 @@
           (only (srfi :13 strings) string-prefix? string-suffix?
                 string-contains)
           (srfi :19 time)
-          (weinholt struct pack)
+          (struct pack)
           (weinholt crypto crc)
           (weinholt compression inflate)
           (weinholt compression zip extra))

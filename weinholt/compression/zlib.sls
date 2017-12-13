@@ -35,7 +35,7 @@
           (weinholt bytevectors)
           (weinholt compression adler-32)
           (weinholt compression inflate)
-          (weinholt struct pack))
+          (struct pack))
 
   (define-syntax trace
     (syntax-rules ()

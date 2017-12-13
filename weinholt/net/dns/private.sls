@@ -29,7 +29,7 @@
           (srfi :26 cut)
           (srfi :39 parameters)
           (weinholt bytevectors)
-          (weinholt struct pack))
+          (struct pack))
 
   (define (displayer lower permitted prefix suffix)
     (lambda (bv p)

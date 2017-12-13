@@ -2,9 +2,8 @@
 
 Industria is a collection of portable R6RS Scheme libraries for
 cryptography (AES, HMAC, SHA-1, SHA-2, RSA, DSA, ECDSA, etc.), zlib/xz
-decompression, Off-The-Record messaging, bytevector pack/unpack
-syntax, TLS connections via custom binary ports, Secure Shell, and a
-few more things.
+decompression, Off-The-Record messaging, TLS connections via custom
+binary ports, Secure Shell, and a few more things.
 
 The assembler, disassembler and binary format libraries have been
 moved to the [machine-code](https://github.com/weinholt/machine-code)

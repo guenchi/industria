@@ -35,7 +35,7 @@
           (weinholt crypto entropy)
           (weinholt crypto md5)
           (weinholt crypto sha-1)
-          (weinholt struct pack))
+          (struct pack))
 
   (define nil-uuid
     #vu8(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
