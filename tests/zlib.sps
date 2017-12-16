@@ -25,8 +25,8 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt compression adler-32)
-        (weinholt compression zlib))
+        (industria compression adler-32)
+        (industria compression zlib))
 
 (define dicts
   (let ((d (string->utf8 "(library ))((import (rnrs (export (define (lambda ")))

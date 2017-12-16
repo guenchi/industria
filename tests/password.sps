@@ -21,7 +21,7 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt crypto password)
+(import (industria crypto password)
         (srfi :78 lightweight-testing)
         (rnrs))
 

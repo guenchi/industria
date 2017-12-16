@@ -21,8 +21,8 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt bytevectors)
-        (weinholt net irc)
+(import (industria bytevectors)
+        (industria net irc)
         (srfi :78 lightweight-testing)
         (rnrs))
 

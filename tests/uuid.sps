@@ -22,7 +22,7 @@
 #!r6rs
 
 (import (rnrs)
-        (weinholt crypto uuid)
+        (industria crypto uuid)
         (srfi :78 lightweight-testing))
 
 ;;; RFC Errata ID: 3476

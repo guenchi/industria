@@ -21,7 +21,7 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt crypto blowfish)
+(import (industria crypto blowfish)
         (srfi :78 lightweight-testing)
         (rnrs))
 

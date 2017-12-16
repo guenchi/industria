@@ -21,7 +21,7 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt crypto sha-2)
+(import (industria crypto sha-2)
         (srfi :78 lightweight-testing)
         (rnrs))
 

@@ -25,10 +25,10 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt crypto dsa)
-        (weinholt crypto entropy)
-        (weinholt net otr)
-        (weinholt text base64))
+        (industria crypto dsa)
+        (industria crypto entropy)
+        (industria net otr)
+        (industria text base64))
 
 (define (parse-key s)
   (let-values (((type bv)

@@ -21,9 +21,9 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt crypto x509)
-        (weinholt crypto sha-1)
-        (weinholt text base64)
+(import (industria crypto x509)
+        (industria crypto sha-1)
+        (industria text base64)
         (srfi :19 time)
         (srfi :39 parameters)
         (srfi :78 lightweight-testing)

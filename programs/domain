@@ -25,9 +25,9 @@
 
 (import (rnrs)
         (only (ikarus) udp-connect)
-        (weinholt net tcp)
-        (weinholt net dns)
-        (weinholt net dns numbers))
+        (industria net tcp)
+        (industria net dns)
+        (industria net dns numbers))
 
 (define (print . x) (for-each display x) (newline))
 

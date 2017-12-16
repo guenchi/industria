@@ -21,7 +21,7 @@ data created by gzip, zip and zlib.
 @c ======================================================================
 @node compression adler-32
 @subsection Mark Adler's Adler-32 checksum
-The @code{(weinholt compression adler-32)} library provides the
+The @code{(industria compression adler-32)} library provides the
 Adler-32 checksum used in the ZLIB data format. @xref{compression zlib}. 
 
 The procedures defined are similar to those made by @code{define-crc}
@@ -32,7 +32,7 @@ in @ref{crypto crc}. The exported bindings are @code{adler-32},
 @c ======================================================================
 @node compression gzip
 @subsection GZIP custom input port
-The @code{(weinholt compression gzip)} library provides a custom
+The @code{(industria compression gzip)} library provides a custom
 input port for reading GZIP compressed data.
 
 A word of warning: the current implementation uses an internal buffer
@@ -113,7 +113,7 @@ e.g.@: 0 for DOS, 1 for Amiga, 2 for VMS, 3 for Unix.
 @c ======================================================================
 @node compression inflate
 @subsection Decompress DEFLATE'd data
-The procedures in @code{(weinholt compression inflate)} decompress
+The procedures in @code{(industria compression inflate)} decompress
 DEFLATE data streams. DEFLATE is the data format used by gzip, zip and
 zlib. This library handles the raw data stream.
 
@@ -124,7 +124,7 @@ Inflates a complete DEFLATE data stream. It reads compressed data from
 @var{binary-output-port}.
 
 The arguments @var{crc-init}, @var{crc-update} and @var{crc-finish}
-should have the same semantics that @code{(weinholt crypto crc)} uses,
+should have the same semantics that @code{(industria crypto crc)} uses,
 see @ref{crypto crc} and @ref{compression adler-32}.
 
 Three values are returned: the final CRC of the decompressed data, its
@@ -159,7 +159,7 @@ those extra bytes as a bytevector.
 @c ======================================================================
 @node compression sliding-buffer
 @subsection A circular buffer attached to a data sink
-The @code{(weinholt compression sliding-buffer)} library provides a
+The @code{(industria compression sliding-buffer)} library provides a
 circular buffer that passes the buffered data to a sink (a
 @dfn{sliding window}).
 
@@ -212,7 +212,7 @@ buffer.
 @c ======================================================================
 @node compression xz
 @subsection XZ custom input port
-The @code{(weinholt compression xz)} library provides a custom input
+The @code{(industria compression xz)} library provides a custom input
 port for reading XZ compressed data. XZ is a wrapper format around the
 LZMA2 algorithm and it is becoming popular as a gzip/bzip2
 replacement.
@@ -250,14 +250,14 @@ port that decompresses the file on-the-fly.
 @c ======================================================================
 @node compression zip
 @subsection ZIP archive reader/writer
-The @code{(weinholt compression zip)} library provides procedures for
+The @code{(industria compression zip)} library provides procedures for
 reading and writing ZIP archives.
 
 This library exports bindings that aren't easily identified as having
 to do with ZIP archives, so I suggest to import them with a prefix
-using @code{(import (prefix (weinholt compression zip) zip:) ...)}.
+using @code{(import (prefix (industria compression zip) zip:) ...)}.
 
-The @code{(weinholt compression zip extra)} library is used to set and
+The @code{(industria compression zip extra)} library is used to set and
 retrieve file attributes, look for absolute/relative path attacks,
 create directories, and handle system-specific file types. None of
 this can really be done portably, so the default version of that
@@ -546,7 +546,7 @@ A textual comment associated with the whole archive.
 @c ======================================================================
 @node compression zlib
 @subsection ZLIB custom input port
-The @code{(weinholt compression zlib)} library provides a custom
+The @code{(industria compression zlib)} library provides a custom
 input port for reading ZLIB compressed data.
 
 @deffn Procedure make-zlib-input-port binary-input-port id max-buffer-size close-underlying-port? dictionaries

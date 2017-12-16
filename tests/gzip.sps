@@ -23,9 +23,9 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt bytevectors)
-        (weinholt compression adler-32)
-        (weinholt compression gzip))
+        (industria bytevectors)
+        (industria compression adler-32)
+        (industria compression gzip))
 
 (define (gunzip bv)
   (call-with-port (make-gzip-input-port (open-bytevector-input-port bv)

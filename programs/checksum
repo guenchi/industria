@@ -22,11 +22,11 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt compression adler-32)
-        (weinholt crypto sha-1)
-        (weinholt crypto sha-2)
-        (weinholt crypto md5)
-        (weinholt crypto crc)
+(import (industria compression adler-32)
+        (industria crypto sha-1)
+        (industria crypto sha-2)
+        (industria crypto md5)
+        (industria crypto crc)
         (only (srfi :13 strings) string-join string-pad)
         (rnrs))
 

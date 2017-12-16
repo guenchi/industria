@@ -21,9 +21,9 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (prefix (weinholt crypto x509) x509:)
-        (weinholt net tls)
-        (weinholt net tls simple)
+(import (prefix (industria crypto x509) x509:)
+        (industria net tls)
+        (industria net tls simple)
         (rnrs))
 
 (define (print . x) (for-each display x) (newline))

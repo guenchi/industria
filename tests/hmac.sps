@@ -25,7 +25,7 @@
         (only (srfi :13 strings) string-filter)
         (only (srfi :14 char-sets) char-set:hex-digit)
         (srfi :78 lightweight-testing)
-        (weinholt crypto sha-2))
+        (industria crypto sha-2))
 
 (define (filter-digest str)
   (string-filter char-set:hex-digit str))

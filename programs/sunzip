@@ -21,7 +21,7 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt compression zip)
+(import (industria compression zip)
         (only (srfi :1 lists) last)
         (only (srfi :13 strings) string-filter string-pad string-pad-right)
         (srfi :19 time)

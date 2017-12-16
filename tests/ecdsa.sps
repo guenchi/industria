@@ -23,9 +23,9 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt crypto ec)
-        (weinholt crypto ec dsa)
-        (weinholt crypto sha-1))
+        (industria crypto ec)
+        (industria crypto ec dsa)
+        (industria crypto sha-1))
 
 ;; Test from SECG's GEC 2
 

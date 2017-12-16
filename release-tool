@@ -1,7 +1,7 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
 ;; release-tool - Release tool for Industria
-;; Copyright © 2010, 2011, 2012, 2016 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2012, 2016, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -32,7 +32,7 @@
               string-join)
         (srfi :26 cut)
         (srfi :48 intermediate-format-strings)
-        (weinholt text strings)
+        (industria text strings)
         (only (xitomatl file-system base compat)
               directory-list file-regular? file-directory?
               file-symbolic-link? file-size)
@@ -43,63 +43,63 @@
   (error 'release-tool "Could not find documentation/industria.texinfo"))
 
 (define *private-libraries*
-  '((weinholt crypto aes private)
-    (weinholt net ssh algorithms)
-    (weinholt net ssh kex-dh-gex)
-    (weinholt net ssh kexdh)
-    (weinholt net ssh private)
-    (weinholt net tls)))
+  '((industria crypto aes private)
+    (industria net ssh algorithms)
+    (industria net ssh kex-dh-gex)
+    (industria net ssh kexdh)
+    (industria net ssh private)
+    (industria net tls)))
 
 (define *released-libraries*
-  '((weinholt archive tar)
-    (weinholt bytevectors)
-    (weinholt compression adler-32)
-    (weinholt compression inflate)
-    (weinholt compression gzip)
-    (weinholt compression xz)
-    (weinholt compression zip)
-    (weinholt compression zlib)
-    (weinholt crypto aes)
-    (weinholt crypto arcfour)
-    (weinholt crypto blowfish)
-    (weinholt crypto crc)
-    (weinholt crypto des)
-    (weinholt crypto dsa)
-    (weinholt crypto ec)
-    (weinholt crypto ec dsa)
-    (weinholt crypto entropy)
-    (weinholt crypto hmac)
-    (weinholt crypto math)
-    (weinholt crypto md5)
-    (weinholt crypto openpgp)
-    (weinholt crypto password)
-    (weinholt crypto rsa)
-    (weinholt crypto sha-1)
-    (weinholt crypto sha-2)
-    (weinholt crypto ssh-public-key)
-    (weinholt crypto x509)
-    ;;(weinholt net dns)
-    (weinholt net irc fish)
-    (weinholt net irc)
-    (weinholt net otr)
-    (weinholt net ssh)
-    (weinholt net tcp)
-    (weinholt net tls simple)
-    (weinholt net tls)
-    (weinholt struct der)
-    (weinholt text base64)
-    (weinholt text internet)
-    ;;(weinholt text punycode)
-    (weinholt text random-art)))
+  '((industria archive tar)
+    (industria bytevectors)
+    (industria compression adler-32)
+    (industria compression inflate)
+    (industria compression gzip)
+    (industria compression xz)
+    (industria compression zip)
+    (industria compression zlib)
+    (industria crypto aes)
+    (industria crypto arcfour)
+    (industria crypto blowfish)
+    (industria crypto crc)
+    (industria crypto des)
+    (industria crypto dsa)
+    (industria crypto ec)
+    (industria crypto ec dsa)
+    (industria crypto entropy)
+    (industria crypto hmac)
+    (industria crypto math)
+    (industria crypto md5)
+    (industria crypto openpgp)
+    (industria crypto password)
+    (industria crypto rsa)
+    (industria crypto sha-1)
+    (industria crypto sha-2)
+    (industria crypto ssh-public-key)
+    (industria crypto x509)
+    ;;(industria net dns)
+    (industria net irc fish)
+    (industria net irc)
+    (industria net otr)
+    (industria net ssh)
+    (industria net tcp)
+    (industria net tls simple)
+    (industria net tls)
+    (industria struct der)
+    (industria text base64)
+    (industria text internet)
+    ;;(industria text punycode)
+    (industria text random-art)))
 
 (define *properly-docmented*
   ;; These libraries export identifiers that show up in the check for
   ;; undocumented exports, for some good reason.
-  '((weinholt compression adler-32)
-    (weinholt crypto dh)
-    (weinholt crypto dsa)
-    (weinholt crypto sha-1)
-    (weinholt crypto sha-2)))
+  '((industria compression adler-32)
+    (industria crypto dh)
+    (industria crypto dsa)
+    (industria crypto sha-1)
+    (industria crypto sha-2)))
 
 (define *implementations* '(chezscheme
                             ikarus
@@ -258,7 +258,7 @@
                (else '()))))
      files)))
 
-(define libraries (find-files "weinholt/" (directory-list "weinholt")))
+(define libraries (filter library? (find-files "./" (directory-list "."))))
 (define docs (find-docs "documentation/industria.texinfo"))
 (define tests (find-files "tests/" (directory-list "tests")))
 (define programs (find-files "programs/" (directory-list "programs")))
@@ -276,7 +276,7 @@
 
 (define (find-released-set start-set)
   (define (traverse add! added? library)
-    (let ((deps (filter (match-lambda (('weinholt . _) #t) (_ #f))
+    (let ((deps (filter (match-lambda (('industria . _) #t) (_ #f))
                         (find-dependencies library))))
       (add! library)
       (for-each (lambda (dep)
@@ -308,7 +308,7 @@
       (('srfi . _) #t)
       (('rnrs . _) #t)
       (('struct . _) #t)
-      (('weinholt . _)
+      (('industria . _)
        (let ((v (find (lambda (lib)
                         (equal? (import-name import)
                                 (library-name lib)))
@@ -385,10 +385,10 @@
     (for-each
      (lambda (doc-name)
        (when (library-name? doc-name)
-         (unless (member (cons 'weinholt doc-name)
+         (unless (member (cons 'industria doc-name)
                          (map library-name libs))
            (format #t "Extra documentation for unreleased ~S.~%"
-                   (cons 'weinholt doc-name)))))
+                   (cons 'industria doc-name)))))
      docs)
     ;; only finds false positives:
     #;
@@ -471,7 +471,7 @@
           (string-join
            (map (cut format #f "~s" <>)
                 (filter
-                 (match-lambda (('weinholt . _) #t) (else #f))
+                 (match-lambda (('industria . _) #t) (else #f))
                  (map import-name (program-imports test))))
            ", "))
   (let ((imports (program-imports test))
@@ -525,7 +525,7 @@ decompression, Off-The-Record messaging, bytevector pack/unpack
 syntax, TLS connections via custom binary ports, Secure Shell, and a
 few more things.")
 
-(define homepage "http://weinholt.se/industria/")
+(define homepage "http://github.com/weinholt/industria/")
 
 ;; This file should be named pkg-list.scm
 (define (dorodango-package-list version)
@@ -544,7 +544,7 @@ few more things.")
              (synopsis ,synopsis)
              (description ,description)
              (homepage ,homepage)
-             (libraries "weinholt"))))
+             (libraries "industria"))))
 
 (define package-files
   (append (if (file-exists? "pkg-list.scm") '("pkg-list.scm") '())))

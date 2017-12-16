@@ -23,13 +23,13 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt crypto dsa)
-        (weinholt crypto entropy)
-        (weinholt net ssh algorithms)
-        (weinholt net ssh kexdh)      ;to recognize kexdh-init
-        (weinholt net ssh kex-dh-gex) ;to recognize kex-dh-gex-request
-        (weinholt net ssh transport)
-        (weinholt text base64))
+        (industria crypto dsa)
+        (industria crypto entropy)
+        (industria net ssh algorithms)
+        (industria net ssh kexdh)      ;to recognize kexdh-init
+        (industria net ssh kex-dh-gex) ;to recognize kex-dh-gex-request
+        (industria net ssh transport)
+        (industria text base64))
 
 (define (print . x) (for-each display x) (newline))
 

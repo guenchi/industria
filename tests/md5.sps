@@ -22,8 +22,8 @@
 #!r6rs
 
 (import (rnrs)
-        (weinholt bytevectors)
-        (weinholt crypto md5)
+        (industria bytevectors)
+        (industria crypto md5)
         (srfi :78 lightweight-testing))
 
 (define (m str) (string-downcase (md5->string (md5 (string->utf8 str)))))

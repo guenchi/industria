@@ -21,8 +21,8 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt crypto crc)
-        (weinholt compression adler-32)
+(import (industria crypto crc)
+        (industria compression adler-32)
         (srfi :78 lightweight-testing)
         (rnrs))
 

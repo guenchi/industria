@@ -16,7 +16,7 @@
 @c ======================================================================
 @node net irc
 @subsection Internet Relay Chat
-The @code{(weinholt net irc)} library provides low-level procedures
+The @code{(industria net irc)} library provides low-level procedures
 for parsing and formatting IRC protocol commands. It makes it easy to
 split incoming commands into parts and to format outgoing commands.
 There are also helpers for various other parsing needs.
@@ -32,7 +32,7 @@ number. If the message does not have a prefix the @var{remote-server}
 argument will be used instead, because it is implied by the protocol.
 
 @example
-(import (weinholt net irc))
+(import (industria net irc))
 (parse-message 
  ":irc.example.net PONG irc.example.net :irc.example.net")
 @result{} "irc.example.net"
@@ -94,7 +94,7 @@ takes a pre-defined number of parameters, so e.g.@: if @var{cmd} is
 @code{PRIVMSG} then you must only pass two parameters.
 
 @example
-(import (weinholt net irc))
+(import (industria net irc))
 (utf8->string
  (call-with-bytevector-output-port
    (lambda (port)
@@ -122,7 +122,7 @@ with the input to make sure it is the same. This prevents some attacks
 against IRC bots.
 
 @example
-(import (weinholt net irc))
+(import (industria net irc))
 (utf8->string
  (call-with-bytevector-output-port
    (lambda (port)
@@ -249,7 +249,7 @@ single character. The comparison is case-insensitive. Wildcard
 characters can be escaped with @code{#\\}.
 
 @example
-(import (weinholt net irc))
+(import (industria net irc))
 (irc-match? "a?c" "abc")
 @result{} #t
 (irc-match? "a*c" "ac")
@@ -290,7 +290,7 @@ server's @code{ISUPPORT PREFIX} data.
 @c ======================================================================
 @node net irc fish
 @subsection Blowcrypt/FiSH encryption for IRC
-The @code{(weinholt net irc fish)} library provides procedures for
+The @code{(industria net irc fish)} library provides procedures for
 interacting with IRC clients that use Blowcrypt/FiSH encryption.
 Messages are encrypted with Blowfish in ECB mode and then encoded with
 a peculiar base64 encoding. Keys can be exchanged with Diffie-Hellman
@@ -338,7 +338,7 @@ The @var{str} is expanded and can then be used with
 @c ======================================================================
 @node net otr
 @subsection Off-the-Record Messaging
-The @code{(weinholt net otr)} library provides Off-the-Record
+The @code{(industria net otr)} library provides Off-the-Record
 Messaging (OTR), which is a security protocol for private chat. It can
 be tunneled over any protocol that guarantees in-order delivery
 (e.g.@: IRC or XMPP). It provides encryption, authentication,
@@ -611,7 +611,7 @@ an extra symmetrical key that can be used by out-of-band protocols.
 @c ======================================================================
 @node net tcp
 @subsection Basic TCP client connections
-The @code{(weinholt net tcp)} provides a simple TCP client. This
+The @code{(industria net tcp)} provides a simple TCP client. This
 library needs implementation-specific code, so the author is not eager
 to provide more than the bare minimum.
 
@@ -633,7 +633,7 @@ be distinct.
 @c ======================================================================
 @node net tls simple
 @subsection Transport Layer Security (simple interface)
-The @code{(weinholt net tls simple)} library provides custom binary
+The @code{(industria net tls simple)} library provides custom binary
 ports that implement the Transport Layer Security (TLS) protocol used
 by e.g.@: https. After starting TLS you can use the new ports as
 easily as if they were unencrypted. TLS encrypts the traffic and
@@ -659,9 +659,9 @@ It is not yet implemented.
 
 This procedure returns three values: a binary input port, a binary
 output port, and a TLS connection object. The last value comes from
-the not-yet-documented @code{(weinholt net tls)} library. It is
+the not-yet-documented @code{(industria net tls)} library. It is
 intended to be used to access the server's certificate chain, which
-can be verified using the not-yet-documented @code{(weinholt crypto
+can be verified using the not-yet-documented @code{(industria crypto
 x509)} library.
 @end deffn
 

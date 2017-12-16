@@ -45,7 +45,7 @@ non-standard procedures from Ikarus.
 @section meircbot -- the minimum-effort irc bot
 The program file contains the configuration. It doesn't do anything
 other than joining channels and being rude in private messages. Shows
-how the @code{(weinholt net irc)} library can be used. It requires
+how the @code{(industria net irc)} library can be used. It requires
 the @code{(xitomatl AS-match)} library.
 
 It also uses demonstrates how to use FiSH, OTR and the simple TLS

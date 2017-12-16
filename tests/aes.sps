@@ -21,8 +21,8 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt bytevectors)
-        (weinholt crypto aes)
+(import (industria bytevectors)
+        (industria crypto aes)
         (srfi :78 lightweight-testing)
         (rnrs))
 

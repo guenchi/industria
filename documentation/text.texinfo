@@ -11,7 +11,7 @@
 @c ======================================================================
 @node text base64
 @subsection Base 64 encoding and decoding
-The @code{(weinholt text base64)} library provides procedures for
+The @code{(industria text base64)} library provides procedures for
 dealing with the standard Base 64 encoding from RFC 4648 and some
 variations thereof. The Base 64 encoding can be used to represent
 arbitrary bytevectors purely in printable ASCII.
@@ -62,7 +62,7 @@ delimited by BEGIN/END lines that include the @var{type}.
 @cindex ASCII Armor
 
 @example
-(import (weinholt text base64))
+(import (industria text base64))
 (put-delimited-base64 (current-output-port) "EXAMPLE"
                       (string->utf8 "POKEY THE PENGUIN"))
 @print{} -----BEGIN EXAMPLE-----
@@ -129,7 +129,7 @@ Version history:
 @c ======================================================================
 @node text internet
 @subsection Internet address parsing and formatting
-The @code{(weinholt text internet)} library helps you correctly parse
+The @code{(industria text internet)} library helps you correctly parse
 and format IPv4 and IPv6 addresses. This was a relatively trivial task
 when the Internet used the 32-bit IPv4 addresses. But when the newer
 128-bit IPv6 addresses are represented as strings they can be
@@ -158,7 +158,7 @@ missing. This library does none of that. Up to two leading zeroes may
 be used, though:
 
 @example
-(import (weinholt text internet))
+(import (industria text internet))
 (ipv4->string (string->ipv4 "192.000.002.000"))
 @result{} "192.0.2.0"
 @end example

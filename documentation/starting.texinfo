@@ -54,11 +54,11 @@ Common file extensions for @rnrs{} programs are @code{.scm},
 library will normally be built-in and might not correspond to any
 file, but other libraries are usually found by converting the library
 name into a file system path. Here's an example that uses the
-@code{(weinholt crypto md5)} library:
+@code{(industria crypto md5)} library:
 
 @lisp
 (import (rnrs)
-        (weinholt crypto md5))
+        (industria crypto md5))
 (display (md5->string (md5 (string->utf8 (cadr (command-line))))))
 (newline)
 @end lisp

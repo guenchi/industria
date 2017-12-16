@@ -23,7 +23,7 @@
 
 (import (srfi :78 lightweight-testing)
         (rnrs)
-        (prefix (weinholt struct der) der:))
+        (prefix (industria struct der) der:))
 
 (define (SubjectAltName)
   `(sequence-of 1 +inf.0 ,(GeneralName)))

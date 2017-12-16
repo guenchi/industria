@@ -10,7 +10,7 @@
 @c ======================================================================
 @node bytevectors
 @subsection Bytevector utilities
-The @code{(weinholt bytevectors)} library contains utilities for
+The @code{(industria bytevectors)} library contains utilities for
 working with @rnrs{} bytevectors.
 
 @deffn Procedure bytevector-append [bytevector ...]
@@ -51,7 +51,7 @@ order. The returned bytevector has the minimum possible length. Zero
 is converted to the empty bytevector.
 
 @example
-(import (weinholt bytevectors))
+(import (industria bytevectors))
 (uint->bytevector 256)
 @result{} #vu8(1 0)
 (uint->bytevector 255)

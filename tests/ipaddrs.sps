@@ -24,8 +24,8 @@
 (import (rnrs)
         (only (srfi :1 lists) iota)
         (srfi :78 lightweight-testing)
-        (weinholt text internet)
-        (weinholt text strings)
+        (industria text internet)
+        (industria text strings)
         (struct pack))
 
 (check (ipv6->string (string->ipv6 "::")) => "::")

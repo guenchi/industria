@@ -23,11 +23,11 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt net dns)
-        (weinholt net dns numbers)
-        (weinholt net dns types)
-        (weinholt text base64)
-        (weinholt text internet))
+        (industria net dns)
+        (industria net dns numbers)
+        (industria net dns types)
+        (industria text base64)
+        (industria text internet))
 
 ;; Some bogus test data (.test is RFC 2606)
 (define dummy-digest

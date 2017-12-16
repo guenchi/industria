@@ -1,7 +1,7 @@
 @c ======================================================================
 @node net ssh
 @subsection Secure Shell (SSH)
-The @code{(weinholt net ssh)} library hierarchy deals with the Secure
+The @code{(industria net ssh)} library hierarchy deals with the Secure
 Shell protocol. Both SSH servers and clients can be written with these
 libraries. Some convenient abstractions are currently missing though,
 e.g.@: a channel abstraction. These libraries hide the details of the
@@ -65,7 +65,7 @@ comments. This field is sometimes used to identify a vendor.
 The following parameters are when constructing the local kex exchange
 packet. It lists the preferred algorithms. You may remove and reorder
 the algorithms, but you can't introduce new ones without first adding
-them to @code{(weinholt net ssh algorithms)}. The defaults may change
+them to @code{(industria net ssh algorithms)}. The defaults may change
 in the future.
 
 @deffn Parameter preferred-kex-algorithms
@@ -208,7 +208,7 @@ given as an argument to @code{register-connection} and
 @c this should probably be part of the private interface:
 @c The procedure takes three arguments: an integer representing a packet
 @c type, a parser and a formatter. The parser takes a single argument: a
-@c buffer object (as defined in @code{(weinholt net buffer)}) and returns
+@c buffer object (as defined in @code{(industria net buffer)}) and returns
 @c an ssh-packet object. The formatter takes a binary output port and a
 @c packet. It writes the packet to the port, starting with the @emph{u8}
 @c that identifies the packet type.
@@ -303,7 +303,7 @@ welcome.
 @c ======================================================================
 @node net ssh connection
 @subsubsection Secure Shell Connection Protocol
-The @code{(weinholt net ssh connection)} library implements record
+The @code{(industria net ssh connection)} library implements record
 types, parsers and formatters for the connection protocol packets in
 SSH.
 
@@ -910,7 +910,7 @@ The inverse of @code{bytevector->terminal-modes}. All modes specified
 by RFC 4254 can be encoded.
 
 @example
-(import (weinholt net ssh connection))
+(import (industria net ssh connection))
 (terminal-modes->bytevector '((VINTR . 3) (VERASE . 127)))
 @result{} #vu8(1 0 0 0 3 3 0 0 0 127 0)
 @end example
@@ -1035,7 +1035,7 @@ on the server.
 @c ======================================================================
 @node net ssh transport
 @subsubsection Secure Shell Transport Layer Protocol
-The @code{(weinholt net ssh transport)} library implements record
+The @code{(industria net ssh transport)} library implements record
 types, parsers and formatters for the transport layer packets in SSH.
 
 See RFC 4253 for a description of this protocol.
@@ -1265,7 +1265,7 @@ Returns @code{#t} if @var{obj} is a @var{newkeys} packet.
 @c ======================================================================
 @node net ssh userauth
 @subsubsection Secure Shell Authentication Protocol
-The @code{(weinholt net ssh userauth)} library implements record
+The @code{(industria net ssh userauth)} library implements record
 types, parsers and formatters for the authentication protocol packets
 in SSH.
 

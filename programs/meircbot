@@ -22,12 +22,12 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt crypto dsa)
-        (weinholt net irc)
-        (weinholt net irc fish)
-        (weinholt net otr)
-        (weinholt net tcp)
-        (weinholt net tls simple)
+(import (industria crypto dsa)
+        (industria net irc)
+        (industria net irc fish)
+        (industria net otr)
+        (industria net tcp)
+        (industria net tls simple)
         (xitomatl AS-match)
         (only (srfi :13 strings) string-join string-trim-right)
         (srfi :26 cut)

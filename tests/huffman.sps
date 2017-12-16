@@ -23,8 +23,8 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt compression bitstream)
-        (weinholt compression huffman))
+        (industria compression bitstream)
+        (industria compression huffman))
 
 ;;                                                            ____ 12 in reverse
 (let ((br (make-bit-reader (open-bytevector-input-port #vu8(#b00111101 #b11000011 #b10100000))))

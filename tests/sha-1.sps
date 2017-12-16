@@ -24,8 +24,8 @@
 (import (rnrs)
         (for (only (srfi :1 lists) iota) expand)
         (srfi :78 lightweight-testing)
-        (weinholt bytevectors)
-        (weinholt crypto sha-1))
+        (industria bytevectors)
+        (industria crypto sha-1))
 
 (define (test/s expect . data)
   (let ((result (sha-1->string (apply sha-1 (map string->utf8 data)))))

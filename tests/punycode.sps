@@ -23,7 +23,7 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
-        (weinholt text punycode))
+        (industria text punycode))
 
 ;; Sample strings from RFC3492
 

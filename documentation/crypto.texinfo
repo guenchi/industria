@@ -52,7 +52,7 @@ or the FDA and quite likely aren't allowed for government work.
 @c ======================================================================
 @node crypto aes
 @subsection Advanced Encryption Standard
-The @code{(weinholt crypto aes)} library provides an implementation of
+The @code{(industria crypto aes)} library provides an implementation of
 the symmetrical Rijndael cipher as parameterized by the Advanced
 Encryption Standard (AES). It was created by the Belgian
 cryptographers Joan Daemen and Vincent Rijmen. Key lengths of 128, 192
@@ -77,7 +77,7 @@ them in Electronic Code Book (ECB) mode using the given
 can be the same.
 
 @example
-(import (weinholt crypto aes))
+(import (industria crypto aes))
 (let ((buf (string->utf8 "A Scheme at work"))
       (sched (expand-aes-key (string->utf8 "super-secret-key"))))
   (aes-encrypt! buf 0 buf 0 sched)
@@ -97,7 +97,7 @@ Performs the inverse of @code{aes-encrypt!}. The @var{key-schedule}
 should first be reversed with @code{reverse-aes-schedule}.
 
 @example
-(import (weinholt crypto aes))
+(import (industria crypto aes))
 (let ((buf (bytevector-copy #vu8(116 7 242 187 114 235 130 138
                                  166 39 24 204 117 224 5 8)))
       (sched (reverse-aes-schedule
@@ -150,7 +150,7 @@ The inverse of @code{aes-cbc-encrypt!}.
 @c ======================================================================
 @node crypto arcfour
 @subsection ARCFOUR stream cipher
-The @code{(weinholt crypto arcfour)} library provides the well-known
+The @code{(industria crypto arcfour)} library provides the well-known
 ARCFOUR stream cipher. It is the fastest of the ciphers provided by
 this library collection.
 
@@ -172,7 +172,7 @@ XORs them with bytes from the @var{keystream}, and writes them to
 @var{target-start} be less then or equal to @var{source-start}.
 
 @example
-(import (weinholt crypto arcfour))
+(import (industria crypto arcfour))
 (let ((buf #vu8(90 60 247 233 181 200 38 52 121 82 133
                 98 244 159 12 97 90 157 43 183 249 170
                 73 244 126))
@@ -199,7 +199,7 @@ Removes all key material from the @var{keystream}.
 @c ======================================================================
 @node crypto blowfish
 @subsection The Blowfish Cipher
-The @code{(weinholt crypto blowfish)} library is a complete
+The @code{(industria crypto blowfish)} library is a complete
 implementation of Bruce Schneier's Blowfish cipher. It is a symmetric
 block cipher with key length between 8 and 448 bits. The key
 length does not affect the performance.
@@ -252,7 +252,7 @@ The inverse of @code{blowfish-cbc-encrypt!}.
 @c ======================================================================
 @node crypto crc
 @subsection Cyclic Redundancy Codes
-The @code{(weinholt crypto crc)} library exports syntax for defining
+The @code{(industria crypto crc)} library exports syntax for defining
 procedures that calculate CRCs. There is a simple syntax that simply
 requires the name of the CRC, and an advanced syntax that can define
 new CRCs.
@@ -268,7 +268,7 @@ currently: @code{crc-32}, @code{crc-16}, @code{crc-16/ccitt},
 @code{crc-64/ecma-182}.
 
 @example
-(import (weinholt crypto crc))
+(import (industria crypto crc))
 (define-crc crc-32)
 @end example
 @end deffn
@@ -302,7 +302,7 @@ can simply specify the powers of the coefficients. CRC-16 in this
 syntax becomes:
 
 @example
-(import (weinholt crypto crc))
+(import (industria crypto crc))
 (define-crc crc-16 (16 15 2 0) #x0000 #t #t #x0000 #xBB3D)
 @expansion{}
 (begin
@@ -330,7 +330,7 @@ Calculates the final CRC of the entire bytevector and returns it as an
 integer.
 
 @example
-(import (weinholt crypto crc))
+(import (industria crypto crc))
 (define-crc crc-32)
 (crc-32 (string->utf8 "A fiendish scheme"))
 @result{} 1384349758
@@ -346,7 +346,7 @@ Uses the @var{state} and returns a new state that includes the CRC of
 the given bytes.
 
 @example
-(import (weinholt crypto crc))
+(import (industria crypto crc))
 (define-crc crc-32)
 (crc-32-finish
  (crc-32-update (crc-32-init)
@@ -378,7 +378,7 @@ keys. To get longer keys the Triple Data Encryption Algorithm (TDEA,
 @cindex 3DES
 
 
-The @code{(weinholt crypto des)} library is incredibly inefficient and
+The @code{(industria crypto des)} library is incredibly inefficient and
 the API is, for no good reason, different from the AES library. You
 should probably use AES instead, if possible.
 
@@ -402,7 +402,7 @@ The @var{E} argument will normally be omitted. It is only used by the
 @code{des-crypt} procedure.
 
 @example
-(import (weinholt crypto des))
+(import (industria crypto des))
 (let ((buf (string->utf8 "security"))
       (sched (permute-key (string->utf8 "terrible"))))
   (des! buf sched)
@@ -411,7 +411,7 @@ The @var{E} argument will normally be omitted. It is only used by the
 @end example
 
 @example
-(import (weinholt crypto des))
+(import (industria crypto des))
 (let ((buf (bytevector-copy #vu8(106 72 113 111 248 178 225 208)))
       (sched (reverse (permute-key (string->utf8 "terrible")))))
   (des! buf sched)
@@ -471,7 +471,7 @@ The @var{salt} must be a string of two characters from the alphabet
 @code{#\0}--@code{#\9}, @code{#\.} and @code{#\/}.
 
 @example
-(import (weinholt crypto des))
+(import (industria crypto des))
 (des-crypt "password" "4t")
 @result{} "4tQSEW3lEnOio"
 @end example
@@ -482,7 +482,7 @@ A more general interface is also available, @pxref{crypto password}.
 @c ======================================================================
 @node crypto dh
 @subsection Diffie-Hellman key exchange
-The @code{(weinholt crypto dh)} library exports procedures and
+The @code{(industria crypto dh)} library exports procedures and
 constants for Diffie-Hellman (Merkle) key exchange. D-H works by
 generating a pair of numbers, sending one of them to the other party,
 and using the other one and the one you receive to compute a shared
@@ -509,7 +509,7 @@ The @var{exponent} can also be negative (set it to -1 to calculate the
 multiplicative inverse of @var{base}).
 
 @example
-(import (weinholt crypto dh))
+(import (industria crypto dh))
 (let ((g modp-group15-g) (p modp-group15-p))
   (let-values (((y Y) (make-dh-secret g p 320))
                ((x X) (make-dh-secret g p 320)))
@@ -532,7 +532,7 @@ See RFC 3526 for more on this.
 @c ======================================================================
 @node crypto dsa
 @subsection Digital Signature Algorithm
-The @code{(weinholt crypto dsa)} library provides procedures for
+The @code{(industria crypto dsa)} library provides procedures for
 creating and verifying DSA signatures. DSA is a public key signature
 algorithm, which means that it uses private and public key pairs. With
 a private key you can create a signature that can then be verified by
@@ -629,7 +629,7 @@ Returns @code{#t} if the signature matches, otherwise @code{#f}.
 @c ======================================================================
 @node crypto ec
 @subsection Elliptic Curve Cryptography
-The @code{(weinholt crypto ec)} provides algorithms and definitions
+The @code{(industria crypto ec)} provides algorithms and definitions
 for working with elliptic curves.
 
 Only curves over prime finite fields are currently supported. Points
@@ -752,9 +752,9 @@ software.
 @c ======================================================================
 @node crypto ec dsa
 @subsection Elliptic Curve Digital Signature Algorithm (ECDSA)
-The @code{(weinholt crypto ec dsa)} library builds on the
-@code{(weinholt crypto ec)} library and provides an interface similar
-to @code{(weinholt crypto dsa)}. The keys and the operations are
+The @code{(industria crypto ec dsa)} library builds on the
+@code{(industria crypto ec)} library and provides an interface similar
+to @code{(industria crypto dsa)}. The keys and the operations are
 defined to work with elliptic curves instead of modular
 exponentiation.
 
@@ -878,7 +878,7 @@ marked to be used with SHA-2.
 @c ======================================================================
 @node crypto entropy
 @subsection Entropy and randomness
-The @code{(weinholt crypto entropy)} library is meant to help with
+The @code{(industria crypto entropy)} library is meant to help with
 generating random data. It tries to use the system's
 @code{/dev/urandom} device if possible, otherwise it uses SRFI-27.
 
@@ -893,7 +893,7 @@ index @var{target-start}.
 Returns a bytevector of length @var{k} with random content.
 
 @example
-(import (weinholt crypto entropy))
+(import (industria crypto entropy))
 (make-random-bytevector 8)
 @result{} #vu8(68 229 38 253 58 70 198 161)
 @end example
@@ -902,7 +902,7 @@ Returns a bytevector of length @var{k} with random content.
 @c ======================================================================
 @node crypto md5
 @subsection Message-Digest algorithm 5
-The @code{(weinholt crypto md5)} library is an implementation of the
+The @code{(industria crypto md5)} library is an implementation of the
 cryptographic hash function MD5. It takes bytes as input and returns a
 @dfn{message digest}, which is like a one-way summary of the data. The
 idea is that even the smallest change in the data should produce a
@@ -998,7 +998,7 @@ MD5 to generate such a code. The return value is an MD5 state.
 @c ======================================================================
 @node crypto openpgp
 @subsection OpenPGP signature verification
-The @code{(weinholt crypto openpgp)} library provides procedures for
+The @code{(industria crypto openpgp)} library provides procedures for
 reading OpenPGP keyrings and verifying signatures. OpenPGP signatures
 can be created with e.g.@: GNU Private Guard (GnuPG) and are often
 used to verify the integrity of software releases.
@@ -1166,7 +1166,7 @@ The 64-bit key ID of the OpenPGP public @var{key}.
 @c ======================================================================
 @node crypto password
 @subsection Password hashing
-The procedure provided by @code{(weinholt crypto password)} is the
+The procedure provided by @code{(industria crypto password)} is the
 same type of procedure that is called @code{crypt} in the standard C
 library. It is used for password hashing, i.e.@: it scrambles
 passwords. This is a method often used when passwords need to be
@@ -1190,7 +1190,7 @@ To verify that a password matches a hash, you can do something like
 @code{(string=? hash (crypt password hash))}.
 
 @example
-(import (weinholt crypto password))
+(import (industria crypto password))
 (crypt "test" "..")
 @result{} "..9sjyf8zL76k"
 @end example
@@ -1212,7 +1212,7 @@ To verify that a password matches a hash, you can do something like
 @c ======================================================================
 @node crypto rsa
 @subsection RSA public key encryption and signatures
-The @code{(weinholt crypto rsa)} library implements the RSA (Rivest,
+The @code{(industria crypto rsa)} library implements the RSA (Rivest,
 Shamir and Adleman) algorithm and a few helpers.
 
 @deffn Procedure make-rsa-public-key n e
@@ -1339,7 +1339,7 @@ must be a private RSA key.
 modulus of @var{key}.
 
 @example
-(import (weinholt crypto rsa))
+(import (industria crypto rsa))
 (let ((key (make-rsa-private-key 3233 17 2753)))
   (rsa-decrypt (rsa-encrypt 42 key) key))
 @result{} 42
@@ -1379,7 +1379,7 @@ integer using @var{private-key}, a private RSA key. The padding is
 then checked for correctness and removed.
 
 @example
-(import (weinholt crypto rsa))
+(import (industria crypto rsa))
 (let ((key (make-rsa-private-key
             288412728347463293650191476303670753583
             65537
@@ -1409,7 +1409,7 @@ list containing a digest algorithm specifier and a digest.
 @c ======================================================================
 @node crypto sha-1
 @subsection Secure Hash Algorithm 1
-The interface provided by @code{(weinholt crypto sha-1)} is identical
+The interface provided by @code{(industria crypto sha-1)} is identical
 to the one provided by the MD5 library, except every procedure is
 prefixed by @code{sha-1} instead of @code{md5}. @xref{crypto md5}.
 
@@ -1420,7 +1420,7 @@ the message digests are 160 bits instead of MD5's 128.
 @c ======================================================================
 @node crypto sha-2
 @subsection Secure Hash Algorithm 2
-The interface provided by @code{(weinholt crypto sha-2)} is identical
+The interface provided by @code{(industria crypto sha-2)} is identical
 to the one provided by the MD5 library, but instead of @code{md5},
 every procedure is prefixed by @code{sha-224}, @code{sha-256},
 @code{sha-384} or @code{sha-512}. In addition the procedures that
@@ -1438,7 +1438,7 @@ The message digests produced by SHA-224 are 224 bits, and so on.
 @c ======================================================================
 @node crypto ssh-public-key
 @subsection SSH public key format conversion
-Use @code{(weinholt crypto ssh-public-key)} to convert public RSA,
+Use @code{(industria crypto ssh-public-key)} to convert public RSA,
 DSA, and ECDSA keys from records to the binary SSH public key format,
 and the other way around. SSH is the name of a network protocol for
 secure terminal connections defined by RFCs 4250-4254. The key format
@@ -1484,7 +1484,7 @@ feature displays.
 @c ======================================================================
 @node crypto uuid
 @subsection Universally Unique IDentifiers (UUID / GUID)
-The @code{(weinholt crypto uuid)} library can be used to generate
+The @code{(industria crypto uuid)} library can be used to generate
 or analyze UUIDs.
 
 UUIDs are 128-bit identifiers standardized by RFC 4122 (though their
@@ -1552,7 +1552,7 @@ The @var{namespace} is given as a UUID, of which several are
 pre-defined below.
 
 @example
-(import (weinholt crypto uuid))
+(import (industria crypto uuid))
 (uuid->string (md5-uuid uuid-namespace-dns "www.example.com"))
 @result{} "5df41881-3aed-3515-88a7-2f4a814cf09e"
 @end example
@@ -1621,7 +1621,7 @@ randomly generated.
 @end itemize
 
 @example
-(import (weinholt crypto uuid))
+(import (industria crypto uuid))
 (uuid-info (time-uuid))
 @result{}
  ((variant . rfc4122)
@@ -1656,7 +1656,7 @@ ID, or an X.500 Distinguished Name.
 @c ======================================================================
 @node crypto x509
 @subsection X.509 Public-Key Infrastructure
-The @code{(weinholt crypto x509)} library implements parts of ITU-T's
+The @code{(industria crypto x509)} library implements parts of ITU-T's
 X.509 standard for public-key infrastructure.
 
 An X.509 certificate is a data structure that contains a public RSA or

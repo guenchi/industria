@@ -2,6 +2,13 @@
 
 * Changes in version 2.0 (not released)
 
+** Library renaming
+
+The libraries were previously under the namespace (weinholt *), which
+was originally based on a recommendation in R6RS appendix G. They are
+now under (industria *) and one level of the directory structure has
+been eliminated.
+
 ** Akku manifest
 
 Industria now comes with an Akku manifest that can be used to download

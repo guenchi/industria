@@ -21,7 +21,7 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (weinholt compression zip)
+(import (industria compression zip)
         (rnrs))
 
 (define (print . x) (for-each display x) (newline))
