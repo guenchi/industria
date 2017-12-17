@@ -39,7 +39,7 @@
                 string-index string-index-right)
           (industria bytevectors)
           (industria crypto des)
-          (industria crypto md5)
+          (hashing md5)
           (industria text base64))
 
   (define (print . x) (for-each display x) (newline))

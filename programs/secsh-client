@@ -22,13 +22,13 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (rnrs)
+(import (rnrs (6))
         (only (srfi :13 strings) string-index)
         (srfi :39 parameters)
+        (hashing sha-1)
         (industria crypto dsa)
         (industria crypto ec dsa)
         (industria crypto rsa)
-        (industria crypto sha-1)
         (industria crypto ssh-public-key)
         ;; (industria net dns numbers)
         ;; (industria net dns types)

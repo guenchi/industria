@@ -40,7 +40,7 @@
           (industria bytevectors)
           (industria crypto blowfish)
           (industria crypto dh)
-          (industria crypto sha-2)
+          (hashing sha-2)
           (struct pack)
           (industria text base64))
 

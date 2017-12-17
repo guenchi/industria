@@ -49,7 +49,7 @@
           (industria crypto ec)
           (industria crypto entropy)
           (industria crypto math)
-          (industria crypto sha-2)
+          (hashing sha-2)
           (prefix (industria struct der) der:)
           (industria text base64))
 

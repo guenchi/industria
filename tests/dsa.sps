@@ -22,8 +22,8 @@
 #!r6rs
 
 (import (industria crypto dsa)
-        (industria crypto sha-1)
-        (industria crypto sha-2)
+        (hashing sha-1)
+        (hashing sha-2)
         (srfi :78 lightweight-testing)
         (rnrs))
 

@@ -33,8 +33,8 @@
           (srfi :19 time)
           (industria bytevectors)
           (industria crypto entropy)
-          (industria crypto md5)
-          (industria crypto sha-1)
+          (hashing md5)
+          (hashing sha-1)
           (struct pack))
 
   (define nil-uuid

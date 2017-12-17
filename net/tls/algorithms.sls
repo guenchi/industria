@@ -48,9 +48,9 @@
     ;;(industria crypto dh)
     (industria crypto dsa)
     ;;(industria crypto entropy)
-    (industria crypto md5)
+    (hashing md5)
     (industria crypto rsa)
-    (industria crypto sha-1))
+    (hashing sha-1))
 
 ;;; Pseudo random functions
 

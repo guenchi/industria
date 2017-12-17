@@ -45,7 +45,7 @@
           (industria crypto dsa)
           (industria crypto ec)
           (industria crypto ec dsa)
-          (industria crypto md5)
+          (hashing md5)
           (industria crypto rsa)
           (struct pack)
           (industria text base64)

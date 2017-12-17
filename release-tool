@@ -51,31 +51,19 @@
     (industria net tls)))
 
 (define *released-libraries*
-  '((industria archive tar)
-    (industria bytevectors)
-    (industria compression adler-32)
-    (industria compression inflate)
-    (industria compression gzip)
-    (industria compression xz)
-    (industria compression zip)
-    (industria compression zlib)
+  '((industria bytevectors)
     (industria crypto aes)
     (industria crypto arcfour)
     (industria crypto blowfish)
-    (industria crypto crc)
     (industria crypto des)
     (industria crypto dsa)
     (industria crypto ec)
     (industria crypto ec dsa)
     (industria crypto entropy)
-    (industria crypto hmac)
     (industria crypto math)
-    (industria crypto md5)
     (industria crypto openpgp)
     (industria crypto password)
     (industria crypto rsa)
-    (industria crypto sha-1)
-    (industria crypto sha-2)
     (industria crypto ssh-public-key)
     (industria crypto x509)
     ;;(industria net dns)
@@ -95,11 +83,8 @@
 (define *properly-docmented*
   ;; These libraries export identifiers that show up in the check for
   ;; undocumented exports, for some good reason.
-  '((industria compression adler-32)
-    (industria crypto dh)
-    (industria crypto dsa)
-    (industria crypto sha-1)
-    (industria crypto sha-2)))
+  '((industria crypto dh)
+    (industria crypto dsa)))
 
 (define *implementations* '(chezscheme
                             ikarus
@@ -308,6 +293,7 @@
       (('srfi . _) #t)
       (('rnrs . _) #t)
       (('struct . _) #t)
+      (('hashing . _) #t)
       (('industria . _)
        (let ((v (find (lambda (lib)
                         (equal? (import-name import)
@@ -520,11 +506,9 @@
 (define synopsis "Cryptography, compression, OTR, TLS, etc.")
 (define description
   "Industria is a collection of portable R6RS Scheme libraries for
-cryptography (AES, HMAC, SHA-1, SHA-2, RSA, DSA, ECDSA, etc.), zlib/xz
-decompression, Off-The-Record messaging, bytevector pack/unpack
-syntax, TLS connections via custom binary ports, Secure Shell, and a
-few more things.")
-
+cryptography. It implements low-level algorithms like AES, RSA, DSA,
+ECDSA, etc and high-level protocols such as OpenPGP, Off-The-Record
+messaging and Secure Shell (SSH).")
 (define homepage "http://github.com/weinholt/industria/")
 
 ;; This file should be named pkg-list.scm

@@ -9,13 +9,9 @@ installing the demos in the default program search path.
 
 @menu
 * checksig::     checksig -- verifies OpenPGP signature files
-* checksum::     checksum -- computes CRCs and message digests
 * honingsburk::  honingsburk -- simple Secure Shell honey pot
 * meircbot::     meircbot -- the minimum-effort irc bot
 * secsh-client:: secsh-client -- manually operated Secure Shell client
-* sunzip::       sunzip -- zip archive extractor
-* szip::         szip -- zip archive creator
-* tarinfo::      tarinfo -- tarball information lister
 * tls-client::   tls-client -- trivial HTTPS client
 @end menu
 
@@ -25,12 +21,6 @@ This program takes a detached ascii armored OpenPGP signature, a file
 to check against, and a GPG keyring. It then verifies the signature.
 As a curiosity it also prints OpenSSH-style random art for the key
 that made the signature.
-
-@node checksum
-@section checksum -- computes CRCs and message digests
-Compute the hash or CRC of a file. Give it an algorithm and filenames
-and off it goes. It also demonstrates the superior slowness of the
-hashing libraries.
 
 @node honingsburk
 @section honingsburk -- simple Secure Shell honey pot
@@ -107,20 +97,6 @@ localhost=> r
 darkstar:~# 
 localhost=> 
 @end example
-
-@node sunzip
-@section sunzip -- zip archive extractor
-A simple program to extract (or list the contents of) zip archives.
-Can handle deflated files.
-
-@node szip
-@section szip -- zip archive creator
-Creates zip files, but does not actually compress anything as of yet.
-
-@node tarinfo
-@section tarinfo -- tarball information lister
-Lists the contents of @:.tar and @:.tar.gz files. Sometimes these
-files contain more information than you think.
 
 @node tls-client
 @section tls-client -- trivial HTTPS client

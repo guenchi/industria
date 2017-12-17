@@ -22,7 +22,7 @@
 #!r6rs
 
 (import (industria crypto x509)
-        (industria crypto sha-1)
+        (hashing sha-1)
         (industria text base64)
         (srfi :19 time)
         (srfi :39 parameters)

@@ -12,21 +12,27 @@ been eliminated.
 ** Akku manifest
 
 Industria now comes with an Akku manifest that can be used to download
-its dependencies in known-good version.
+its dependencies in known good revisions.
 
 More about Akku here: https://github.com/weinholt/akku
 
+** (weinholt archive *): Removed
 ** (weinholt assembler *): Removed
-** (weinholt binfmt elf): Removed
+** (weinholt compression *): Removed
+** (weinholt crypto crc): Removed
+** (weinholt crypto hmac): Removed
+** (weinholt crypto md5): Removed
+** (weinholt crypto sha-1): Removed
+** (weinholt crypto sha-2): Removed
+** (weinholt binfmt *): Removed
 ** (weinholt disassembler *): Removed
 ** (weinholt struct pack): Removed
 
-The machine code utilities have been moved to a separate project:
+These libraries have been moved to here:
 
+https://github.com/weinholt/compression
+https://github.com/weinholt/hashing
 https://github.com/weinholt/machine-code
-
-The struct pack syntax has been moved to a separate project:
-
 https://github.com/weinholt/struct-pack
 
 * Changes in version 1.5

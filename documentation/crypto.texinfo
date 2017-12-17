@@ -31,19 +31,15 @@ or the FDA and quite likely aren't allowed for government work.
 * crypto aes::            Advanced Encryption Standard (AES)
 * crypto arcfour::        ARCFOUR stream cipher
 * crypto blowfish::       The Blowfish cipher
-* crypto crc::            Cyclic Redundancy Codes (CRC)
 * crypto des::            Data Encryption Standard (DES, 3DES)
 * crypto dh::             Diffie-Hellman key exchange
 * crypto dsa::            Digital Signature Algorithm (DSA)
 * crypto ec::             Elliptic Curve Cryptography
 * crypto ec dsa::         Elliptic Curve Digital Signature Algorithm (ECDSA)
 * crypto entropy::        Entropy and randomness
-* crypto md5::            Message-Digest algorithm 5 (MD5)
 * crypto openpgp::        OpenPGP signature verification
 * crypto password::       Password hashing
 * crypto rsa::            RSA public key encryption and signatures
-* crypto sha-1::          Secure Hash Algorithm 1 (SHA-1)
-* crypto sha-2::          Secure Hash Algorithm 2 (SHA-256, SHA-512, etc)
 * crypto ssh-public-key:: SSH public key format conversion
 * crypto uuid::           Universally Unique IDentifiers (UUID / GUID)
 * crypto x509::           X.509 Public-Key Infrastructure
@@ -247,125 +243,6 @@ after processing a block.
 
 @deffn Procedure blowfish-cbc-decrypt! source source-start target target-start k schedule iv
 The inverse of @code{blowfish-cbc-encrypt!}.
-@end deffn
-
-@c ======================================================================
-@node crypto crc
-@subsection Cyclic Redundancy Codes
-The @code{(industria crypto crc)} library exports syntax for defining
-procedures that calculate CRCs. There is a simple syntax that simply
-requires the name of the CRC, and an advanced syntax that can define
-new CRCs.
-
-CRCs do not really qualify as cryptography, because it is trivial to
-modify data so that the modified data's CRC matches the old one.
-
-@deffn Syntax define-crc name
-This is the simple interface that requires merely the name of the CRC
-algorithm. The pre-defined CRCs that can be used this way are
-currently: @code{crc-32}, @code{crc-16}, @code{crc-16/ccitt},
-@code{crc-32c}, @code{crc-24}, @code{crc-64} (CRC-64-ISO), and
-@code{crc-64/ecma-182}.
-
-@example
-(import (industria crypto crc))
-(define-crc crc-32)
-@end example
-@end deffn
-
-@deffn Syntax define-crc name width polynomial init ref-in ref-out xor-out check
-For details on how the arguments work, and the theory behind them, see
-Ross N.@tie{}Williams's paper @cite{A painless guide to CRC error
-detection algorithms}, which is available at
-@url{http://www.ross.net/crc/crcpaper.html}. A brief description of the
-arguments follows.
-
-The @var{width} is the bitwise length of the polynomial. You might be
-led to believe that it should sometimes be 33, but if so you've
-been counting the highest bit, which doesn't count.
-
-The polynomial for CRC-16 is sometimes given as @math{x^{16} + x^{15}
-+ x^2 + 1}. This translates to @code{#b1000000000000101}
-(@code{#x8005}). Notice that @math{x^{16}} is absent. Don't use the
-reversed polynomial if you have one of those, instead set @var{ref-in}
-and @var{ref-out} properly.
-
-After a CRC has been calculated it is sometimes @sc{xor}'d with a
-final value, this is @var{xor-out}.
-
-@var{check} is either @code{#f} or the CRC of the string @code{"123456789"}.
-@end deffn
-
-@deffn Syntax define-crc name (coefficients ...) init ref-in ref-out xor-out check
-This is a slightly easier version of the advanced interface where you
-can simply specify the powers of the coefficients. CRC-16 in this
-syntax becomes:
-
-@example
-(import (industria crypto crc))
-(define-crc crc-16 (16 15 2 0) #x0000 #t #t #x0000 #xBB3D)
-@expansion{}
-(begin
-  (define (crc-16 bv)
-    (crc-16-finish (crc-16-update (crc-16-init) bv)))
-  (define (crc-16-init) #x0000)
-  (define (crc-16-finish r) (bitwise-xor r #x0000))
-  (define (crc-16-self-test)
-    (if #xBB3D
-        (if (= (crc-16 (string->utf8 "123456789")) #xBB3D)
-            'success 'failure)
-        'no-self-test))
-  @dots{})
-@end example
-
-Another example: the polynomial @math{x^8 + x^2 + x + 1} in this syntax
-is @code{(8 2 1 0)}.
-@end deffn
-
-After e.g.@: @code{(define-crc crc-32)} has been used, these bindings
-will be available (with names that match the name of the CRC):
-
-@deffn Procedure crc-32 bytevector
-Calculates the final CRC of the entire bytevector and returns it as an
-integer.
-
-@example
-(import (industria crypto crc))
-(define-crc crc-32)
-(crc-32 (string->utf8 "A fiendish scheme"))
-@result{} 1384349758
-@end example
-@end deffn
-
-@deffn Procedure crc-32-init
-Returns an initial CRC state.
-@end deffn
-
-@deffn Procedure crc-32-update state bv [start end]
-Uses the @var{state} and returns a new state that includes the CRC of
-the given bytes.
-
-@example
-(import (industria crypto crc))
-(define-crc crc-32)
-(crc-32-finish
- (crc-32-update (crc-32-init)
-                (string->utf8 "A fiendish scheme")))
-@result{} 1384349758
-@end example
-@end deffn
-
-@deffn Procedure crc-32-finish state
-Finalizes the CRC @var{state}.
-@end deffn
-
-@deffn Procedure crc-32-width
-Returns the bit-width of the CRC, e.g.@: 32 for CRC-32.
-@end deffn
-
-@deffn Procedure crc-32-self-test
-Performs a sanity check and returns either
-@code{success}, @code{failure} or @code{no-self-test}.
 @end deffn
 
 @c ======================================================================
@@ -900,102 +777,6 @@ Returns a bytevector of length @var{k} with random content.
 @end deffn
 
 @c ======================================================================
-@node crypto md5
-@subsection Message-Digest algorithm 5
-The @code{(industria crypto md5)} library is an implementation of the
-cryptographic hash function MD5. It takes bytes as input and returns a
-@dfn{message digest}, which is like a one-way summary of the data. The
-idea is that even the smallest change in the data should produce a
-completely different digest, and it should be difficult to find
-different data that has the same digest. An MD5 digest is 16 bytes.
-
-MD5 has a maximum message size of @math{2^{64}-1} bits.
-
-The MD5 algorithm is considered broken and you will likely want to use
-SHA-2 instead, if possible.
-
-@deffn Procedure md5 bv ...
-The complete all-in-one procedure to calculate the MD5 message digest
-of all the given bytevectors in order. Returns an md5 state, which
-should be used with @code{md5->bytevector} or @code{md5->string}.
-
-@example
-(md5->string (md5 (string->utf8 "A Scheme in my pocket")))
-@result{} "65A2B2D8EE076250EA0A105A8D5EF1BB"
-@end example
-@end deffn
-
-@deffn Procedure md5-length
-The length of md5 message digests in bytes.
-@end deffn
-
-@deffn Procedure make-md5
-Returns a new MD5 state for use with the procedures below. The type of
-the return value is unspecified.
-@end deffn
-
-@deffn Procedure md5-update! md5state bv [start end]
-Updates the @var{md5state} to include the specified range of data from
-@var{bv}.
-@end deffn
-
-@deffn Procedure md5-finish! md5state
-Finalizes the @var{md5state}. This must be used after the last call to
-@code{md5-update!}.
-@end deffn
-
-@deffn Procedure md5-clear! md5state
-Clear the @var{md5state} so that it does not contain any part of the
-input data or the message digest.
-@end deffn
-
-@deffn Procedure md5-copy md5state
-Make a copy of the @var{md5state}.
-@end deffn
-
-@deffn Procedure md5-finish md5state
-Performs @code{md5-finish!} on a copy of @var{md5state} and then
-returns the new state.
-@end deffn
-
-@deffn Procedure md5-copy-hash! md5state bv offset
-Copies the message digest (a.k.a.@: hash) in the finalized
-@var{md5state} into @var{bv} at the given offset.
-@end deffn
-
-@deffn Procedure md5-96-copy-hash! md5state bv offset
-Like @code{md5-copy-hash!}, but only copies the leftmost 96 bits.
-@end deffn
-
-@deffn Procedure md5->bytevector md5state
-Returns a new bytevector which contains a binary representation of the
-finalized @var{md5state}.
-@end deffn
-
-@deffn Procedure md5->string md5state
-Returns a new string which contains a textual representation of the
-finalized @var{md5state}. The conventional hexadecimal representation
-is used.
-@end deffn
-
-@deffn Procedure md5-hash=? md5state bv
-Compares the finalized @var{md5state} with the leading bytes of
-@var{bv}. The comparison is designed to take the same amount of time
-regardless of where any differences may be. This may be important for
-networked programs that would otherwise be vulnerable to timing
-attacks.
-@end deffn
-
-@deffn Procedure md5-96-hash=? md5state bv
-Like @code{md5-hash=?} except it only compares the leftmost 96 bits.
-@end deffn
-
-@deffn Procedure hmac-md5 secret bytevector ...
-An HMAC is a Hash-based Message Authentication Code. This procedure uses
-MD5 to generate such a code. The return value is an MD5 state.
-@end deffn
-
-@c ======================================================================
 @node crypto openpgp
 @subsection OpenPGP signature verification
 The @code{(industria crypto openpgp)} library provides procedures for
@@ -1405,35 +1186,6 @@ This performs the same operation as
 decrypted signature as a DER encoded DigestInfo. The return value is a
 list containing a digest algorithm specifier and a digest.
 @end deffn
-
-@c ======================================================================
-@node crypto sha-1
-@subsection Secure Hash Algorithm 1
-The interface provided by @code{(industria crypto sha-1)} is identical
-to the one provided by the MD5 library, except every procedure is
-prefixed by @code{sha-1} instead of @code{md5}. @xref{crypto md5}.
-
-SHA-1 also has a maximum message size of @math{2^{64}-1} bits, but
-the message digests are 160 bits instead of MD5's 128.
-@cindex SHA-1
-
-@c ======================================================================
-@node crypto sha-2
-@subsection Secure Hash Algorithm 2
-The interface provided by @code{(industria crypto sha-2)} is identical
-to the one provided by the MD5 library, but instead of @code{md5},
-every procedure is prefixed by @code{sha-224}, @code{sha-256},
-@code{sha-384} or @code{sha-512}. In addition the procedures that
-operate on the leftmost 96 bits are instead defined for the leftmost
-128 bits (e.g.@: @code{sha-512-128-hash=?}). @xref{crypto md5}.
-
-SHA-224 and SHA-256 have a maximum message size of @math{2^{64}-1}
-bits. For SHA-384 and SHA-512 the maximum is @math{2^{128}-1} bits.
-The message digests produced by SHA-224 are 224 bits, and so on.
-@cindex SHA-224
-@cindex SHA-256
-@cindex SHA-384
-@cindex SHA-512
 
 @c ======================================================================
 @node crypto ssh-public-key

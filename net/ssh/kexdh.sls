@@ -33,7 +33,7 @@
           make-kex-dh-key-exchanger)
   (import (rnrs)
           (industria crypto dh)
-          (industria crypto sha-1)
+          (hashing sha-1)
           (industria crypto ssh-public-key)
           (industria net ssh private))
 
