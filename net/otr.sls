@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2009, 2010, 2012, 2013 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2009, 2010, 2012, 2013, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,6 @@
 ;; http://www.cypherpunks.ca/otr/Protocol-v2-3.1.0.html
 
 ;; TODO: fix the state transitions (most are probably missing)
-;; TODO: Ypsilon is very slow on D-H key generation.
 ;; TODO: should it be possible to establish a session with someone
 ;; using our own DSA key?
 ;; TODO: finishing sessions.
@@ -977,8 +976,8 @@
     (let ((type (get-message-type p)))
       (cond ((eq? type 'ignore))
             ((= type msg-signature)
-             (let ((X-alice (get-bytevector p (get-unpack p "!L")))
-                   (mac (get-bytevector p 160/8)))
+             (let* ((X-alice (get-bytevector p (get-unpack p "!L")))
+                    (mac (get-bytevector p 160/8)))
                (unless (bytevector=? mac (MAC m2* (pack "!L" (bytevector-length X-alice))
                                               X-alice))
                  (error 'auth-state-awaiting-signature "Bad message MAC"))
