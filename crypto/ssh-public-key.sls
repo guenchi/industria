@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010, 2011, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2012, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -125,7 +125,7 @@
            (error who "Unknown elliptic curve" x))))
 
   (define (ssh-public-key-algorithm key)
-    (define who 'ssh-public-key-algorithm )
+    (define who 'ssh-public-key-algorithm)
     (cond ((rsa-public-key? key) "ssh-rsa")
           ((dsa-public-key? key) "ssh-dss")
           ((ecdsa-sha-2-public-key? key)

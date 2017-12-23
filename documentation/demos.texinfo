@@ -12,7 +12,6 @@ installing the demos in the default program search path.
 * honingsburk::  honingsburk -- simple Secure Shell honey pot
 * meircbot::     meircbot -- the minimum-effort irc bot
 * secsh-client:: secsh-client -- manually operated Secure Shell client
-* tls-client::   tls-client -- trivial HTTPS client
 @end menu
 
 @node checksig
@@ -97,8 +96,3 @@ localhost=> r
 darkstar:~# 
 localhost=> 
 @end example
-
-@node tls-client
-@section tls-client -- trivial HTTPS client
-Demonstrates the simple TLS library. It connects to an HTTPS server,
-does a GET / request and displays the reply.

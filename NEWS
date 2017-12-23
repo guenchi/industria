@@ -24,8 +24,11 @@ More about Akku here: https://github.com/weinholt/akku
 ** (weinholt crypto md5): Removed
 ** (weinholt crypto sha-1): Removed
 ** (weinholt crypto sha-2): Removed
+** (weinholt crypto x509): Removed
 ** (weinholt binfmt *): Removed
 ** (weinholt disassembler *): Removed
+** (weinholt net tls): Removed
+** (weinholt net tls *): Removed
 ** (weinholt struct pack): Removed
 
 These libraries have been moved to here:
@@ -34,6 +37,7 @@ https://github.com/weinholt/compression
 https://github.com/weinholt/hashing
 https://github.com/weinholt/machine-code
 https://github.com/weinholt/struct-pack
+https://github.com/weinholt/TerribleTLS
 
 * Changes in version 1.5
 

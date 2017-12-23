@@ -10,7 +10,6 @@
 * net otr::            Off-the-Record Messaging
 * net ssh::            Secure Shell (SSH)
 * net tcp::            Basic TCP client connections
-* net tls simple::     Transport Layer Security (simple interface)
 @end menu
 
 @c ======================================================================
@@ -628,49 +627,3 @@ Initiates a TCP connection to the given @var{hostname} and
 Returns an input-port and an output-port. They are not guaranteed to
 be distinct.
 @end deffn
-
-
-@c ======================================================================
-@node net tls simple
-@subsection Transport Layer Security (simple interface)
-The @code{(industria net tls simple)} library provides custom binary
-ports that implement the Transport Layer Security (TLS) protocol used
-by e.g.@: https. After starting TLS you can use the new ports as
-easily as if they were unencrypted. TLS encrypts the traffic and
-lets you verify the remote server's identity.
-@cindex https
-@cindex TLS
-@cindex SSL
-
-This library currently only provides a TLS client. Both TLS 1.0 and
-TLS 1.1 are supported. The RSA, DHE-RSA (Ephemeral Diffie-Hellman) and
-DHE-DSA key exchange algorithms are supported, as well as AES, ARCFOUR
-and 3DES ciphers.
-
-This whole thing is kind of experimental and I'd appreciate feedback.
-
-@deffn Procedure tls-connect hostname portname [client-certificates]
-Initiates a TCP connection to the given @var{hostname} and
-@var{portname} (which are strings) and negotiates a TLS connection.
-Can hang forever.
-
-Pay no attention to the optional @var{client-certificates} argument.
-It is not yet implemented.
-
-This procedure returns three values: a binary input port, a binary
-output port, and a TLS connection object. The last value comes from
-the not-yet-documented @code{(industria net tls)} library. It is
-intended to be used to access the server's certificate chain, which
-can be verified using the not-yet-documented @code{(industria crypto
-x509)} library.
-@end deffn
-
-@deffn Procedure start-tls hostname portname binary-input-port @
-                 binary-output-port [client-certificates]
-Negotiates TLS on two already opened ports. Same return values as
-@code{tls-connect}. This procedure can be used for protocols where the
-communication at first is in plaintext and then switches over to
-encrypted (i.e.@: STARTTLS). Some such protocols are SMTP, LDAP and
-XMPP.
-@end deffn
-

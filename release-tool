@@ -47,8 +47,7 @@
     (industria net ssh algorithms)
     (industria net ssh kex-dh-gex)
     (industria net ssh kexdh)
-    (industria net ssh private)
-    (industria net tls)))
+    (industria net ssh private)))
 
 (define *released-libraries*
   '((industria bytevectors)
@@ -65,19 +64,14 @@
     (industria crypto password)
     (industria crypto rsa)
     (industria crypto ssh-public-key)
-    (industria crypto x509)
-    ;;(industria net dns)
     (industria net irc fish)
     (industria net irc)
     (industria net otr)
     (industria net ssh)
     (industria net tcp)
-    (industria net tls simple)
-    (industria net tls)
     (industria struct der)
     (industria text base64)
     (industria text internet)
-    ;;(industria text punycode)
     (industria text random-art)))
 
 (define *properly-docmented*

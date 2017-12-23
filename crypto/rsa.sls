@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2009, 2010, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2009, 2010, 2012, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -87,7 +87,6 @@
     'octet-string)
 
   (define (AlgorithmIdentifier)
-    ;; Same as in x509.sls
     `(sequence (algorithm object-identifier)
                (parameters ANY (default #f))))
 
