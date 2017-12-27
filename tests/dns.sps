@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2011 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2011, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -23,11 +23,11 @@
 
 (import (rnrs)
         (srfi :78 lightweight-testing)
+        (ip-address)
         (industria net dns)
         (industria net dns numbers)
         (industria net dns types)
-        (industria text base64)
-        (industria text internet))
+        (industria text base64))
 
 ;; Some bogus test data (.test is RFC 2606)
 (define dummy-digest

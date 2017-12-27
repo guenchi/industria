@@ -10,7 +10,6 @@ installing the demos in the default program search path.
 @menu
 * checksig::     checksig -- verifies OpenPGP signature files
 * honingsburk::  honingsburk -- simple Secure Shell honey pot
-* meircbot::     meircbot -- the minimum-effort irc bot
 * secsh-client:: secsh-client -- manually operated Secure Shell client
 @end menu
 
@@ -29,16 +28,6 @@ password toor. The server does not create a real PTY and the client
 does not gain access to the computer running the server. It presents a
 command line where all commands return an error. It uses a few
 non-standard procedures from Ikarus.
-
-@node meircbot
-@section meircbot -- the minimum-effort irc bot
-The program file contains the configuration. It doesn't do anything
-other than joining channels and being rude in private messages. Shows
-how the @code{(industria net irc)} library can be used. It requires
-the @code{(xitomatl AS-match)} library.
-
-It also uses demonstrates how to use FiSH, OTR and the simple TLS
-library.
 
 @node secsh-client
 @section secsh-client -- manually operated Secure Shell client

@@ -1,43 +1,52 @@
--*- mode: outline; coding: utf-8 -*-
+-*- mode: org; coding: utf-8 -*-
 
-* Changes in version 2.0 (not released)
+* Changes in version 2.0.0 (not released)
+
+** Removed libraries
+
+This release removes many of the libraries that were previously part
+of Industria:
+
+ - (weinholt archive)
+ - (weinholt assembler)
+ - (weinholt compression)
+ - (weinholt crypto crc)
+ - (weinholt crypto hmac)
+ - (weinholt crypto md5)
+ - (weinholt crypto sha-1)
+ - (weinholt crypto sha-2)
+ - (weinholt crypto uuid)
+ - (weinholt crypto x509)
+ - (weinholt binfmt
+ - (weinholt disassembler)
+ - (weinholt net irc)
+ - (weinholt net tls)
+ - (weinholt struct pack)
+ - (weinholt text internet)
+
+These libraries have been moved to here:
+
+ - https://github.com/weinholt/compression
+ - https://github.com/weinholt/hashing
+ - https://github.com/weinholt/irc-protocol
+ - https://github.com/weinholt/ip-address
+ - https://github.com/weinholt/machine-code
+ - https://github.com/weinholt/struct-pack
+ - https://github.com/weinholt/TerribleTLS
+ - https://github.com/weinholt/uuid
 
 ** Library renaming
 
 The libraries were previously under the namespace (weinholt *), which
-was originally based on a recommendation in R6RS appendix G. They are
-now under (industria *) and one level of the directory structure has
-been eliminated.
+was originally based on a recommendation in R6RS non-normative
+appendix G. They are now under (industria *).
 
 ** Akku manifest
 
 Industria now comes with an Akku manifest that can be used to download
 its dependencies in known good revisions.
 
-More about Akku here: https://github.com/weinholt/akku
-
-** (weinholt archive *): Removed
-** (weinholt assembler *): Removed
-** (weinholt compression *): Removed
-** (weinholt crypto crc): Removed
-** (weinholt crypto hmac): Removed
-** (weinholt crypto md5): Removed
-** (weinholt crypto sha-1): Removed
-** (weinholt crypto sha-2): Removed
-** (weinholt crypto x509): Removed
-** (weinholt binfmt *): Removed
-** (weinholt disassembler *): Removed
-** (weinholt net tls): Removed
-** (weinholt net tls *): Removed
-** (weinholt struct pack): Removed
-
-These libraries have been moved to here:
-
-https://github.com/weinholt/compression
-https://github.com/weinholt/hashing
-https://github.com/weinholt/machine-code
-https://github.com/weinholt/struct-pack
-https://github.com/weinholt/TerribleTLS
+More about Akku: https://github.com/weinholt/akku
 
 * Changes in version 1.5
 

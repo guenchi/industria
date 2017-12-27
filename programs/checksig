@@ -1,7 +1,7 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
 ;; Demo program to verify OpenPGP signatures
-;; Copyright © 2010, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2012, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -31,8 +31,7 @@
         (industria crypto dsa)
         (industria crypto rsa)
         (industria crypto openpgp)
-        (industria text random-art)
-        (xitomatl AS-match))
+        (industria text random-art))
 
 (define (print . x) (for-each display x) (newline))
 
@@ -126,31 +125,33 @@
                  (newline)))))
           (lp))))))
 
-(match (command-line)
-  ((name sigfile)
-   (checksig sigfile
-             (cond ((string-index-right sigfile #\.)
-                    => (lambda (i) (substring sigfile 0 i)))
-                   (else
-                    (display (string-append
-                              "Can't guess the data filename.\n"
-                              "Usage: " name
-                              " signature-file [data-file] [keyring-file]\n")
-                             (current-error-port))
-                    (exit 1)))
-             (default-keyring)))
-  ((_ sigfile datafile)
-   (checksig sigfile datafile (default-keyring)))
-  ((_ sigfile datafile keyring)
-   (checksig sigfile datafile keyring))
-  ((name)
-   (display (string-append
-            "Usage: " name " signature-file [data-file] [keyring-file]\n\
+(apply
+ (case-lambda
+   ((name sigfile)
+    (checksig sigfile
+              (cond ((string-index-right sigfile #\.)
+                     => (lambda (i) (substring sigfile 0 i)))
+                    (else
+                     (display (string-append
+                               "Can't guess the data filename.\n"
+                               "Usage: " name
+                               " signature-file [data-file] [keyring-file]\n")
+                              (current-error-port))
+                     (exit 1)))
+              (default-keyring)))
+   ((_ sigfile datafile)
+    (checksig sigfile datafile (default-keyring)))
+   ((_ sigfile datafile keyring)
+    (checksig sigfile datafile keyring))
+   ((name)
+    (display (string-append
+              "Usage: " name " signature-file [data-file] [keyring-file]\n\
 \n\
 Checks the detached OpenPGP signatures in SIGNATURE-FILE against
 the data in DATA-FILE. If DATA-FILE is not specified the default
 is to drop the last part of the SIGNATURE-FILE filename.
 If KEYRING-FILE file is not specified the default is
 " (default-keyring) ".\n")
-           (current-error-port))
-  (exit 1)))
+             (current-error-port))
+    (exit 1)))
+  (command-line))

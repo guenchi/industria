@@ -64,14 +64,12 @@
     (industria crypto password)
     (industria crypto rsa)
     (industria crypto ssh-public-key)
-    (industria net irc fish)
-    (industria net irc)
+    (industria net dns)
     (industria net otr)
     (industria net ssh)
     (industria net tcp)
     (industria struct der)
     (industria text base64)
-    (industria text internet)
     (industria text random-art)))
 
 (define *properly-docmented*

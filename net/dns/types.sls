@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010, 2011, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2012, 2017 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -117,12 +117,12 @@
           (srfi :19 time)
           (srfi :26 cut)
           (srfi :39 parameters)
+          (ip-address)
+          (struct pack)
           (industria bytevectors)
           (industria net dns numbers)
           (industria net dns private)
-          (struct pack)
-          (industria text base64)
-          (industria text internet))
+          (industria text base64))
 
   (define (dns-resource-print p split-length r)
     (if (dns-resource/raw? r)
