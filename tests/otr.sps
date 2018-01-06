@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2010, 2013, 2014 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2013, 2014, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -23,11 +23,11 @@
 
 ;; Tests for Off-The-Record messaging
 
-(import (rnrs)
+(import (rnrs (6))
         (srfi :78 lightweight-testing)
         (industria crypto dsa)
         (industria crypto entropy)
-        (industria net otr)
+        (industria otr)
         (industria text base64))
 
 (define (parse-key s)

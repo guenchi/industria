@@ -1,6 +1,5 @@
-#!/usr/bin/env scheme-script
-;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2010 Göran Weinholt <goran@weinholt.se>
+;; -*- mode: scheme; coding: utf-8 -*-
+;; Copyright © 2011 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -21,25 +20,18 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (srfi :78 lightweight-testing)
-        (rnrs)
-        (prefix (industria der) der:))
+(library (industria tcp)
+  (export tcp-connect)
+  (import (rnrs)
+          (primitives r5rs:require get-service-by-name make-client-socket
+                      socket-input-port socket-output-port))
 
-(define (SubjectAltName)
-  `(sequence-of 1 +inf.0 ,(GeneralName)))
+  (define (tcp-connect host service)
+    (let ((port (or (string->number service 10)
+                    (let-values (((port . _) (get-service-by-name service)))
+                      port))))
+      (let ((s (make-client-socket host port)))
+        (values (socket-input-port s)
+                (socket-output-port s)))))
 
-(define (GeneralName)
-  `(choice #;(otherName (implicit context 0 ,(OtherName)))
-           (rfc822Name (implicit context 1 ia5-string))
-           (dNSName (implicit context 2 ia5-string))
-           #;etc...))
-
-(check
- (der:translate (der:decode #vu8(48 30 130 15 119 119 119 46 119 101 105 110 104 111 108 116
-                                    46 115 101 130 11 119 101 105 110 104 111 108 116 46 115 101))
-                (SubjectAltName))
- => '("www.weinholt.se" "weinholt.se"))
-
-;; TODO: needs more tests, to say the least.
-
-(check-report)
+  (r5rs:require 'socket))

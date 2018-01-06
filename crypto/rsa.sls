@@ -69,7 +69,7 @@
           (industria bytevectors)
           (industria crypto entropy)
           (industria crypto math)
-          (prefix (industria struct der) der:)
+          (prefix (industria der) der:)
           (industria text base64))
 
   (define (RSAPublicKey)

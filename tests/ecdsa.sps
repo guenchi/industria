@@ -24,7 +24,7 @@
 (import (rnrs)
         (srfi :78 lightweight-testing)
         (industria crypto ec)
-        (industria crypto ec dsa)
+        (industria crypto ecdsa)
         (hashing sha-1))
 
 ;; Test from SECG's GEC 2

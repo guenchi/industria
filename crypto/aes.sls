@@ -1,6 +1,6 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 ;; Advanced Encryption Standard (AES), FIPS-197.
-;; Copyright © 2009, 2010, 2012, 2017 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2009, 2010, 2012, 2017, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -86,7 +86,7 @@
           clear-aes-schedule!
           aes-ctr!
           aes-cbc-encrypt! aes-cbc-decrypt!)
-  (import (for (industria crypto aes private) expand)
+  (import (for (industria crypto private aes) expand)
           (for (only (srfi :1 lists) iota) expand)
           (only (srfi :1 lists) split-at concatenate)
           (rename (rnrs)

@@ -13,13 +13,12 @@ locations of these libraries.
 
 The latest [released manual is available online](https://weinholt.se/industria/manual/).
 
-The sources for the manual are available in Texinfo format in the
-documentation directory. Use these commands from that directory to
-build the manual:
+The sources for the manual are available in Texinfo format in the docs
+directory. Use these commands from that directory to build the manual:
 
 ```bash
-makeinfo industria.texinfo                    # info format
-makeinfo --plaintext industria.texinfo        # text format
-makeinfo --no-split --html industria.texinfo  # html format
-texi2pdf industria.texinfo                    # pdf format
+makeinfo industria.texi                    # info format
+makeinfo --plaintext industria.texi        # text format
+makeinfo --no-split --html industria.texi  # html format
+texi2pdf industria.texi                    # pdf format
 ```

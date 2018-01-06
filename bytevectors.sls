@@ -1,6 +1,6 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
 ;; Bytevector utilities
-;; Copyright © 2009, 2010, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2009, 2010, 2012, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -129,6 +129,4 @@
                                    (fxxor
                                     (bytevector-u8-ref bv1 i)
                                     (bytevector-u8-ref bv2 i)))))
-                   ((= i len) (fxzero? diff)))))))
-
-  )
+                   ((= i len) (fxzero? diff))))))))

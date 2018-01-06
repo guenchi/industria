@@ -44,7 +44,7 @@
           dsa-signature-from-bytevector
           dsa-verify-signature
           dsa-create-signature)
-  (import (prefix (industria struct der) der:)
+  (import (prefix (industria der) der:)
           (industria bytevectors)
           (industria crypto entropy)
           (industria crypto math)

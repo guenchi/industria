@@ -28,8 +28,8 @@ These libraries have been moved to here:
 
  - https://github.com/weinholt/compression
  - https://github.com/weinholt/hashing
- - https://github.com/weinholt/irc-protocol
  - https://github.com/weinholt/ip-address
+ - https://github.com/weinholt/irc-protocol
  - https://github.com/weinholt/machine-code
  - https://github.com/weinholt/struct-pack
  - https://github.com/weinholt/TerribleTLS
@@ -39,7 +39,22 @@ These libraries have been moved to here:
 
 The libraries were previously under the namespace (weinholt *), which
 was originally based on a recommendation in R6RS non-normative
-appendix G. They are now under (industria *).
+appendix G. They are now under (industria *) and are organized in
+these categories:
+
+ - (industria crypto) -- Cryptographical primitives
+ - (industria dns) -- DNS
+ - (industria otr) -- Off-The-Record messaging
+ - (industria openpgp) -- OpenPGP
+ - (industria ssh) -- Secure Shell
+
+Various other utility libraries have been moved to the root of the
+industria hierarchy.
+
+** Library deprecation
+
+The (industria tcp) library is deprecated and should not be used. Use
+SRFI 106 instead.
 
 ** Akku manifest
 

@@ -24,9 +24,9 @@
 (import (rnrs)
         (srfi :78 lightweight-testing)
         (ip-address)
-        (industria net dns)
-        (industria net dns numbers)
-        (industria net dns types)
+        (industria dns)
+        (industria dns numbers)
+        (industria dns types)
         (industria text base64))
 
 ;; Some bogus test data (.test is RFC 2606)

@@ -1,0 +1,45 @@
+@node Installation
+@section Installation
+
+The simple version: install Akku from
+@url{https://github.com/weinholt/akku}. Run @code{akku install} in the
+@code{industria} directory. This fetches the dependencies recorded in
+@code{Akku.lock} and installs everything to @code{.akku}. Run
+@code{source .akku/bin/activate} to start using Industria in your R6RS
+Scheme of choice.
+
+The longer version: extend your Scheme library search path to include
+the @code{industria} directory, e.g.@: if you're using Chez Scheme on a Unix
+system and you unpacked Industria in @code{~/scheme}:
+@verbatim
+export CHEZSCHEMELIBDIRS=$HOME/scheme
+@end verbatim
+
+Other possible environment variables include @code{IKARUS_LIBRARY_PATH},
+@code{LARCENY_LIBPATH}, @code{MOSH_LOADPATH} and @code{YPSILON_SITELIB}.
+For more details please refer to your Scheme implementation's
+documentation.
+An alternative is to move or symlink the @code{industria} directory into a
+directory that already exists in your Scheme's search path.
+
+Releases and the latest source code for Industria is available at
+GitHub @url{https://github.com/weinholt/industria/}:
+@cindex development snapshots
+
+@node Usage
+@section Usage
+To load an @rnrs{} library into your program or library, put it in the
+@code{import} specification. Here's Hello World for @rnrs{} Scheme:
+
+@lisp
+#!/usr/bin/env scheme-script
+(import (rnrs))
+(display "Hello World!\n")
+@end lisp
+@cindex Hello World, example
+
+The first line is useful on Unix systems, but it is specified in the
+@rnrs{} Non-Normative Appendices, so your Scheme might not accept
+programs with that line present.
+
+See the @code{programs/} and @code{tests/} directories for examples.

@@ -1,7 +1,7 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
 ;; release-tool - Release tool for Industria
-;; Copyright © 2010, 2011, 2012, 2016, 2017 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2012, 2016, 2017, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -32,22 +32,22 @@
               string-join)
         (srfi :26 cut)
         (srfi :48 intermediate-format-strings)
-        (industria text strings)
+        (industria strings)
         (only (xitomatl file-system base compat)
               directory-list file-regular? file-directory?
               file-symbolic-link? file-size)
         (only (xitomatl common) pretty-print)
         (xitomatl AS-match))
 
-(unless (file-exists? "documentation/industria.texinfo")
-  (error 'release-tool "Could not find documentation/industria.texinfo"))
+(unless (file-exists? "docs/industria.texi")
+  (error 'release-tool "Could not find docs/industria.texi"))
 
 (define *private-libraries*
-  '((industria crypto aes private)
-    (industria net ssh algorithms)
-    (industria net ssh kex-dh-gex)
-    (industria net ssh kexdh)
-    (industria net ssh private)))
+  '((industria crypto private aes)
+    (industria ssh algorithms)
+    (industria ssh kex-dh-gex)
+    (industria ssh kexdh)
+    (industria ssh private)))
 
 (define *released-libraries*
   '((industria bytevectors)
@@ -57,20 +57,21 @@
     (industria crypto des)
     (industria crypto dsa)
     (industria crypto ec)
-    (industria crypto ec dsa)
+    (industria crypto ecdsa)
     (industria crypto entropy)
     (industria crypto math)
-    (industria crypto openpgp)
-    (industria crypto password)
     (industria crypto rsa)
-    (industria crypto ssh-public-key)
-    (industria net dns)
-    (industria net otr)
-    (industria net ssh)
-    (industria net tcp)
-    (industria struct der)
+    (industria ssh public-keys)
+    (industria dns)
+    (industria openpgp)
+    (industria otr)
+    (industria password)
+    (industria ssh)
+    (industria strings)
+    (industria der)
+    (industria tcp)                     ;XXX: should use srfi-106 instead
     (industria text base64)
-    (industria text random-art)))
+    (industria ssh random-art)))
 
 (define *properly-docmented*
   ;; These libraries export identifiers that show up in the check for
@@ -236,9 +237,9 @@
      files)))
 
 (define libraries (filter library? (find-files "./" (directory-list "."))))
-(define docs (find-docs "documentation/industria.texinfo"))
+(define docs (find-docs "docs/industria.texi"))
 (define tests (find-files "tests/" (directory-list "tests")))
-(define programs (find-files "programs/" (directory-list "programs")))
+(define programs (find-files "bin/" (directory-list "bin")))
 
 ;;; Find the set of released libraries
 
@@ -286,6 +287,7 @@
       (('rnrs . _) #t)
       (('struct . _) #t)
       (('hashing . _) #t)
+      (('ip-address . _) #t)
       (('industria . _)
        (let ((v (find (lambda (lib)
                         (equal? (import-name import)
@@ -495,7 +497,7 @@
 
 ;;; Package manifests
 
-(define synopsis "Cryptography, compression, OTR, TLS, etc.")
+(define synopsis "Cryptography, OTR, SSH, OpenPGP, etc.")
 (define description
   "Industria is a collection of portable R6RS Scheme libraries for
 cryptography. It implements low-level algorithms like AES, RSA, DSA,

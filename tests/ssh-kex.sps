@@ -25,10 +25,10 @@
         (srfi :78 lightweight-testing)
         (industria crypto dsa)
         (industria crypto entropy)
-        (industria net ssh algorithms)
-        (industria net ssh kexdh)      ;to recognize kexdh-init
-        (industria net ssh kex-dh-gex) ;to recognize kex-dh-gex-request
-        (industria net ssh transport)
+        (industria ssh algorithms)
+        (industria ssh kexdh)      ;to recognize kexdh-init
+        (industria ssh kex-dh-gex) ;to recognize kex-dh-gex-request
+        (industria ssh transport)
         (industria text base64))
 
 (define (print . x) (for-each display x) (newline))

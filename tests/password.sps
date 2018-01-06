@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2009, 2010 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2009, 2010, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,9 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (industria crypto password)
+(import (rnrs (6))
         (srfi :78 lightweight-testing)
-        (rnrs))
+        (industria password))
 
 ;;; DES
 
