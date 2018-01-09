@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2009, 2010, 2011, 2013 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2009, 2010, 2011, 2013, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -21,8 +21,8 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (srfi :78 lightweight-testing)
-        (rnrs)
+(import (rnrs (6))
+        (srfi :64 testing)
         (industria base64))
 
 (define (string->base64 x)
@@ -30,63 +30,77 @@
 
 ;; From RFC 4658
 
-(check (string->base64 "") => "")
+(test-begin "base64 rfc4658")
 
-(check (string->base64 "f") => "Zg==")
+(test-equal "" (string->base64 ""))
 
-(check (string->base64 "fo") => "Zm8=")
+(test-equal "Zg==" (string->base64 "f"))
 
-(check (string->base64 "foo") => "Zm9v")
+(test-equal "Zm8=" (string->base64 "fo"))
 
-(check (string->base64 "foob") => "Zm9vYg==")
+(test-equal "Zm9v" (string->base64 "foo"))
 
-(check (string->base64 "fooba") => "Zm9vYmE=")
+(test-equal "Zm9vYg==" (string->base64 "foob"))
 
-(check (string->base64 "foobar") => "Zm9vYmFy")
+(test-equal "Zm9vYmE=" (string->base64 "fooba"))
+
+(test-equal "Zm9vYmFy" (string->base64 "foobar"))
+
+(test-end)
 
 ;; Non-strict mode
 
-(check (base64-decode "ABC= " base64-alphabet #f #f) => #vu8(0 16))
+(test-begin "base64 non-strict")
 
-(check (base64-decode "ABC =" base64-alphabet #f #f) => #vu8(0 16))
+(test-equal #vu8(0 16) (base64-decode "ABC= " base64-alphabet #f #f))
 
-(check (base64-decode "AB==C=" base64-alphabet #f #f) => #vu8(0 16))
+(test-equal #vu8(0 16) (base64-decode "ABC =" base64-alphabet #f #f))
 
-(check (base64-decode "AB==C =" base64-alphabet #f #f) => #vu8(0 16))
+(test-equal #vu8(0 16) (base64-decode "AB==C=" base64-alphabet #f #f))
 
-(check (base64-decode "A B = = C = " base64-alphabet #f #f) => #vu8(0 16))
+(test-equal #vu8(0 16) (base64-decode "AB==C =" base64-alphabet #f #f))
+
+(test-equal #vu8(0 16) (base64-decode "A B = = C = " base64-alphabet #f #f))
+
+(test-end)
 
 ;; ad-hoc
+
+(test-begin "base64")
 
 (define (base64-linewrapped str)
   (let ((bv (string->utf8 str)))
     (base64-encode bv 0 (bytevector-length bv) 76 #f)))
 
-(check (base64-linewrapped
-        "My name is Ozymandias, king of kings:\n\
-         Look on my works, ye Mighty, and despair!")
-       =>
-       "TXkgbmFtZSBpcyBPenltYW5kaWFzLCBraW5nIG9mIGtpbmdzOgpMb29rIG9uIG15IHdvcmtzLCB5\n\
-        ZSBNaWdodHksIGFuZCBkZXNwYWlyIQ==")
+(test-equal "TXkgbmFtZSBpcyBPenltYW5kaWFzLCBraW5nIG9mIGtpbmdzOgpMb29rIG9uIG15IHdvcmtzLCB5\n\
+             ZSBNaWdodHksIGFuZCBkZXNwYWlyIQ=="
+            (base64-linewrapped
+             "My name is Ozymandias, king of kings:\n\
+              Look on my works, ye Mighty, and despair!"))
+
+(test-end)
 
 ;; ascii armor
 
-(check (call-with-values
-         (lambda ()
-           (get-delimited-base64
-            (open-string-input-port
-             "-----BEGIN EXAMPLE-----\n\
+(test-begin "ascii armor")
+
+(test-equal '("EXAMPLE" #vu8(0 1 2 3 4 5 6))
+            (call-with-values
+              (lambda ()
+                (get-delimited-base64
+                 (open-string-input-port
+                  "-----BEGIN EXAMPLE-----\n\
 AAECAwQFBg==\n\
 -----END EXAMPLE-----\n")))
-         list)
-         => '("EXAMPLE" #vu8(0 1 2 3 4 5 6)))
+         list))
 
 ;; ignoring header and crc-24 checksum
-(check (call-with-values
-         (lambda ()
-           (get-delimited-base64
-            (open-string-input-port
-             "Example follows\n\
+(test-equal '("EXAMPLE" #vu8(0 1 2 3 4 5 6))
+            (call-with-values
+              (lambda ()
+                (get-delimited-base64
+                 (open-string-input-port
+                  "Example follows\n\
 \n\
 -----BEGIN EXAMPLE-----\n\
 Header: data\n\
@@ -97,8 +111,7 @@ foo
 AAECAwQFBg==\n\
 =2wOb\n\
 -----END EXAMPLE-----\n")))
-         list)
-         => '("EXAMPLE" #vu8(0 1 2 3 4 5 6)))
+         list))
 
 (let-values (((p extract) (open-string-output-port))
              ((str) "Crusoe's Law: With every new C++ standard, its syntax\n\
@@ -108,8 +121,10 @@ AAECAwQFBg==\n\
                                                    (string-append
                                                     "This is garbage\n"
                                                     (extract))))))
-    (check type => "TEST")
-    (check (utf8->string str*) => str)
+    (test-equal "TEST" type)
+    (test-equal str (utf8->string str*))
     #f))
 
-(check-report)
+(test-end)
+
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

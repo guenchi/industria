@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2009, 2010 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2009, 2010, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -21,14 +21,15 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (industria crypto dsa)
+(import (rnrs (6))
+        (srfi :64 testing)
+        (industria crypto dsa)
         (hashing sha-1)
-        (hashing sha-2)
-        (srfi :78 lightweight-testing)
-        (rnrs))
+        (hashing sha-2))
 
 ;;; http://csrc.nist.gov/groups/ST/toolkit/examples.html
 
+(test-begin "DSA 1024")
 ;; L = 1024
 ;; N = 160
 ;; seedlen = 0
@@ -47,17 +48,17 @@
    ;; x
    #xD0EC4E50BB290A42E9E355C73D8809345DE2E139))
 
-(check
+(test-assert
  (dsa-verify-signature
   (sha-1->bytevector (sha-1 #vu8(#x61 #x62 #x63)))
   (dsa-private->public key1)
   ;; r
   #x636155AC9A4633B4665D179F9E4117DF68601F34
   ;; s
-  #x6C540B02D9D4852F89DF8CFC99963204F4347704)
- => #t)
+  #x6C540B02D9D4852F89DF8CFC99963204F4347704))
+(test-end)
 
-
+(test-begin "DSA 2048")
 ;; L = 2048
 ;; N = 224
 ;; seedlen = 0
@@ -76,16 +77,17 @@
    ;; x
    #x00D0F09ED3E2568F6CADF9224117DA2AEC5A4300E009DE1366023E17))
 
-(check
+(test-assert
  (dsa-verify-signature
   (sha-224->bytevector (sha-224 #vu8(#x61 #x62 #x63)))
   (dsa-private->public key2)
   ;; r
   #x4400138D05F9639CAF54A583CAAF25D2B76D0C3EAD752CE17DBC85FE
   ;; s
-  #x874D4F12CB13B61732D398445698CFA9D92381D938AA57EE2C9327B3)
- => #t)
+  #x874D4F12CB13B61732D398445698CFA9D92381D938AA57EE2C9327B3))
+(test-end)
 
+(test-begin "DSA 2048/256")
 ;; L = 2048
 ;; N = 256
 ;; seedlen = 0
@@ -104,17 +106,17 @@
    ;; x
    #x0CAF2EF547EC49C4F3A6FE6DF4223A174D01F2C115D49A6F73437C29A2A8458C))
 
-(check
+(test-assert
  (dsa-verify-signature
   (sha-256->bytevector (sha-256 #vu8(#x61 #x62 #x63)))
   (dsa-private->public key3)
   ;; r
   #x315C875DCD4850E948B8AC42824E9483A32D5BA5ABE0681B9B9448D444F2BE3C
   ;; s
-  #x89718D12E54A8D9ED066E4A55F7ED5A2229CD23B9A3CEE78F83ED6AA61F6BCB9)
- => #t)
+  #x89718D12E54A8D9ED066E4A55F7ED5A2229CD23B9A3CEE78F83ED6AA61F6BCB9))
+(test-end)
 
-
+(test-begin "DSA 3072")
 ;; L = 3072
 ;; N = 256
 ;; seedlen = 0
@@ -133,23 +135,22 @@
    ;; x
    #x3ABC1587297CE7B9EA1AD6651CF2BC4D7F92ED25CABC8553F567D1B40EBB8764))
 
-(check
+(test-assert
  (dsa-verify-signature
   (sha-256->bytevector (sha-256 #vu8(#x61 #x62 #x63)))
   (dsa-private->public key4)
   ;; r
   #x5F184E645A38BE8FB4A6871B6503A9D12924C7ABE04B71410066C2ECA6E3BE3E
   ;; s
-  #x91EB0C7BA3D4B9B60B825C3D9F2CADA8A2C9D7723267B033CBCDCF8803DB9C18)
- => #t)
-
+  #x91EB0C7BA3D4B9B60B825C3D9F2CADA8A2C9D7723267B033CBCDCF8803DB9C18))
+(test-end)
 
 ;;; Signature generation
 
-(check
- (let*-values (((Hm) (sha-256->bytevector (sha-256 #vu8(#x61 #x62 #x63))))
-               ((r s) (dsa-create-signature Hm key4)))
-   (dsa-verify-signature Hm (dsa-private->public key4) r s))
- => #t)
+(test-begin "DSA signature")
+(test-assert (let*-values (((Hm) (sha-256->bytevector (sha-256 #vu8(#x61 #x62 #x63))))
+                           ((r s) (dsa-create-signature Hm key4)))
+               (dsa-verify-signature Hm (dsa-private->public key4) r s)))
+(test-end)
 
-(check-report)
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

@@ -22,104 +22,110 @@
 #!r6rs
 
 (import (rnrs (6))
-        (srfi :78 lightweight-testing)
+        (srfi :64 testing)
         (industria password))
 
 ;;; DES
 
-(check (crypt "foodbard" "..") => "..o6avrdNBOA6")
+(test-begin "Password DES")
 
-(check (crypt "test" "..") => "..9sjyf8zL76k")
+(test-equal "..o6avrdNBOA6" (crypt "foodbard" ".."))
 
-(check (crypt "X" "..") => "..XhpOnw6KMZg")
+(test-equal "..9sjyf8zL76k" (crypt "test" ".."))
 
-(check (crypt "foobar" "Ax") => "AxTdjVtckZ0Rs")
+(test-equal "..XhpOnw6KMZg" (crypt "X" ".."))
 
-(check (crypt "ZZZZ" "zz") => "zz/CBDeUpwD26")
+(test-equal "AxTdjVtckZ0Rs" (crypt "foobar" "Ax"))
 
-(check (crypt "" "..") => "..X8NBuQ4l6uQ")
+(test-equal "zz/CBDeUpwD26" (crypt "ZZZZ" "zz"))
 
-(check (crypt "" "ZZ") => "ZZvIHp4MBMwSE")
+(test-equal "..X8NBuQ4l6uQ" (crypt "" ".."))
+
+(test-equal "ZZvIHp4MBMwSE" (crypt "" "ZZ"))
+
+(test-end)
 
 ;;; MD5
 
-(check (crypt "hello" "$1$oKnN0HHt$") => "$1$oKnN0HHt$Aul2g/J4edgga3WE/03cN/")
+(test-begin "Password MD5")
 
-(check (crypt "this is a password longer than 16 characters" "$1$oKnN0HHt$")
-       => "$1$oKnN0HHt$KtM1JhHfFNyQOq5OgbGo.1")
+(test-equal "$1$oKnN0HHt$Aul2g/J4edgga3WE/03cN/"
+            (crypt "hello" "$1$oKnN0HHt$"))
+
+(test-equal "$1$oKnN0HHt$KtM1JhHfFNyQOq5OgbGo.1"
+            (crypt "this is a password longer than 16 characters" "$1$oKnN0HHt$"))
+
+(test-end)
 
 ;;; SHA from http://people.redhat.com/drepper/SHA-crypt.txt
 
 ;; SHA-256
 
-;; (check (crypt "Hello world!" "$5$saltstring") =>
-;;        "$5$saltstring$5B8vYYiY.CVt1RlTTf8KbXBH3hsxY/GNooZaBBGWEc5")
+(test-begin "Password SHA-256")
+(test-skip 7)
 
-;; (check (crypt "Hello world!"
-;;               "$5$rounds=10000$saltstringsaltstring")
-;;        =>
-;;        "$5$rounds=10000$saltstringsaltst$3xv.VbSHBb41AL9AvLeujZkZRBAwqFMz2.opqey6IcA")
+(test-equal "$5$saltstring$5B8vYYiY.CVt1RlTTf8KbXBH3hsxY/GNooZaBBGWEc5"
+            (crypt "Hello world!"
+                   "$5$saltstring"))
 
-;; (check (crypt "This is just a test"
-;;               "$5$rounds=5000$toolongsaltstring")
-;;        =>
-;;        "$5$rounds=5000$toolongsaltstrin$Un/5jzAHMgOGZ5.mWJpuVolil07guHPvOW8mGRcvxa5")
+(test-equal "$5$rounds=10000$saltstringsaltst$3xv.VbSHBb41AL9AvLeujZkZRBAwqFMz2.opqey6IcA"
+            (crypt "Hello world!"
+                   "$5$rounds=10000$saltstringsaltstring"))
 
-;; (check (crypt "a very much longer text to encrypt.  This one even stretches over morethan one line."
-;;               "$5$rounds=1400$anotherlongsaltstring")
-;;        =>
-;;        "$5$rounds=1400$anotherlongsalts$Rx.j8H.h8HjEDGomFU8bDkXm3XIUnzyxf12oP84Bnq1")
+(test-equal "$5$rounds=5000$toolongsaltstrin$Un/5jzAHMgOGZ5.mWJpuVolil07guHPvOW8mGRcvxa5"
+            (crypt "This is just a test"
+                   "$5$rounds=5000$toolongsaltstring"))
 
-;; (check (crypt "we have a short salt string but not a short password"
-;;               "$5$rounds=77777$short")
-;;        =>
-;;        "$5$rounds=77777$short$JiO1O3ZpDAxGJeaDIuqCoEFysAe1mZNJRs3pw0KQRd/")
+(test-equal "$5$rounds=1400$anotherlongsalts$Rx.j8H.h8HjEDGomFU8bDkXm3XIUnzyxf12oP84Bnq1"
+            (crypt "a very much longer text to encrypt.  This one even stretches over morethan one line."
+                   "$5$rounds=1400$anotherlongsaltstring"))
 
-;; (check (crypt "a short string"
-;;               "$5$rounds=123456$asaltof16chars..")
-;;        =>
-;;        "$5$rounds=123456$asaltof16chars..$gP3VQ/6X7UUEW3HkBn2w1/Ptq2jxPyzV/cZKmF/wJvD")
+(test-equal "$5$rounds=77777$short$JiO1O3ZpDAxGJeaDIuqCoEFysAe1mZNJRs3pw0KQRd/"
+            (crypt "we have a short salt string but not a short password"
+                   "$5$rounds=77777$short"))
 
-;; (check (crypt "the minimum number is still observed"
-;;               "$5$rounds=10$roundstoolow")
-;;        =>
-;;        "$5$rounds=1000$roundstoolow$yfvwcWrQ8l/K0DAWyuPMDNHpIVlTQebY9l/gL972bIC")
+(test-equal "$5$rounds=123456$asaltof16chars..$gP3VQ/6X7UUEW3HkBn2w1/Ptq2jxPyzV/cZKmF/wJvD"
+            (crypt "a short string"
+                   "$5$rounds=123456$asaltof16chars.."))
 
-;; ;; SHA-512
+(test-equal "$5$rounds=1000$roundstoolow$yfvwcWrQ8l/K0DAWyuPMDNHpIVlTQebY9l/gL972bIC"
+            (crypt "the minimum number is still observed"
+                   "$5$rounds=10$roundstoolow"))
 
-;; (check (crypt "Hello world!" "$6$saltstring")
-;;        =>
-;;        "$6$saltstring$svn8UoSVapNtMuq1ukKS4tPQd8iKwSMHWjl/O817G3uBnIFNjnQJuesI68u4OTLiBFdcbYEdFCoEOfaS35inz1")
+(test-end)
 
-;; (check (crypt "Hello world!"
-;;               "$6$rounds=10000$saltstringsaltstring")
-;;        =>
-;;        "$6$rounds=10000$saltstringsaltst$OW1/O6BYHV6BcXZu8QVeXbDWra3Oeqh0sbHbbMCVNSnCM/UrjmM0Dp8vOuZeHBy/YTBmSK6H9qs/y3RnOaw5v.")
+;; SHA-512
 
-;; (check (crypt "This is just a test"
-;;               "$6$rounds=5000$toolongsaltstring")
-;;        =>
-;;        "$6$rounds=5000$toolongsaltstrin$lQ8jolhgVRVhY4b5pZKaysCLi0QBxGoNeKQzQ3glMhwllF7oGDZxUhx1yxdYcz/e1JSbq3y6JMxxl8audkUEm0")
+(test-begin "Password SHA-512")
+(test-skip 7)
+(test-equal "$6$saltstring$svn8UoSVapNtMuq1ukKS4tPQd8iKwSMHWjl/O817G3uBnIFNjnQJuesI68u4OTLiBFdcbYEdFCoEOfaS35inz1"
+            (crypt "Hello world!"
+                   "$6$saltstring"))
 
-;; (check (crypt "a very much longer text to encrypt.  This one even stretches over morethan one line."
-;;               "$6$rounds=1400$anotherlongsaltstring")
-;;        =>
-;;        "$6$rounds=1400$anotherlongsalts$POfYwTEok97VWcjxIiSOjiykti.o/pQs.wPvMxQ6Fm7I6IoYN3CmLs66x9t0oSwbtEW7o7UmJEiDwGqd8p4ur1")
+(test-equal "$6$rounds=10000$saltstringsaltst$OW1/O6BYHV6BcXZu8QVeXbDWra3Oeqh0sbHbbMCVNSnCM/UrjmM0Dp8vOuZeHBy/YTBmSK6H9qs/y3RnOaw5v."
+            (crypt "Hello world!"
+                   "$6$rounds=10000$saltstringsaltstring"))
 
-;; (check (crypt "we have a short salt string but not a short password"
-;;               "$6$rounds=77777$short")
-;;        =>
-;;        "$6$rounds=77777$short$WuQyW2YR.hBNpjjRhpYD/ifIw05xdfeEyQoMxIXbkvr0gge1a1x3yRULJ5CCaUeOxFmtlcGZelFl5CxtgfiAc0")
+(test-equal "$6$rounds=5000$toolongsaltstrin$lQ8jolhgVRVhY4b5pZKaysCLi0QBxGoNeKQzQ3glMhwllF7oGDZxUhx1yxdYcz/e1JSbq3y6JMxxl8audkUEm0"
+            (crypt "This is just a test"
+                   "$6$rounds=5000$toolongsaltstring"))
 
-;; (check (crypt "a short string"
-;;               "$6$rounds=123456$asaltof16chars..")
-;;        =>
-;;        "$6$rounds=123456$asaltof16chars..$BtCwjqMJGx5hrJhZywWvt0RLE8uZ4oPwcelCjmw2kSYu.Ec6ycULevoBK25fs2xXgMNrCzIMVcgEJAstJeonj1")
+(test-equal "$6$rounds=1400$anotherlongsalts$POfYwTEok97VWcjxIiSOjiykti.o/pQs.wPvMxQ6Fm7I6IoYN3CmLs66x9t0oSwbtEW7o7UmJEiDwGqd8p4ur1"
+            (crypt "a very much longer text to encrypt.  This one even stretches over morethan one line."
+                   "$6$rounds=1400$anotherlongsaltstring"))
 
-;; (check (crypt "the minimum number is still observed"
-;;               "$6$rounds=10$roundstoolow")
-;;        =>
-;;        "$6$rounds=1000$roundstoolow$kUMsbe306n21p9R.FRkW3IGn.S9NPN0x50YhH1xhLsPuWGsUSklZt58jaTfF4ZEQpyUNGc0dqbpBYYBaHHrsX.")
+(test-equal "$6$rounds=77777$short$WuQyW2YR.hBNpjjRhpYD/ifIw05xdfeEyQoMxIXbkvr0gge1a1x3yRULJ5CCaUeOxFmtlcGZelFl5CxtgfiAc0"
+            (crypt "we have a short salt string but not a short password"
+                   "$6$rounds=77777$short"))
 
+(test-equal "$6$rounds=123456$asaltof16chars..$BtCwjqMJGx5hrJhZywWvt0RLE8uZ4oPwcelCjmw2kSYu.Ec6ycULevoBK25fs2xXgMNrCzIMVcgEJAstJeonj1"
+            (crypt "a short string"
+                   "$6$rounds=123456$asaltof16chars.."))
 
-(check-report)
+(test-equal "$6$rounds=1000$roundstoolow$kUMsbe306n21p9R.FRkW3IGn.S9NPN0x50YhH1xhLsPuWGsUSklZt58jaTfF4ZEQpyUNGc0dqbpBYYBaHHrsX."
+            (crypt "the minimum number is still observed"
+                   "$6$rounds=10$roundstoolow"))
+
+(test-end)
+
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

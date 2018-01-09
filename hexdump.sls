@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2012, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 
 ;; Old timey hex dumps
 
-(library (industria text hexdump)
+(library (industria hexdump)
   (export hexdump)
   (import (rnrs)
           (only (srfi :13 strings) string-pad))

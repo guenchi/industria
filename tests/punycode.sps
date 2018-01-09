@@ -22,7 +22,7 @@
 #!r6rs
 
 (import (rnrs (6))
-        (srfi :78 lightweight-testing)
+        (srfi :64 testing)
         (industria dns punycode))
 
 ;; Sample strings from RFC3492
@@ -32,10 +32,12 @@
     (syntax-case x ()
       ((_ puny codes ...)
        #'(begin
-           (check (punycode->string (string->utf8 puny)) =>
-                  (list->string (map integer->char '(codes ...))))
-           (check (string->punycode (list->string (map integer->char '(codes ...)))) =>
-                  (string->utf8 puny)))))))
+           (test-equal (list->string (map integer->char '(codes ...)))
+                       (punycode->string (string->utf8 puny)))
+           (test-equal (string->utf8 puny)
+                       (string->punycode (list->string (map integer->char '(codes ...))))))))))
+
+(test-begin "punycode rfc3492 vectors")
 
 (test "egbpdaj6bu4bxfgehfvwxn"
       #x0644 #x064A #x0647 #x0645 #x0627 #x0628 #x062A #x0643 #x0644
@@ -121,5 +123,6 @@
       #x002D #x003E #x0020 #x0024 #x0031 #x002E #x0030 #x0030 #x0020
       #x003C #x002D)
 
+(test-end)
 
-(check-report)
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

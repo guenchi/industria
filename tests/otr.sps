@@ -24,7 +24,7 @@
 ;; Tests for Off-The-Record messaging
 
 (import (rnrs (6))
-        (srfi :78 lightweight-testing)
+        (srfi :64 testing)
         (industria crypto dsa)
         (industria crypto entropy)
         (industria otr)
@@ -80,10 +80,9 @@ daOZBopKox5oXEbXK0gw
             (let ((e (car Xq)))
               (case (car e)
                 ((outgoing)
-                 ;; Show the messages, for fun!
-                 (display ";; ")
-                 (write (list Xname '=> Yname (cdr e)))
-                 (newline)
+                 ;; (display ";; ")
+                 ;; (write (list Xname '=> Yname (cdr e)))
+                 ;; (newline)
                  (otr-update! Y (cdr e)))
                 ((they-revealed) 'ignore)
                 (else
@@ -94,68 +93,59 @@ daOZBopKox5oXEbXK0gw
   (define Alice (make-otr-state key1 (+ 40 (random-integer 200)))) ;test fragmentation
   (define Bob (make-otr-state key2 +inf.0))
 
-  (define dummy                         ;appease release-tool
-    (begin
-      (display "Testing ")
-      (display first-message)
-      (newline)))
-
   ;; Alice wants to chat with Bob
-  (check (begin (otr-update! Alice first-message)
-                (shuffle Alice Bob 'Alice 'Bob))
-         =>
-         '((Bob session-established . from-there)
-           (Alice session-established . from-here)))
+  (test-equal '((Bob session-established . from-there)
+                (Alice session-established . from-here))
+              (begin (otr-update! Alice first-message)
+                     (shuffle Alice Bob 'Alice 'Bob)))
 
   ;; Alice greets Bob
-  (check (begin (otr-send-encrypted! Alice "Hello, Bob!")
-                (shuffle Alice Bob 'Alice 'Bob))
-         =>
-         '((Bob encrypted . "Hello, Bob!")))
+  (test-equal '((Bob encrypted . "Hello, Bob!"))
+              (begin (otr-send-encrypted! Alice "Hello, Bob!")
+                     (shuffle Alice Bob 'Alice 'Bob)))
 
   ;; Bob greets back
-  (check (begin (otr-send-encrypted! Bob "Hello, I am Bob!")
-                (shuffle Bob Alice 'Bob 'Alice))
-         =>
-         '((Alice encrypted . "Hello, I am Bob!")))
+  (test-equal '((Alice encrypted . "Hello, I am Bob!"))
+              (begin (otr-send-encrypted! Bob "Hello, I am Bob!")
+                     (shuffle Bob Alice 'Bob 'Alice)))
 
   ;; Request to use the extra symmetric key.
-  (check (begin (otr-send-symmetric-key-request! Alice 42 #vu8(0 1))
-                (shuffle Alice Bob 'Alice 'Bob))
-         =>
-         '((Bob symmetric-key-request . (42 . #vu8(0 1)))))
-  (check (otr-state-symmetric-key Alice) => (otr-state-symmetric-key Bob))
+  (test-equal '((Bob symmetric-key-request . (42 . #vu8(0 1))))
+              (begin (otr-send-symmetric-key-request! Alice 42 #vu8(0 1))
+                     (shuffle Alice Bob 'Alice 'Bob)))
+  (test-equal (otr-state-symmetric-key Alice)
+              (otr-state-symmetric-key Bob))
 
   ;; Alice starts S-M-P
-  (check (begin (otr-authenticate! Alice (string->utf8 "Waterloo"))
-                (shuffle Alice Bob 'Alice 'Bob))
-         =>
-         '((Bob authentication . expecting-secret)))
+  (test-equal '((Bob authentication . expecting-secret))
+              (begin (otr-authenticate! Alice (string->utf8 "Waterloo"))
+                     (shuffle Alice Bob 'Alice 'Bob)))
 
   ;; Bob finishes S-M-P
-  (check (begin (otr-authenticate! Bob (string->utf8 "Waterloo"))
-                (shuffle Bob Alice 'Bob 'Alice))
-         =>
-         '((Bob authentication . #t)
-           (Alice authentication . #t)))
+  (test-equal '((Bob authentication . #t)
+                (Alice authentication . #t))
+              (begin (otr-authenticate! Bob (string->utf8 "Waterloo"))
+                     (shuffle Bob Alice 'Bob 'Alice)))
 
   ;; Bob starts S-M-P. Test with mismatching secrets.
-  (check (begin (otr-authenticate! Bob (string->utf8 "Waterloo"))
-                (shuffle Bob Alice 'Bob 'Alice))
-         =>
-         '((Alice authentication . expecting-secret)))
+  (test-equal '((Alice authentication . expecting-secret))
+              (begin (otr-authenticate! Bob (string->utf8 "Waterloo"))
+                     (shuffle Bob Alice 'Bob 'Alice)))
 
   ;; Alice finishes S-M-P with a different secret.
-  (check (begin (otr-authenticate! Alice (string->utf8 "Boston"))
-                (shuffle Alice Bob 'Alice 'Bob))
-         =>
-         '((Alice authentication . #f)
-           (Bob authentication . #f)))
-
+  (test-equal '((Alice authentication . #f)
+                (Bob authentication . #f))
+              (begin (otr-authenticate! Alice (string->utf8 "Boston"))
+                     (shuffle Alice Bob 'Alice 'Bob)))
   #t)
 
+(test-begin "OTRv2")
 (run-test (otr-tag #f '(2)))
+(test-end)
+
+(test-begin "OTRv3")
 (run-test (otr-tag #f '(3)))
+(test-end)
 
 #|
 ;; OTR queries
@@ -170,4 +160,4 @@ daOZBopKox5oXEbXK0gw
 (check (otr-parse-query "?OTRv?") => '())
 |#
 
-(check-report)
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

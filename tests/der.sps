@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2010 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,13 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (srfi :78 lightweight-testing)
-        (rnrs)
+(import (rnrs)
+        (srfi :64 testing)
         (prefix (industria der) der:))
+
+;; TODO: needs more tests, to say the least.
+
+(test-begin "der SubjectAltName")
 
 (define (SubjectAltName)
   `(sequence-of 1 +inf.0 ,(GeneralName)))
@@ -34,12 +38,12 @@
            (dNSName (implicit context 2 ia5-string))
            #;etc...))
 
-(check
- (der:translate (der:decode #vu8(48 30 130 15 119 119 119 46 119 101 105 110 104 111 108 116
-                                    46 115 101 130 11 119 101 105 110 104 111 108 116 46 115 101))
-                (SubjectAltName))
- => '("www.weinholt.se" "weinholt.se"))
+(test-equal '("www.weinholt.se" "weinholt.se")
+            (der:translate
+             (der:decode #vu8(48 30 130 15 119 119 119 46 119 101 105 110 104 111 108 116
+                              46 115 101 130 11 119 101 105 110 104 111 108 116 46 115 101))
+             (SubjectAltName)))
 
-;; TODO: needs more tests, to say the least.
+(test-end)
 
-(check-report)
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

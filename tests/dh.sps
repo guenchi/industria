@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2010, 2011 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,11 @@
 ;; DEALINGS IN THE SOFTWARE.
 #!r6rs
 
-(import (industria crypto dh)
-        (srfi :78 lightweight-testing)
-        (rnrs))
+(import (rnrs)
+        (industria crypto dh)
+        (srfi :64 testing))
+
+(test-begin "dh")
 
 (define-syntax check-dh
   (lambda (x)
@@ -31,8 +33,8 @@
       ((_ g p)
        #'(let-values (((y Y) (make-dh-secret g p (bitwise-length p)))
                       ((x X) (make-dh-secret g p (bitwise-length p))))
-           (check (expt-mod X y p) => (expt-mod Y x p))
-           #f)))))
+           (test-equal (expt-mod X y p)
+                       (expt-mod Y x p)))))))
 
 (check-dh modp-group1-g modp-group1-p)
 (check-dh modp-group2-g modp-group2-p)
@@ -45,4 +47,6 @@
 ;; (check-dh modp-group17-g modp-group17-p)
 ;; (check-dh modp-group18-g modp-group18-p)
 
-(check-report)
+(test-end)
+
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

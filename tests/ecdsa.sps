@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2011 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2011, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -22,12 +22,14 @@
 #!r6rs
 
 (import (rnrs)
-        (srfi :78 lightweight-testing)
+        (srfi :64 testing)
         (industria crypto ec)
         (industria crypto ecdsa)
         (hashing sha-1))
 
 ;; Test from SECG's GEC 2
+
+(test-begin "ECDSA SECG GEC 2")
 
 (define secp160r1
   (make-elliptic-prime-curve
@@ -38,20 +40,22 @@
    #x0100000000000000000001F4C8F927AED3CA752257
    #x01))
 
-(check (ecdsa-verify-signature (sha-1->bytevector (sha-1 (string->utf8 "abc")))
-                               (ecdsa-private->public
-                                (make-ecdsa-private-key
-                                 secp160r1
-                                 971761939728640320549601132085879836204587084162))
-                               1176954224688105769566774212902092897866168635793
-                               299742580584132926933316745664091704165278518100)
-       => #t)
+(test-assert
+ (ecdsa-verify-signature (sha-1->bytevector (sha-1 (string->utf8 "abc")))
+                         (ecdsa-private->public
+                          (make-ecdsa-private-key
+                           secp160r1
+                           971761939728640320549601132085879836204587084162))
+                         1176954224688105769566774212902092897866168635793
+                         299742580584132926933316745664091704165278518100))
 
 ;; Test all of ecdsa-sha2: make a new key, make a signature and verify it.
-(check (let*-values (((data) (sha-1->bytevector (sha-1 #vu8(1 2 3))))
-                     ((key) (make-ecdsa-private-key secp256r1))
-                     ((r s) (ecdsa-create-signature data key)))
-         (ecdsa-verify-signature data (ecdsa-private->public key) r s))
-       => #t)
+(test-assert
+ (let*-values (((data) (sha-1->bytevector (sha-1 #vu8(1 2 3))))
+               ((key) (make-ecdsa-private-key secp256r1))
+               ((r s) (ecdsa-create-signature data key)))
+   (ecdsa-verify-signature data (ecdsa-private->public key) r s)))
 
-(check-report)
+(test-end)
+
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))

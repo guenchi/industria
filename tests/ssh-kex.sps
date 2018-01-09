@@ -1,6 +1,6 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
-;; Copyright © 2010 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 #!r6rs
 
 (import (rnrs)
-        (srfi :78 lightweight-testing)
+        (srfi :64 testing)
         (industria crypto dsa)
         (industria crypto entropy)
         (industria ssh algorithms)
@@ -30,6 +30,8 @@
         (industria ssh kex-dh-gex) ;to recognize kex-dh-gex-request
         (industria ssh transport)
         (industria base64))
+
+(test-begin "ssh-kex")
 
 (define (print . x) (for-each display x) (newline))
 
@@ -79,7 +81,7 @@ WAhaSeMnKo/oDbb2ICI=
                   (or (kexdh-init? x)
                       (kex-dh-gex-request? x)))
              ;; Filter out the first KEX packet
-             (print ";; Server ignores " x)
+             ;; (print ";; Server ignores " x)
              (set! seen-kexdh-init? #t) 
              #f)
             (else x)))))
@@ -91,7 +93,7 @@ WAhaSeMnKo/oDbb2ICI=
        ;; The "attacker" can be used to simulate an active attacker
        (let ((x* (attacker name x)))
          (when x*
-           (print ";; Packet to " name ": " x*)
+           ;; (print ";; Packet to " name ": " x*)
            (set! q (append q (list (attacker name x)))))))
       (()
        (and (not (null? q))
@@ -132,14 +134,13 @@ WAhaSeMnKo/oDbb2ICI=
                        (lp cstatus (server 'packet p))))
             (else (compare cstatus sstatus))))))
 
-(check (test-kex "diffie-hellman-group1-sha1" server-dsa-key (no-attacker))
-       => #t)
-(check (test-kex "diffie-hellman-group14-sha1" server-dsa-key (no-attacker))
-       => #t)
+(test-assert (test-kex "diffie-hellman-group1-sha1" server-dsa-key (no-attacker)))
+(test-assert (test-kex "diffie-hellman-group14-sha1" server-dsa-key (no-attacker)))
 
-(check (test-kex "diffie-hellman-group-exchange-sha256" server-dsa-key (no-attacker))
-       => #t)
-(check (test-kex "diffie-hellman-group-exchange-sha1" server-dsa-key (no-attacker))
-       => #t)
+(test-assert (test-kex "diffie-hellman-group-exchange-sha256" server-dsa-key (no-attacker)))
+(test-assert (test-kex "diffie-hellman-group-exchange-sha1" server-dsa-key (no-attacker)))
 
-(check-report)
+(test-end)
+
+(exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))
+
