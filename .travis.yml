@@ -11,10 +11,7 @@ env:
 matrix:
   allow_failures:
     - env: SCHEME="Guile_2.2"
-    - env: SCHEME="Larceny"
-    - env: SCHEME="Racket_HEAD"
     - env: SCHEME="SagittariusScheme"
-    - env: SCHEME="VicareScheme"
   fast_finish: true
 
 sudo: false
