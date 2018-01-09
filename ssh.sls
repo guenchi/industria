@@ -77,6 +77,7 @@
           (industria buffer)
           (industria bytevectors)
           (industria crypto entropy)
+          (industria hexdump)
           (industria ssh public-keys)
           (industria ssh algorithms)
           (industria ssh connection)
@@ -84,9 +85,8 @@
           (industria ssh private)
           (industria ssh transport)
           (industria ssh userauth)
-          (struct pack)
-          (industria text hexdump)
-          (industria strings))
+          (industria strings)
+          (struct pack))
 
   ;; bit 0 gives a few crappy messages, bit 1 gives packet tracing,
   ;; bit 2 gives packet hex dumps.
@@ -125,7 +125,7 @@
     (make-parameter "2.0" (check-version (char-set #\-))))
 
   (define software-version
-    (make-parameter "Industria_1" (check-version (char-set #\-))))
+    (make-parameter "Industria_2" (check-version (char-set #\-))))
 
   (define comments
     (make-parameter

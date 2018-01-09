@@ -113,12 +113,10 @@ DEALINGS IN THE SOFTWARE.
 * openpgp::            OpenPGP
 * otr::                Off-The-Record messaging
 * ssh::                Secure Shell
-* text::               Textual structure utilities
 * misc::               Data types and utilities
 @end menu
 
 @include crypto.texi
-@include text.texi
 @include openpgp.texi
 @include otr.texi
 @include ssh.texi

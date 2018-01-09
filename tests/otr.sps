@@ -28,7 +28,7 @@
         (industria crypto dsa)
         (industria crypto entropy)
         (industria otr)
-        (industria text base64))
+        (industria base64))
 
 (define (parse-key s)
   (let-values (((type bv)

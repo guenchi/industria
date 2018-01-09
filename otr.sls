@@ -67,7 +67,7 @@
           (hashing sha-1)
           (hashing sha-2)
           (struct pack)
-          (industria text base64)
+          (industria base64)
           (industria strings))
 
 ;;; Helpers

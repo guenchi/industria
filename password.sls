@@ -40,7 +40,7 @@
           (industria bytevectors)
           (industria crypto des)
           (hashing md5)
-          (industria text base64))
+          (industria base64))
 
   (define (print . x) (for-each display x) (newline))
 

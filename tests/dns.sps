@@ -27,7 +27,7 @@
         (industria dns)
         (industria dns numbers)
         (industria dns types)
-        (industria text base64))
+        (industria base64))
 
 ;; Some bogus test data (.test is RFC 2606)
 (define dummy-digest

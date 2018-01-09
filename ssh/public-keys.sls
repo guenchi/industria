@@ -48,7 +48,7 @@
           (hashing md5)
           (industria crypto rsa)
           (struct pack)
-          (industria text base64)
+          (industria base64)
           (industria ssh random-art))
 
   (define (mpnegative? bv)

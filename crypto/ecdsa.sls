@@ -51,7 +51,7 @@
           (industria crypto math)
           (hashing sha-2)
           (prefix (industria der) der:)
-          (industria text base64))
+          (industria base64))
 
   (define-record-type ecdsa-public-key
     (fields curve Q)

@@ -74,7 +74,7 @@
           (hashing md5)
           (hashing sha-1)
           (hashing sha-2)
-          (industria text base64)
+          (industria base64)
           (struct pack))
 
   (define-syntax print

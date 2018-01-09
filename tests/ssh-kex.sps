@@ -29,7 +29,7 @@
         (industria ssh kexdh)      ;to recognize kexdh-init
         (industria ssh kex-dh-gex) ;to recognize kex-dh-gex-request
         (industria ssh transport)
-        (industria text base64))
+        (industria base64))
 
 (define (print . x) (for-each display x) (newline))
 

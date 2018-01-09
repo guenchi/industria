@@ -22,7 +22,7 @@
 
 ;; RFC 4648 Base-N Encodings
 
-(library (industria text base64)
+(library (industria base64)
   (export base64-encode
           base64-decode
           base64-alphabet

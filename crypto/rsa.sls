@@ -70,7 +70,7 @@
           (industria crypto entropy)
           (industria crypto math)
           (prefix (industria der) der:)
-          (industria text base64))
+          (industria base64))
 
   (define (RSAPublicKey)
     `(sequence (modulus integer)

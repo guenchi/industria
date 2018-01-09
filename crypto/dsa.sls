@@ -48,7 +48,7 @@
           (industria bytevectors)
           (industria crypto entropy)
           (industria crypto math)
-          (industria text base64)
+          (industria base64)
           (rnrs))
 
   ;; y is (expt-mod g x p). x is secret.

@@ -23,7 +23,7 @@
 
 (import (srfi :78 lightweight-testing)
         (rnrs)
-        (industria text base64))
+        (industria base64))
 
 (define (string->base64 x)
   (base64-encode (string->utf8 x)))

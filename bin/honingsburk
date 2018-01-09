@@ -40,7 +40,7 @@
         (industria ssh userauth)
         (industria password)
         (industria strings)
-        (industria text base64)
+        (industria base64)
         (only (ikarus) tcp-server-socket fork
               accept-connection waitpid))
 

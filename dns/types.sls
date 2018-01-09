@@ -122,7 +122,7 @@
           (industria bytevectors)
           (industria dns numbers)
           (industria dns private)
-          (industria text base64))
+          (industria base64))
 
   (define (dns-resource-print p split-length r)
     (if (dns-resource/raw? r)

@@ -37,7 +37,7 @@
         (industria ssh transport)
         (industria ssh userauth)
         (industria tcp)
-        (industria text base64))
+        (industria base64))
 
 (define (print . x) (for-each display x) (newline))
 

@@ -52,7 +52,7 @@ This SRFI-39 parameter is used when constructing the local
 identification string. It specifies the name and version of the client
 or server.
 
-@emph{Default}: "Industria_1"
+@emph{Default}: "Industria_2"
 @end deffn
 
 @deffn Parameter identification-comments
