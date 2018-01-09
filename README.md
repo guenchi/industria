@@ -13,7 +13,8 @@ locations of these libraries.
 
 # Documentation
 
-The latest [released manual is available online](https://weinholt.se/industria/manual/).
+The latest [released manual is available online](https://weinholt.github.io/industria/)
+([PDF](https://weinholt.github.io/industria/industria.pdf)).
 
 The sources for the manual are available in Texinfo format in the docs
 directory. Use these commands from that directory to build the manual:
