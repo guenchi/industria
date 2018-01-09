@@ -50,7 +50,7 @@ cryptographers Joan Daemen and Vincent Rijmen. Key lengths of 128, 192
 and 256 bits are supported.
 
 The code uses clever lookup tables and is probably as fast as any
-@rnrs{} implementation of AES can be without using an FFI. The number
+R6RS implementation of AES can be without using an FFI. The number
 of modes provided is pretty sparse though (only ECB and CTR). It also
 leaks key material via memory.
 

@@ -30,8 +30,8 @@ GitHub @url{https://github.com/weinholt/industria/}:
 
 @node Usage
 @section Usage
-To load an @rnrs{} library into your program or library, put it in the
-@code{import} specification. Here's Hello World for @rnrs{} Scheme:
+To load an R6RS library into your program or library, put it in the
+@code{import} specification. Here's Hello World for R6RS Scheme:
 
 @lisp
 #!/usr/bin/env scheme-script
@@ -41,7 +41,7 @@ To load an @rnrs{} library into your program or library, put it in the
 @cindex Hello World, example
 
 The first line is useful on Unix systems, but it is specified in the
-@rnrs{} Non-Normative Appendices, so your Scheme might not accept
+R6RS Non-Normative Appendices, so your Scheme might not accept
 programs with that line present.
 
 See the @code{programs/} and @code{tests/} directories for examples.

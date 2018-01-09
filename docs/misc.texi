@@ -132,7 +132,7 @@ Version history:
 @node bytevectors
 @subsection Bytevector utilities
 The @code{(industria bytevectors)} library contains utilities for
-working with @rnrs{} bytevectors.
+working with R6RS bytevectors.
 
 @deffn Procedure bytevector-append [bytevector ...]
 Appends the given bytevectors.

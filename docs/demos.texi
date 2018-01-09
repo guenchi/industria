@@ -1,7 +1,7 @@
 @node Demo programs
 @chapter Demo programs
 The programs directory contains small demonstration of the libraries.
-These scripts are implemented in the way recommended by @rnrs{}
+These scripts are implemented in the way recommended by R6RS
 non-normative appendix D.
 
 If you're packaging these libraries then I would recommend against

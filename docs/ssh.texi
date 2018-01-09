@@ -14,7 +14,7 @@ abstractions.
 
 It remains to be seen if this interface can be used for interactive
 applications. One problem is @code{get-ssh}, which reads a whole SSH
-packet. This procedure is blocking. @rnrs{} doesn't provide any
+packet. This procedure is blocking. R6RS doesn't provide any
 procedures for event-driven programming, so the author has made no
 effort to make this library work in an event-driven setting.
 

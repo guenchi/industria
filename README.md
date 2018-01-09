@@ -24,3 +24,7 @@ makeinfo --plaintext industria.texi        # text format
 makeinfo --no-split --html industria.texi  # html format
 texi2pdf industria.texi                    # pdf format
 ```
+
+# License
+
+MIT license. See [LICENSE.txt](LICENSE.txt).
