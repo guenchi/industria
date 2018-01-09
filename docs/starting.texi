@@ -25,7 +25,7 @@ Download the dependencies noted in the Akku.lock file and install them
 in the library path.
 
 Releases and the latest source code for Industria are available at
-GitHub @url{https://github.com/weinholt/industria/}:
+GitHub @url{https://github.com/weinholt/industria/}.
 @cindex development snapshots
 
 @node Usage
