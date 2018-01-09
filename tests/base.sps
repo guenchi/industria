@@ -30,7 +30,7 @@
 
 ;; From RFC 4658
 
-(test-begin "base64 rfc4658")
+(test-begin "base64-rfc4658")
 
 (test-equal "" (string->base64 ""))
 
@@ -50,7 +50,7 @@
 
 ;; Non-strict mode
 
-(test-begin "base64 non-strict")
+(test-begin "base64-non-strict")
 
 (test-equal #vu8(0 16) (base64-decode "ABC= " base64-alphabet #f #f))
 
@@ -82,7 +82,7 @@
 
 ;; ascii armor
 
-(test-begin "ascii armor")
+(test-begin "base64-ascii-armor")
 
 (test-equal '("EXAMPLE" #vu8(0 1 2 3 4 5 6))
             (call-with-values

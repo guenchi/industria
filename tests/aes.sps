@@ -28,7 +28,7 @@
 
 ;;; Appendix A in FIPS-197
 
-(test-begin "AES Appendix A")
+(test-begin "aes-appendix-a")
 
 (test-equal '#(#x2b7e1516 #x28aed2a6 #xabf71588 #x09cf4f3c
 
@@ -77,7 +77,7 @@
 
 ;;; Appendix B in FIPS-197 - cipher example
 
-(test-begin "AES Appendix B")
+(test-begin "aes-appendix-b")
 
 (define (encrypt plaintext key)
   (let ((ret (make-bytevector 16 0))
@@ -105,7 +105,7 @@
 
 ;;; Appendix C in FIPS-197
 
-(test-begin "AES Appendix C")
+(test-begin "aes-appendix-c")
 
 (define-syntax test
   (lambda (x)
@@ -137,7 +137,7 @@
 
 ;;; http://csrc.nist.gov/groups/ST/toolkit/examples.html
 
-(test-begin "AES examples")
+(test-begin "aes-examples")
 
 (test #x6BC1BEE22E409F96E93D7E117393172A
       128 #x2B7E151628AED2A6ABF7158809CF4F3C
@@ -191,7 +191,7 @@
 
 ;;; CTR mode from the above URL
 
-(test-begin "AES CTR")
+(test-begin "aes-ctr")
 
 (define (ctr ctr key)
   (define pt #vu8(#x6b #xc1 #xbe #xe2 #x2e #x40 #x9f #x96 #xe9 #x3d #x7e #x11 #x73 #x93 #x17 #x2a
@@ -229,7 +229,7 @@
 
 ;;; CBC tests from RFC3602
 
-(test-begin "AES CBC")
+(test-begin "aes-cbc")
 
 (define (cbc128 key iv pt)
   (let ((ret (make-bytevector (bytevector-length pt)))

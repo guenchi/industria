@@ -43,7 +43,7 @@
         (and (equal? dec plaintext)
              (bytevector-u64-ref enc 0 (endianness big)))))))
 
-(test-begin "blowfish vectors")
+(test-begin "blowfish-vectors")
 (test-equal #x4EF997456198DD78 (test #x0000000000000000 #x0000000000000000))
 (test-equal #x51866FD5B85ECB8A (test #xFFFFFFFFFFFFFFFF #xFFFFFFFFFFFFFFFF))
 (test-equal #x7D856F9A613063F2 (test #x3000000000000000 #x1000000000000001))
@@ -96,7 +96,7 @@
         (and (equal? dec plaintext)
              (bytevector-u64-ref enc 0 (endianness big)))))))
 
-(test-begin "blowfish keys")
+(test-begin "blowfish-keys")
 (test-equal #xF9AD597C49DB005E (testv 1 #xF0))
 (test-equal #xE91D21C1D961A6D6 (testv 2 #xF0E1))
 (test-equal #xE9C2B70A1BC65CF3 (testv 3 #xF0E1D2))

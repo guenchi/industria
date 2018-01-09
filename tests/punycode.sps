@@ -37,7 +37,7 @@
            (test-equal (string->utf8 puny)
                        (string->punycode (list->string (map integer->char '(codes ...))))))))))
 
-(test-begin "punycode rfc3492 vectors")
+(test-begin "punycode-rfc3492-vectors")
 
 (test "egbpdaj6bu4bxfgehfvwxn"
       #x0644 #x064A #x0647 #x0645 #x0627 #x0628 #x062A #x0643 #x0644

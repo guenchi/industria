@@ -27,7 +27,7 @@
 
 ;; TODO: needs more tests, to say the least.
 
-(test-begin "der SubjectAltName")
+(test-begin "der-subjectaltname")
 
 (define (SubjectAltName)
   `(sequence-of 1 +inf.0 ,(GeneralName)))

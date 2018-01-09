@@ -29,7 +29,7 @@
 
 ;;; http://csrc.nist.gov/groups/ST/toolkit/examples.html
 
-(test-begin "DSA 1024")
+(test-begin "dsa-1024")
 ;; L = 1024
 ;; N = 160
 ;; seedlen = 0
@@ -58,7 +58,7 @@
   #x6C540B02D9D4852F89DF8CFC99963204F4347704))
 (test-end)
 
-(test-begin "DSA 2048")
+(test-begin "dsa-2048")
 ;; L = 2048
 ;; N = 224
 ;; seedlen = 0
@@ -87,7 +87,7 @@
   #x874D4F12CB13B61732D398445698CFA9D92381D938AA57EE2C9327B3))
 (test-end)
 
-(test-begin "DSA 2048/256")
+(test-begin "dsa-2048-256")
 ;; L = 2048
 ;; N = 256
 ;; seedlen = 0
@@ -116,7 +116,7 @@
   #x89718D12E54A8D9ED066E4A55F7ED5A2229CD23B9A3CEE78F83ED6AA61F6BCB9))
 (test-end)
 
-(test-begin "DSA 3072")
+(test-begin "dsa-3072")
 ;; L = 3072
 ;; N = 256
 ;; seedlen = 0
@@ -147,7 +147,7 @@
 
 ;;; Signature generation
 
-(test-begin "DSA signature")
+(test-begin "dsa-signature")
 (test-assert (let*-values (((Hm) (sha-256->bytevector (sha-256 #vu8(#x61 #x62 #x63))))
                            ((r s) (dsa-create-signature Hm key4)))
                (dsa-verify-signature Hm (dsa-private->public key4) r s)))

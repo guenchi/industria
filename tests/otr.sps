@@ -139,11 +139,11 @@ daOZBopKox5oXEbXK0gw
                      (shuffle Alice Bob 'Alice 'Bob)))
   #t)
 
-(test-begin "OTRv2")
+(test-begin "otrv2")
 (run-test (otr-tag #f '(2)))
 (test-end)
 
-(test-begin "OTRv3")
+(test-begin "otrv3")
 (run-test (otr-tag #f '(3)))
 (test-end)
 

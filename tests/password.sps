@@ -27,7 +27,7 @@
 
 ;;; DES
 
-(test-begin "Password DES")
+(test-begin "password-des")
 
 (test-equal "..o6avrdNBOA6" (crypt "foodbard" ".."))
 
@@ -47,7 +47,7 @@
 
 ;;; MD5
 
-(test-begin "Password MD5")
+(test-begin "password-md5")
 
 (test-equal "$1$oKnN0HHt$Aul2g/J4edgga3WE/03cN/"
             (crypt "hello" "$1$oKnN0HHt$"))
@@ -61,7 +61,7 @@
 
 ;; SHA-256
 
-(test-begin "Password SHA-256")
+(test-begin "password-sha-256")
 (test-skip 7)
 
 (test-equal "$5$saltstring$5B8vYYiY.CVt1RlTTf8KbXBH3hsxY/GNooZaBBGWEc5"
@@ -96,7 +96,7 @@
 
 ;; SHA-512
 
-(test-begin "Password SHA-512")
+(test-begin "password-sha-512")
 (test-skip 7)
 (test-equal "$6$saltstring$svn8UoSVapNtMuq1ukKS4tPQd8iKwSMHWjl/O817G3uBnIFNjnQJuesI68u4OTLiBFdcbYEdFCoEOfaS35inz1"
             (crypt "Hello world!"

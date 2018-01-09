@@ -29,7 +29,7 @@
 
 ;; Test from SECG's GEC 2
 
-(test-begin "ECDSA SECG GEC 2")
+(test-begin "ecdsa")
 
 (define secp160r1
   (make-elliptic-prime-curve
