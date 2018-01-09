@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010, 2011, 2012, 2017 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2012, 2017, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -246,13 +246,15 @@
                                              (dns-rrtype name))))
                         proto-body ...)))))
                (define dummy
-                 (vector-set! handlers (dns-rrtype name)
-                              (list
-                               (let ((parser bparse))
-                                 (lambda (name ttl class bv start end)
-                                   (apply make name ttl class
-                                          (parser bv start end))))
-                               tparse bformat tformat))))))
+                 (begin
+                   (vector-set! handlers (dns-rrtype name)
+                                (list
+                                 (let ((parser bparse))
+                                   (lambda (name ttl class bv start end)
+                                     (apply make name ttl class
+                                            (parser bv start end))))
+                                 tparse bformat tformat))
+                   #f)))))
         ((_ name
             (fields field-spec ...)
             p f)
