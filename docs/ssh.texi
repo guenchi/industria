@@ -1,6 +1,6 @@
 @c ======================================================================
 @node ssh
-@subsection Secure Shell (SSH)
+@section Secure Shell (SSH)
 The @code{(industria ssh)} library hierarchy deals with the Secure
 Shell protocol. Both SSH servers and clients can be written with these
 libraries. Some convenient abstractions are currently missing though,
@@ -303,7 +303,7 @@ welcome.
 
 @c ======================================================================
 @node ssh connection
-@subsubsection Secure Shell Connection Protocol
+@subsection Secure Shell Connection Protocol
 The @code{(industria ssh connection)} library implements record
 types, parsers and formatters for the connection protocol packets in
 SSH.
@@ -1035,7 +1035,7 @@ on the server.
 
 @c ======================================================================
 @node ssh transport
-@subsubsection Secure Shell Transport Layer Protocol
+@subsection Secure Shell Transport Layer Protocol
 The @code{(industria ssh transport)} library implements record
 types, parsers and formatters for the transport layer packets in SSH.
 
@@ -1265,7 +1265,7 @@ Returns @code{#t} if @var{obj} is a @var{newkeys} packet.
 
 @c ======================================================================
 @node ssh userauth
-@subsubsection Secure Shell Authentication Protocol
+@subsection Secure Shell Authentication Protocol
 The @code{(industria ssh userauth)} library implements record
 types, parsers and formatters for the authentication protocol packets
 in SSH.
