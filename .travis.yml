@@ -6,11 +6,13 @@ env:
     - SCHEME="Racket_HEAD"
     - SCHEME="SagittariusScheme"
     - SCHEME="VicareScheme"
+    - SCHEME="Ypsilon"
 
 matrix:
   allow_failures:
     - env: SCHEME="Guile_2.2"
     - env: SCHEME="SagittariusScheme"
+    - env: SCHEME="Ypsilon"
   fast_finish: true
 
 sudo: false
