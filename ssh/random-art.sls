@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010, 2012 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2012, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
           random-art-style-unicode)
   (import (rnrs)
           (only (srfi :13 strings) string-pad string-pad-right)
-          (srfi :25 multi-dimensional-arrays)
+          ;; (srfi :25 multi-dimensional-arrays)
           (srfi :39 parameters)
           (industria crypto dsa)
           (industria crypto rsa))
@@ -65,9 +65,15 @@
 
   (define random-art
     (case-lambda
-      ((digest header)
-       (random-art digest header xlen ylen chars))
-      ((digest header xlen ylen chars)
+      ((digest header footer)
+       (random-art digest header footer xlen ylen chars))
+      ((digest header footer xlen ylen chars)
+       ;; Fill-in for SRFI-25
+       (define (array-index x y) (fx+ (fx* y xlen) x))
+       (define (array-set! f x y v) (vector-set! f (array-index x y) v))
+       (define (array-ref f x y) (vector-ref f (array-index x y)))
+       (define make-array make-vector)
+       (define (shape x0 x1 y0 y1) (assert (and (zero? x0) (zero? y0))) (* x1 y1))
        (define (perambulate! field x y b)
          (let ((x (min (- xlen 1) (max 0 (+ x (if (fxbit-set? b 0) 1 -1)))))
                (y (min (- ylen 1) (max 0 (+ y (if (fxbit-set? b 1) 1 -1))))))
@@ -93,16 +99,15 @@
          (call-with-string-output-port
            (lambda (p)
              (let ((box (random-art-box-style)))
+               (define (centered-line text padding-char)
+                 (let* ((header (string-append (vector-ref box 2)
+                                               text
+                                               (vector-ref box 3)))
+                        (line (make-string (div (- xlen (string-length header)) 2)
+                                           padding-char)))
+                   (string-pad-right (string-append line header line) xlen padding-char)))
                (display (vector-ref box 0) p)
-               (display
-                (let* ((header (string-append (vector-ref box 2)
-                                              header
-                                              (vector-ref box 3)))
-                       (line (make-string (div (- xlen (string-length header)) 2)
-                                          (vector-ref box 1))))
-                  (string-pad-right (string-append line header line)
-                                    xlen (vector-ref box 1)))
-                p)
+               (display (centered-line header (vector-ref box 1)) p)
                (display (vector-ref box 4) p)
                (do ((y 0 (+ y 1)))
                    ((= y ylen))
@@ -114,5 +119,5 @@
                             p))
                  (display (vector-ref box 6) p))
                (display (vector-ref box 7) p)
-               (display (make-string xlen (vector-ref box 8)) p)
+               (display (centered-line footer (vector-ref box 8)) p)
                (display (vector-ref box 9) p)))))))))

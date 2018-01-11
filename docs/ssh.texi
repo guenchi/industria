@@ -1568,15 +1568,17 @@ ECDSA keys it is @code{"ecdsa-sha2-[identifier]"} where
 @code{[identifier]} identifies the curve.
 @end deffn
 
-@deffn Procedure ssh-public-key-fingerprint key
-The MD5 based fingerprint of the RSA/DSA/ECDSA @var{key} in the same
-format used by common SSH software and specified by RFC 4716.
+@deffn Procedure ssh-public-key-fingerprint key [algorithm]
+The fingerprint of the RSA/DSA/ECDSA @var{key} in the same format used
+by common SSH software and specified by RFC 4716. The @var{algorithm}
+is either sha256 (default) or md5.
 @end deffn
 
-@deffn Procedure ssh-public-key-random-art key
+@deffn Procedure ssh-public-key-random-art key [algorithm]
 The random art of the RSA/DSA/ECDSA key. This is a visual
 representation of the key can is easier for humans to distinguish than
 fingerprints. This is the same art that OpenSSH's VisualHostKey
-feature displays.
+feature displays. The @var{algorithm} is either sha256 (default) or
+md5.
 @cindex VisualHostKey
 @end deffn

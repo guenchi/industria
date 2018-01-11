@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010, 2011, 2012, 2017 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2011, 2012, 2017, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -41,14 +41,15 @@
   (import (only (srfi :13 strings) string-pad
                 string-join string-prefix?)
           (except (rnrs) put-string)
+          (hashing md5)
+          (hashing sha-2)
+          (struct pack)
+          (industria base64)
           (industria bytevectors)
           (industria crypto dsa)
           (industria crypto ec)
           (industria crypto ecdsa)
-          (hashing md5)
           (industria crypto rsa)
-          (struct pack)
-          (industria base64)
           (industria ssh random-art))
 
   (define (mpnegative? bv)
@@ -164,25 +165,54 @@
               (else
                (error who "Unknown public key algorithm" key))))))
 
-  (define (ssh-public-key-fingerprint key)
-    (string-join
-     (map (lambda (b)
-            (string-pad (string-downcase (number->string b 16)) 2 #\0))
-          (bytevector->u8-list
-           (md5->bytevector (md5 (ssh-public-key->bytevector key)))))
-     ":" 'infix))
+  (define ssh-public-key-fingerprint
+    (case-lambda
+      ((key)
+       (ssh-public-key-fingerprint key 'sha256))
+      ((key algorithm)
+       (case algorithm
+         ((sha256)
+          (string-append
+           "SHA256:"
+           (base64-encode (sha-256->bytevector (sha-256 (ssh-public-key->bytevector key)))
+                          0 (sha-256-length) #f 'no-padding)))
+         ((md5)
+          (string-append
+           "MD5:"
+           (string-join
+            (map (lambda (b)
+                   (string-pad (string-downcase (number->string b 16)) 2 #\0))
+                 (bytevector->u8-list
+                  (md5->bytevector (md5 (ssh-public-key->bytevector key)))))
+            ":" 'infix)))
+         (else
+          (error 'ssh-public-key-fingerprint "Invalid algorithm" key algorithm))))))
 
   ;; TODO: bubblebabble
 
-  (define (ssh-public-key-random-art key)
-    (let-values (((prefix length)
-                  (cond ((rsa-public-key? key)
-                         (values "RSA" rsa-public-key-length))
-                        ((dsa-public-key? key)
-                         (values "DSA" dsa-public-key-length))
-                        ((ecdsa-public-key? key)
-                         (values "ECDSA" ecdsa-public-key-length))
-                        (else
-                         (values "UNKNOWN" (lambda (x) +nan.0))))))
-      (random-art (md5->bytevector (md5 (ssh-public-key->bytevector key)))
-                  (string-append prefix " " (number->string (length key)))))))
+  (define ssh-public-key-random-art
+    (case-lambda
+      ((key)
+       (ssh-public-key-random-art key 'sha256))
+      ((key algorithm)
+       (let-values (((prefix length)
+                     (cond ((rsa-public-key? key)
+                            (values "RSA" rsa-public-key-length))
+                           ((dsa-public-key? key)
+                            (values "DSA" dsa-public-key-length))
+                           ((ecdsa-public-key? key)
+                            (values "ECDSA" ecdsa-public-key-length))
+                           (else
+                            (values "UNKNOWN" (lambda (_) +nan.0))))))
+         (let ((header (string-append prefix " " (number->string (length key)))))
+           (case algorithm
+             ((sha256)
+              (random-art (sha-256->bytevector (sha-256 (ssh-public-key->bytevector key)))
+                          header
+                          "SHA256"))
+             ((md5)
+              (random-art (md5->bytevector (md5 (ssh-public-key->bytevector key)))
+                          header
+                          "MD5"))
+             (else
+              (error 'ssh-public-key-random-art "Invalid algorithm" key algorithm)))))))))

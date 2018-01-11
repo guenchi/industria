@@ -63,6 +63,16 @@ its dependencies in known good revisions.
 
 More about Akku: https://github.com/weinholt/akku
 
+** (industria ssh public-key): Fingerprints use SHA-256
+
+The fingerprint algorithms now use SHA-256, which is aligned with
+OpenSSH. The old MD5 algorithm is supported with an optional argument.
+
+** (industria ssh random-art): Extra footer argument
+
+The random-art procedure takes an extra footer argument, which shows
+the algorithm that computed the digest.
+
 * Changes in version 1.5
 
 ** (weinholt net otr): Support for OTR version 3
