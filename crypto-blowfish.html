@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto blowfish (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto blowfish (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto blowfish (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="crypto-des.html#crypto-des" rel="next" title="crypto des">
+<link href="crypto-arcfour.html#crypto-arcfour" rel="prev" title="crypto arcfour">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-blowfish"></a>
+<div class="header">
+<p>
+Next: <a href="crypto-des.html#crypto-des" accesskey="n" rel="next">crypto des</a>, Previous: <a href="crypto-arcfour.html#crypto-arcfour" accesskey="p" rel="prev">crypto arcfour</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="The-Blowfish-Cipher"></a>
+<h4 class="subsection">2.1.3 The Blowfish Cipher</h4>
+<p>The <code>(industria crypto blowfish)</code> library is a complete
+implementation of Bruce Schneier&rsquo;s Blowfish cipher. It is a symmetric
+block cipher with key length between 8 and 448 bits. The key
+length does not affect the performance.
+</p>
+<dl>
+<dt><a name="index-expand_002dblowfish_002dkey"></a>Procedure: <strong>expand-blowfish-key</strong> <em>key</em></dt>
+<dd><p>Expands a Blowfish <var>key</var>, which is a bytevector of length between
+1 and 56 bytes (the longer the better). The returned key schedule can
+be used with <code>blowfish-encrypt!</code> or
+<code>reverse-blowfish-schedule</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-blowfish_002dencrypt_0021"></a>Procedure: <strong>blowfish-encrypt!</strong> <em>source source-index target target-index schedule</em></dt>
+<dd><p>Encrypts the eight bytes at <var>source</var>+<var>source-start</var> using
+Electronic Code Book (ECB) mode. The result is written to
+<var>target</var>+<var>target-start</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-reverse_002dblowfish_002dschedule"></a>Procedure: <strong>reverse-blowfish-schedule</strong></dt>
+<dd><p>Reverses a Blowfish key schedule so that it can be used with
+<code>blowfish-decrypt!</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-blowfish_002ddecrypt_0021"></a>Procedure: <strong>blowfish-decrypt!</strong> <em>source source-index target target-index schedule</em></dt>
+<dd><p>The inverse of <code>blowfish-encrypt!</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-clear_002dblowfish_002dschedule_0021"></a>Procedure: <strong>clear-blowfish-schedule!</strong></dt>
+<dd><p>Clears the Blowfish key schedule so that it no longer contains
+cryptographic material. Please note that there is no guarantee that
+the key material will actually be gone from memory. It might remain in
+temporary numbers or other values.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-blowfish_002dcbc_002dencrypt_0021"></a>Procedure: <strong>blowfish-cbc-encrypt!</strong> <em>source source-start target target-start k schedule iv</em></dt>
+<dd><p>Encrypts <var>k</var> bytes in the bytevector <var>source</var> starting at
+<var>source-start</var> with Blowfish in CBC mode and writes the result to
+<var>target</var> at <var>target-start</var>.
+</p>
+<p>The argument <var>k</var> must be an integer multiple of 8, which is the block length.
+</p>
+<p>The <var>iv</var> bytevector is an Initial Vector. It should be 8 bytes
+long, initialized to random bytes. This procedure updates the <var>iv</var>
+after processing a block.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-blowfish_002dcbc_002ddecrypt_0021"></a>Procedure: <strong>blowfish-cbc-decrypt!</strong> <em>source source-start target target-start k schedule iv</em></dt>
+<dd><p>The inverse of <code>blowfish-cbc-encrypt!</code>.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="crypto-des.html#crypto-des" accesskey="n" rel="next">crypto des</a>, Previous: <a href="crypto-arcfour.html#crypto-arcfour" accesskey="p" rel="prev">crypto arcfour</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto ec (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto ec (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto ec (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="crypto-ecdsa.html#crypto-ecdsa" rel="next" title="crypto ecdsa">
+<link href="crypto-dsa.html#crypto-dsa" rel="prev" title="crypto dsa">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-ec"></a>
+<div class="header">
+<p>
+Next: <a href="crypto-ecdsa.html#crypto-ecdsa" accesskey="n" rel="next">crypto ecdsa</a>, Previous: <a href="crypto-dsa.html#crypto-dsa" accesskey="p" rel="prev">crypto dsa</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Elliptic-Curve-Cryptography"></a>
+<h4 class="subsection">2.1.7 Elliptic Curve Cryptography</h4>
+<p>The <code>(industria crypto ec)</code> provides algorithms and definitions
+for working with elliptic curves.
+</p>
+<p>Only curves over prime finite fields are currently supported. Points
+are either <code>+inf.0</code> (the point at infinity) or a pair of x and y
+coordinates.
+</p>
+<p>Some standardized curves are exported:
+</p>
+<dl compact="compact">
+<dt><code>secp256r1</code>
+<a name="index-secp256r1"></a>
+</dt>
+<dd><p>This curve is equivalent to a 3072-bit RSA modulus.
+</p></dd>
+<dt><code>nistp256</code>
+<a name="index-nistp256"></a>
+</dt>
+<dd><p>Curve P-256. This is the same curve as above.
+</p></dd>
+<dt><code>secp384r1</code>
+<a name="index-secp384r1"></a>
+</dt>
+<dd><p>This curve is equivalent to a 7680-bit RSA modulus.
+</p></dd>
+<dt><code>nistp384</code>
+<a name="index-nistp384"></a>
+</dt>
+<dd><p>Curve P-384. This is the same curve as above.
+</p></dd>
+<dt><code>secp521r1</code>
+<a name="index-secp521r1"></a>
+</dt>
+<dd><p>This curve is equivalent to a 15360-bit RSA modulus. The &ldquo;521&rdquo; is
+not a typo.
+</p></dd>
+<dt><code>nistp521</code>
+<a name="index-nistp521"></a>
+</dt>
+<dd><p>Curve P-521. This is the same curve as above.
+</p></dd>
+</dl>
+
+<dl>
+<dt><a name="index-make_002delliptic_002dprime_002dcurve"></a>Procedure: <strong>make-elliptic-prime-curve</strong> <em>p a b G n h</em></dt>
+<dd><p>Constructs a new elliptic-curve object given the domain parameters of
+a curve:
+</p>
+<p><em>y^2 \equiv x^3 + ax + b</em> (mod <em>p</em>).
+</p>
+<p>Normally one will be working with pre-defined curves, so this
+constructor can be safely ignored. The curve definition will include
+all these parameters.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dprime_002dcurve_003f"></a>Procedure: <strong>elliptic-prime-curve?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is an elliptic prime curve.
+</p></dd></dl>
+
+<p>The accessors can be safely ignored unless you&rsquo;re interested in the
+curves themselves.
+</p>
+<dl>
+<dt><a name="index-elliptic_002dcurve_002da"></a>Procedure: <strong>elliptic-curve-a</strong> <em>elliptic-curve</em></dt>
+<dd><p>This is one of the parameters that defines the curve: an element in
+the field.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dcurve_002db"></a>Procedure: <strong>elliptic-curve-b</strong> <em>elliptic-curve</em></dt>
+<dd><p>This is one of the parameters that defines the curve: another element
+in the field.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dcurve_002dG"></a>Procedure: <strong>elliptic-curve-G</strong> <em>elliptic-curve</em></dt>
+<dd><p>This is one of the parameters that defines the curve: the base point,
+i.e. an actual point on the curve.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dcurve_002dn"></a>Procedure: <strong>elliptic-curve-n</strong> <em>elliptic-curve</em></dt>
+<dd><p>This is one of the parameters that defines the curve: a prime that is
+the order of G (the base point).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dcurve_002dh"></a>Procedure: <strong>elliptic-curve-h</strong> <em>elliptic-curve</em></dt>
+<dd><p>This is one of the parameters that defines the curve: the cofactor.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dprime_002dcurve_002dp"></a>Procedure: <strong>elliptic-prime-curve-p</strong> <em>elliptic-prime-curve</em></dt>
+<dd><p>This is one of the parameters that defines the curve: the integer that
+defines the prime finite field.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dcurve_003d_003f"></a>Procedure: <strong>elliptic-curve=?</strong> <em>elliptic-curve<em>_1</em> elliptic-curve<em>_2</em></em></dt>
+<dd><p>Returns <code>#t</code> if the elliptic curve objects are equal (in the
+sense that all domain parameters are equal).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ec_002b"></a>Procedure: <strong>ec+</strong> <em>P Q elliptic-curve</em></dt>
+<dd><p>This adds the points <var>P</var> and <var>Q</var>, which must be points on
+<var>elliptic-curve</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ec_002d"></a>Procedure: <strong>ec-</strong> <em>P [Q] elliptic-curve</em></dt>
+<dd><p>This subtracts <var>Q</var> from <var>P</var>, both of which must be points on
+<var>elliptic-curve</var>. If <var>Q</var> is omitted it returns the complement
+of <var>P</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ec_002a"></a>Procedure: <strong>ec*</strong> <em>multiplier P elliptic-curve</em></dt>
+<dd><p>This multiplies <var>P</var> by <var>multiplier</var>. <var>P</var> must be a point
+on <var>elliptic-curve</var> and <var>multiplier</var> must be a non-negative
+integer.
+</p>
+<p>This operation is the elliptic curve equivalence of <code>expt-mod</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-bytevector_002d_003eelliptic_002dpoint"></a>Procedure: <strong>bytevector-&gt;elliptic-point</strong> <em>bytevector elliptic-curve</em></dt>
+<dd><p>Converts <var>bytevector</var> to a point on <var>elliptic-curve</var>. When
+points are sent over the network or stored in files they are first
+converted to bytevectors.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-integer_002d_003eelliptic_002dpoint"></a>Procedure: <strong>integer-&gt;elliptic-point</strong> <em>integer elliptic-curve</em></dt>
+<dd><p>Performs the same conversion as <code>bytevector-&gt;elliptic-point</code>, but
+first converts <var>integer</var> to a bytevector.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-_002d_003eelliptic_002dpoint"></a>Procedure: <strong>-&gt;elliptic-point</strong> <em>x elliptic-curve</em></dt>
+<dd><p>A generic procedure that accepts as input an <var>x</var> that is either
+already a point, a bytevector representing a point, or an integer
+representing a point.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-elliptic_002dpoint_002d_003ebytevector"></a>Procedure: <strong>elliptic-point-&gt;bytevector</strong> <em>point elliptic-curve</em></dt>
+<dd><p>Converts <var>point</var> to its bytevector representation. This
+representation is sometimes hashed, e.g. in SSH public keys, so the
+canonical representation is used for compatibility with other
+software.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="crypto-ecdsa.html#crypto-ecdsa" accesskey="n" rel="next">crypto ecdsa</a>, Previous: <a href="crypto-dsa.html#crypto-dsa" accesskey="p" rel="prev">crypto dsa</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

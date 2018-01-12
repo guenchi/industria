@@ -1,0 +1,313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto rsa (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto rsa (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto rsa (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="openpgp.html#openpgp" rel="next" title="openpgp">
+<link href="crypto-entropy.html#crypto-entropy" rel="prev" title="crypto entropy">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-rsa"></a>
+<div class="header">
+<p>
+Previous: <a href="crypto-entropy.html#crypto-entropy" accesskey="p" rel="prev">crypto entropy</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="RSA-public-key-encryption-and-signatures"></a>
+<h4 class="subsection">2.1.10 RSA public key encryption and signatures</h4>
+<p>The <code>(industria crypto rsa)</code> library implements the RSA (Rivest,
+Shamir and Adleman) algorithm and a few helpers.
+</p>
+<dl>
+<dt><a name="index-make_002drsa_002dpublic_002dkey"></a>Procedure: <strong>make-rsa-public-key</strong> <em>n e</em></dt>
+<dd><p>Returns an RSA public key object containing the modulus <var>n</var> and
+the public exponent <var>e</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_003f"></a>Procedure: <strong>rsa-public-key?</strong> <em>obj</em></dt>
+<dd><p>True if <var>obj</var> is a public RSA key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_002dn"></a>Procedure: <strong>rsa-public-key-n</strong> <em>key</em></dt>
+</dl>
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_002dmodulus"></a>Procedure: <strong>rsa-public-key-modulus</strong> <em>key</em></dt>
+<dd><p>Returns the <em>modulus</em> of <var>key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_002de"></a>Procedure: <strong>rsa-public-key-e</strong> <em>key</em></dt>
+</dl>
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_002dpublic_002dexponent"></a>Procedure: <strong>rsa-public-key-public-exponent</strong> <em>key</em></dt>
+<dd><p>Returns the <em>public exponent</em> of <var>key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_002dfrom_002dbytevector"></a>Procedure: <strong>rsa-public-key-from-bytevector</strong> <em>bytevector</em></dt>
+<dd><p>Parses <var>bytevector</var> as an ASN.1 DER encoded public RSA key. The
+return value can be used with the other procedures in this library.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_002dlength"></a>Procedure: <strong>rsa-public-key-length</strong> <em>key</em></dt>
+<dd><p>Returns the number of bits in the modulus of <var>key</var>. This is also
+the maximum length of data that can be encrypted or decrypted with the
+key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpublic_002dkey_002dbyte_002dlength"></a>Procedure: <strong>rsa-public-key-byte-length</strong> <em>key</em></dt>
+<dd><p>Returns the number of 8-bit bytes required to store the modulus of
+<var>key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002drsa_002dprivate_002dkey"></a>Procedure: <strong>make-rsa-private-key</strong> <em>n e d [p q exponent1 exponent2 coefficient]</em></dt>
+<dd><p>Returns an RSA private key object with the given modulus <var>n</var>,
+public exponent <var>e</var>, and private exponent <var>d</var>.
+</p>
+<p>The other parameters are used to improve the efficiency of
+<code>rsa-encrypt</code>. They are optional and will be computed if they are
+omitted.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_003f"></a>Procedure: <strong>rsa-private-key?</strong> <em>obj</em></dt>
+<dd><p>True if <var>obj</var> is a private RSA key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dn"></a>Procedure: <strong>rsa-private-key-n</strong> <em>key</em></dt>
+</dl>
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dmodulus"></a>Procedure: <strong>rsa-private-key-modulus</strong> <em>key</em></dt>
+<dd><p>Returns the <em>modulus</em> of <var>key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dpublic_002dexponent"></a>Procedure: <strong>rsa-private-key-public-exponent</strong> <em>key</em></dt>
+<dd><p>Returns the <em>public exponent</em> of <var>key</var>. This exponent is used
+for encryption and signature verification.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dd"></a>Procedure: <strong>rsa-private-key-d</strong> <em>key</em></dt>
+</dl>
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dprivate_002dexponent"></a>Procedure: <strong>rsa-private-key-private-exponent</strong> <em>key</em></dt>
+<dd><p>Returns the <em>private exponent</em> of <var>key</var>. This exponent is
+used for decryption and signature creation.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dprime1"></a>Procedure: <strong>rsa-private-key-prime1</strong> <em>key</em></dt>
+</dl>
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dprime2"></a>Procedure: <strong>rsa-private-key-prime2</strong> <em>key</em></dt>
+<dd><p>These two procedures return the first and second prime factors
+(<em>p</em>,<em>q</em>) of the modulus (<em>n=pq</em>).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dexponent1"></a>Procedure: <strong>rsa-private-key-exponent1</strong> <em>key</em></dt>
+<dd><p>This should be equivalent to <code>(mod d (- p 1))</code>. It is used to
+speed up <code>rsa-decrypt</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dexponent2"></a>Procedure: <strong>rsa-private-key-exponent2</strong> <em>key</em></dt>
+<dd><p>This should be equivalent to <code>(mod d (- q 1))</code>. It is used to
+speed up <code>rsa-decrypt</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dcoefficient"></a>Procedure: <strong>rsa-private-key-coefficient</strong> <em>key</em></dt>
+<dd><p>This should be equivalent to <code>(expt-mod q -1 p)</code>. It is used to
+speed up <code>rsa-decrypt</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002d_003epublic"></a>Procedure: <strong>rsa-private-&gt;public</strong> <em>key</em></dt>
+<dd><p>Uses the <em>modulus</em> and <em>public exponent</em> of <var>key</var> to
+construct a public RSA key object.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dfrom_002dbytevector"></a>Procedure: <strong>rsa-private-key-from-bytevector</strong> <em>bytevector</em></dt>
+<dd><p>Parses <var>bytevector</var> as an ASN.1 DER encoded private RSA key. The
+return value can be used with the other procedures in this library.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dprivate_002dkey_002dfrom_002dpem_002dfile"></a>Procedure: <strong>rsa-private-key-from-pem-file</strong> <em>filename</em></dt>
+<dd><p>Opens the file and reads a private RSA key. The file should be in
+Privacy Enhanced Mail (PEM) format and contain an ASN.1 DER encoded
+private RSA key.
+</p>
+<p>Encrypted keys are currently not supported.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dencrypt"></a>Procedure: <strong>rsa-encrypt</strong> <em>plaintext key</em></dt>
+<dd><p>Encrypts the <var>plaintext</var> integer using the <var>key</var>, which is
+either a public or private RSA key.
+</p>
+<p><var>plaintext</var> must be an exact integer that is less than the modulus
+of <var>key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002ddecrypt"></a>Procedure: <strong>rsa-decrypt</strong> <em>ciphertext key</em></dt>
+<dd><p>Decrypts the <var>ciphertext</var> integer using the <var>key</var>, which
+must be a private RSA key.
+</p>
+<p><var>ciphertext</var> must be an exact integer that is less than the
+modulus of <var>key</var>.
+</p>
+<div class="example">
+<pre class="example">(import (industria crypto rsa))
+(let ((key (make-rsa-private-key 3233 17 2753)))
+  (rsa-decrypt (rsa-encrypt 42 key) key))
+&rArr; 42
+</pre></div>
+</dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002ddecrypt_002fblinding"></a>Procedure: <strong>rsa-decrypt/blinding</strong> <em>ciphertext key</em></dt>
+<dd><p>This performs the same function as <code>rsa-decrypt</code>, but it uses RSA
+blinding. It has been shown that the private key can be recovered by
+measuring the time it takes to run the RSA decryption function. Use
+RSA blinding to protect against these timing attacks.
+</p>
+<p>For more technical information on the subject, see Paul C. Kocher&rsquo;s
+article
+<a href="http://www.cryptography.com/resources/whitepapers/TimingAttacks.pdf">Timing Attacks on Implementations of Diffie-Hellman,
+RSA, DSS, and Other Systems</a>.
+</p></dd></dl>
+
+<p>It is often not enough to just use the plain encryption and decryption
+procedures; a protocol for what to put in the plaintext should also be
+used. PKCS #1 (RFC 3447) is a standard for how to perform RSA
+encryption and signing with padding. New protocols should use one of
+the other protocols from the RFC.
+</p>
+<dl>
+<dt><a name="index-rsa_002dpkcs1_002dencrypt"></a>Procedure: <strong>rsa-pkcs1-encrypt</strong> <em>plaintext public-key</em></dt>
+<dd><p>Pads and encrypts the <var>plaintext</var> bytevector using
+<var>public-key</var>, a public RSA key. The return value is an integer.
+</p>
+<p>The plaintext can&rsquo;t be longer than the length of the key modulus, in
+bytes, minus 11.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpkcs1_002ddecrypt"></a>Procedure: <strong>rsa-pkcs1-decrypt</strong> <em>ciphertext private-key</em></dt>
+<dd><p>The inverse of <var>rsa-pkcs1-encrypt</var>. Decrypts the <var>ciphertext</var>
+integer using <var>private-key</var>, a private RSA key. The padding is
+then checked for correctness and removed.
+</p>
+<div class="example">
+<pre class="example">(import (industria crypto rsa))
+(let ((key (make-rsa-private-key
+            288412728347463293650191476303670753583
+            65537
+            190905048380501971055612558936725496993)))
+  (utf8-&gt;string
+   (rsa-pkcs1-decrypt
+    (rsa-pkcs1-encrypt (string-&gt;utf8 &quot;Hello&quot;)
+                       (rsa-private-&gt;public key))
+    key)))
+&rArr; &quot;Hello&quot;
+</pre></div>
+</dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpkcs1_002ddecrypt_002dsignature"></a>Procedure: <strong>rsa-pkcs1-decrypt-signature</strong> <em>signature public-key</em></dt>
+<dd><p>Decrypts the signature (a bytevector) contained in the <var>signature</var>
+integer by using the <var>public-key</var>. The signature initially
+contains PKCS #1 padding, but this is removed.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-rsa_002dpkcs1_002ddecrypt_002ddigest"></a>Procedure: <strong>rsa-pkcs1-decrypt-digest</strong> <em>signature public-key</em></dt>
+<dd><p>This performs the same operation as
+<code>rsa-pkcs1-decrypt-signature</code>, except it then treats the
+decrypted signature as a DER encoded DigestInfo. The return value is a
+list containing a digest algorithm specifier and a digest.
+</p></dd></dl>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="crypto-entropy.html#crypto-entropy" accesskey="p" rel="prev">crypto entropy</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

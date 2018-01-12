@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto aes (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto aes (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto aes (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="crypto-arcfour.html#crypto-arcfour" rel="next" title="crypto arcfour">
+<link href="crypto.html#crypto" rel="prev" title="crypto">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-aes"></a>
+<div class="header">
+<p>
+Next: <a href="crypto-arcfour.html#crypto-arcfour" accesskey="n" rel="next">crypto arcfour</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Advanced-Encryption-Standard"></a>
+<h4 class="subsection">2.1.1 Advanced Encryption Standard</h4>
+<p>The <code>(industria crypto aes)</code> library provides an implementation of
+the symmetrical Rijndael cipher as parameterized by the Advanced
+Encryption Standard (AES). It was created by the Belgian
+cryptographers Joan Daemen and Vincent Rijmen. Key lengths of 128, 192
+and 256 bits are supported.
+</p>
+<p>The code uses clever lookup tables and is probably as fast as any
+R6RS implementation of AES can be without using an FFI. The number
+of modes provided is pretty sparse though (only ECB and CTR). It also
+leaks key material via memory.
+</p>
+<dl>
+<dt><a name="index-expand_002daes_002dkey"></a>Procedure: <strong>expand-aes-key</strong> <em>key</em></dt>
+<dd><p>Expands the <var>key</var> into an <em>AES key schedule</em> suitable for
+<code>aes-encrypt!</code>. The <var>key</var> must be a bytevector of length 16,
+24 or 32 bytes. The type of the return value is unspecified.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-aes_002dencrypt_0021"></a>Procedure: <strong>aes-encrypt!</strong> <em>source source-start target target-start key-schedule</em></dt>
+<dd><p>Takes the 16 bytes at <var>source</var>+<var>source-start</var>, encrypts
+them in Electronic Code Book (ECB) mode using the given
+<var>key-schedule</var>, and then writes the result at
+<var>target</var>+<var>target-start</var>. The <var>source</var> and the <var>target</var>
+can be the same.
+</p>
+<div class="example">
+<pre class="example">(import (industria crypto aes))
+(let ((buf (string-&gt;utf8 &quot;A Scheme at work&quot;))
+      (sched (expand-aes-key (string-&gt;utf8 &quot;super-secret-key&quot;))))
+  (aes-encrypt! buf 0 buf 0 sched)
+  buf)
+&rArr; #vu8(116 7 242 187 114 235 130 138 166 39 24 204 117 224 5 8)
+</pre></div>
+
+<p>It is generally not a good idea to use ECB mode alone.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-reverse_002daes_002dschedule"></a>Procedure: <strong>reverse-aes-schedule</strong> <em>key-schedule</em></dt>
+<dd><p>Reverses the <var>key-schedule</var> to make it suitable for <code>aes-decrypt!</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-aes_002ddecrypt_0021"></a>Procedure: <strong>aes-decrypt!</strong> <em>source source-start target target-start key-schedule</em></dt>
+<dd><p>Performs the inverse of <code>aes-encrypt!</code>. The <var>key-schedule</var>
+should first be reversed with <code>reverse-aes-schedule</code>.
+</p>
+<div class="example">
+<pre class="example">(import (industria crypto aes))
+(let ((buf (bytevector-copy #vu8(116 7 242 187 114 235 130 138
+                                 166 39 24 204 117 224 5 8)))
+      (sched (reverse-aes-schedule
+              (expand-aes-key
+               (string-&gt;utf8 &quot;super-secret-key&quot;)))))
+  (aes-decrypt! buf 0 buf 0 sched)
+  (utf8-&gt;string buf))
+&rArr; &quot;A Scheme at work&quot;
+</pre></div>
+</dd></dl>
+
+<dl>
+<dt><a name="index-clear_002daes_002dschedule_0021"></a>Procedure: <strong>clear-aes-schedule!</strong> <em>key-schedule</em></dt>
+<dd><p>Clears the AES key schedule so that it no longer contains
+cryptographic material. Please note that there is no guarantee that
+the key material will actually be gone from memory. It might remain in
+temporary numbers or other values.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-aes_002dctr_0021"></a>Procedure: <strong>aes-ctr!</strong> <em>source source-start target target-start len key-schedule ctr</em></dt>
+<dd><p>Encrypts or decrypts the <var>len</var> bytes at
+<var>source</var>+<var>source-start</var> using Counter (CTR) mode and writes
+the result to <var>target</var>+<var>target-start</var>. The <var>len</var> does not
+need to be a block multiple. The <var>ctr</var> argument is a non-negative
+integer.
+</p>
+<p>This procedure is its own inverse and the <var>key-schedule</var> should
+not be reversed for decryption.
+</p>
+<p>Never encrypt more than once using the same <var>key-schedule</var> and
+<var>ctr</var> value. If you&rsquo;re not sure why that is a bad idea, you should
+read up on CTR mode.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-aes_002dcbc_002dencrypt_0021"></a>Procedure: <strong>aes-cbc-encrypt!</strong> <em>source source-start target target-start k key-schedule iv</em></dt>
+<dd><p>Encrypts <var>k</var> bytes in the bytevector <var>source</var> starting at
+<var>source-start</var> with AES in CBC mode and writes the result to
+<var>target</var> at <var>target-start</var>.
+</p>
+<p>The argument <var>k</var> must be an integer multiple of 16, which is the block length.
+</p>
+<p>The <var>iv</var> bytevector is an Initial Vector. It should be 16 bytes
+long, initialized to random bytes. This procedure updates the <var>iv</var>
+after processing a block.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-aes_002dcbc_002ddecrypt_0021"></a>Procedure: <strong>aes-cbc-decrypt!</strong> <em>source source-start target target-start k key-schedule iv</em></dt>
+<dd><p>The inverse of <code>aes-cbc-encrypt!</code>.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="crypto-arcfour.html#crypto-arcfour" accesskey="n" rel="next">crypto arcfour</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

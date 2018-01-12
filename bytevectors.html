@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>bytevectors (The Industria Libraries Manual)</title>
+
+<meta name="description" content="bytevectors (The Industria Libraries Manual)">
+<meta name="keywords" content="bytevectors (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="misc.html#misc" rel="up" title="misc">
+<link href="password.html#password" rel="next" title="password">
+<link href="base64.html#base64" rel="prev" title="base64">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="bytevectors"></a>
+<div class="header">
+<p>
+Next: <a href="password.html#password" accesskey="n" rel="next">password</a>, Previous: <a href="base64.html#base64" accesskey="p" rel="prev">base64</a>, Up: <a href="misc.html#misc" accesskey="u" rel="up">misc</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Bytevector-utilities"></a>
+<h4 class="subsection">2.5.2 Bytevector utilities</h4>
+<p>The <code>(industria bytevectors)</code> library contains utilities for
+working with R6RS bytevectors.
+</p>
+<dl>
+<dt><a name="index-bytevector_002dappend"></a>Procedure: <strong>bytevector-append</strong> <em>[bytevector ...]</em></dt>
+<dd><p>Appends the given bytevectors.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-bytevector_002dconcatenate"></a>Procedure: <strong>bytevector-concatenate</strong> <em>list</em></dt>
+<dd><p><var>list</var> is a list of bytevectors. The bytevectors are appended.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-subbytevector"></a>Procedure: <strong>subbytevector</strong> <em>bytevector start [end]</em></dt>
+<dd><p>Analogous to <code>substring</code>. Returns a new bytevector containing the
+bytes of <var>bytevector</var> from index <code>start</code> to <var>end</var>
+(exclusive).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-bytevector_002du8_002dindex"></a>Procedure: <strong>bytevector-u8-index</strong> <em>bytevector byte [start end]</em></dt>
+<dd><p>Searches <var>bytevector</var> for <var>byte</var>, from left to right. The
+optional arguments <var>start</var> and <var>end</var> give the range to search.
+By default the whole bytevector is searched. Returns <code>#f</code> is no
+match is found.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-bytevector_002du8_002dindex_002dright"></a>Procedure: <strong>bytevector-u8-index-right</strong> <em>bytevector byte [start end]</em></dt>
+<dd><p>Analogous to <code>bytevector-u8-index-right</code>, except this procedure
+searches right-to-left.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-bytevector_002d_003euint"></a>Procedure: <strong>bytevector-&gt;uint</strong> <em>bytevector</em></dt>
+<dd><p><var>bytevector</var> is interpreted as an unsigned integer in big endian
+byte order and is converted to an integer. The empty bytevector is
+treated as zero.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-uint_002d_003ebytevector"></a>Procedure: <strong>uint-&gt;bytevector</strong> <em>integer</em></dt>
+<dd><p><var>integer</var> is converted to an unsigned integer in big endian byte
+order. The returned bytevector has the minimum possible length. Zero
+is converted to the empty bytevector.
+</p>
+<div class="example">
+<pre class="example">(import (industria bytevectors))
+(uint-&gt;bytevector 256)
+&rArr; #vu8(1 0)
+(uint-&gt;bytevector 255)
+&rArr; #vu8(255)
+</pre></div>
+</dd></dl>
+
+<dl>
+<dt><a name="index-bytevector_003d_003f_002fconstant_002dtime"></a>Procedure: <strong>bytevector=?/constant-time</strong> <em>bytevector1 bytevector2</em></dt>
+<dd><p>True if <var>bytevector1</var> and <var>bytevector2</var> are of equal length
+and have the same contents.
+</p>
+<p>This is a drop-in replacement for <code>bytevector=?</code> that does not
+leak information about the outcome of the comparison by how much time
+the comparison takes to perform. It works by accumulating the
+differences between the bytevectors. This kind of operation is most
+often needed when comparing fixed-length message digests, so the
+length comparison is done in the obvious (fast) way.
+</p></dd></dl>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="password.html#password" accesskey="n" rel="next">password</a>, Previous: <a href="base64.html#base64" accesskey="p" rel="prev">base64</a>, Up: <a href="misc.html#misc" accesskey="u" rel="up">misc</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

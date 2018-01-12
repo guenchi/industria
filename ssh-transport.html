@@ -1,0 +1,377 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>ssh transport (The Industria Libraries Manual)</title>
+
+<meta name="description" content="ssh transport (The Industria Libraries Manual)">
+<meta name="keywords" content="ssh transport (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="ssh.html#ssh" rel="up" title="ssh">
+<link href="ssh-userauth.html#ssh-userauth" rel="next" title="ssh userauth">
+<link href="ssh-connection.html#ssh-connection" rel="prev" title="ssh connection">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="ssh-transport"></a>
+<div class="header">
+<p>
+Next: <a href="ssh-userauth.html#ssh-userauth" accesskey="n" rel="next">ssh userauth</a>, Previous: <a href="ssh-connection.html#ssh-connection" accesskey="p" rel="prev">ssh connection</a>, Up: <a href="ssh.html#ssh" accesskey="u" rel="up">ssh</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Secure-Shell-Transport-Layer-Protocol"></a>
+<h4 class="subsection">2.4.2 Secure Shell Transport Layer Protocol</h4>
+<p>The <code>(industria ssh transport)</code> library implements record
+types, parsers and formatters for the transport layer packets in SSH.
+</p>
+<p>See RFC 4253 for a description of this protocol.
+</p>
+<dl>
+<dt><a name="index-register_002dtransport"></a>Procedure: <strong>register-transport</strong> <em>registrar</em></dt>
+<dd><p>Registers the packet types for the transport layer so that they may be
+received and sent. A registrar may be obtained using
+<code>ssh-conn-registrar</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002ddisconnect"></a>Procedure: <strong>make-disconnect</strong> <em>code message language</em></dt>
+<dd><p>Constructs a packet that closes the SSH connection. After sending or
+receiving this message the connection should be closed with
+<code>close-ssh</code>. The <code>ssh-error</code> procedure may be more
+convenient than manually constructing and sending a <code>disconnect</code>
+packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-disconnect_003f"></a>Procedure: <strong>disconnect?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is a <code>disconnect</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-disconnect_002dcode"></a>Procedure: <strong>disconnect-code</strong> <em>pkt</em></dt>
+<dd><p>This field is an integer that represents the cause of the disconnect.
+The reason could be one of these (exported) constants:
+</p>
+<dl compact="compact">
+<dt><code>SSH-DISCONNECT-HOST-NOT-ALLOWED-TO-CONNECT</code>
+<a name="index-SSH_002dDISCONNECT_002dHOST_002dNOT_002dALLOWED_002dTO_002dCONNECT"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-PROTOCOL-ERROR</code>
+<a name="index-SSH_002dDISCONNECT_002dPROTOCOL_002dERROR"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-KEY-EXCHANGE-FAILED</code>
+<a name="index-SSH_002dDISCONNECT_002dKEY_002dEXCHANGE_002dFAILED"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-RESERVED</code>
+<a name="index-SSH_002dDISCONNECT_002dRESERVED"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-MAC-ERROR</code>
+<a name="index-SSH_002dDISCONNECT_002dMAC_002dERROR"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-COMPRESSION-ERROR</code>
+<a name="index-SSH_002dDISCONNECT_002dCOMPRESSION_002dERROR"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-SERVICE-NOT-AVAILABLE</code>
+<a name="index-SSH_002dDISCONNECT_002dSERVICE_002dNOT_002dAVAILABLE"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-PROTOCOL-VERSION-NOT-SUPPORTED</code>
+<a name="index-SSH_002dDISCONNECT_002dPROTOCOL_002dVERSION_002dNOT_002dSUPPORTED"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-HOST-KEY-NOT-VERIFIABLE</code>
+<a name="index-SSH_002dDISCONNECT_002dHOST_002dKEY_002dNOT_002dVERIFIABLE"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-CONNECTION-LOST</code>
+<a name="index-SSH_002dDISCONNECT_002dCONNECTION_002dLOST"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-BY-APPLICATION</code>
+<a name="index-SSH_002dDISCONNECT_002dBY_002dAPPLICATION"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-TOO-MANY-CONNECTIONS</code>
+<a name="index-SSH_002dDISCONNECT_002dTOO_002dMANY_002dCONNECTIONS"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-AUTH-CANCELLED-BY-USER</code>
+<a name="index-SSH_002dDISCONNECT_002dAUTH_002dCANCELLED_002dBY_002dUSER"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-NO-MORE-AUTH-METHODS-AVAILABLE</code>
+<a name="index-SSH_002dDISCONNECT_002dNO_002dMORE_002dAUTH_002dMETHODS_002dAVAILABLE"></a>
+</dt>
+<dt><code>SSH-DISCONNECT-ILLEGAL-USER-NAME</code>
+<a name="index-SSH_002dDISCONNECT_002dILLEGAL_002dUSER_002dNAME"></a>
+</dt>
+</dl>
+</dd></dl>
+
+<dl>
+<dt><a name="index-disconnect_002dmessage"></a>Procedure: <strong>disconnect-message</strong> <em>pkt</em></dt>
+<dd><p>This is a human-readable explanation for the disconnect.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-disconnect_002dlanguage"></a>Procedure: <strong>disconnect-language</strong> <em>pkt</em></dt>
+<dd><p>Most commonly unused, <code>&quot;&quot;</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dignore"></a>Procedure: <strong>make-ignore</strong> <em>data</em></dt>
+<dd><p>Construct a new <code>ignore</code> packet using the bytevector <var>data</var>
+as the payload. These packets are ignored by receivers but can be used
+to make traffic analysis more difficult.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ignore_003f"></a>Procedure: <strong>ignore?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is an <code>ignore</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002dunimplemented"></a>Procedure: <strong>make-unimplemented</strong> <em>sequence-number</em></dt>
+<dd><p>This constructs a message that should be sent when a received packet
+type is not implemented.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-unimplemented_003f"></a>Procedure: <strong>unimplemented?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is an <code>unimplemented</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-unimplemented_002dsequence_002dnumber"></a>Procedure: <strong>unimplemented-sequence-number</strong> <em>pkt</em></dt>
+<dd><p>Each packet sent over an SSH connection is given an implicit sequence
+number. This field exactly identifies one SSH packet.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002ddebug"></a>Procedure: <strong>make-debug</strong> <em>always-display? message language</em></dt>
+<dd><p>Constructs a debug packet. It contains a message that a client or
+server may optionally display to the user.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-debug_003f"></a>Procedure: <strong>debug?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is a <code>debug</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-debug_002dalways_002ddisplay_003f"></a>Procedure: <strong>debug-always-display?</strong> <em>pkt</em></dt>
+<dd><p>If this field is true then the message should be displayed.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-debug_002dmessage"></a>Procedure: <strong>debug-message</strong> <em>pkt</em></dt>
+<dd><p>This is a string containing the debugging message. If it is displayed
+to the user it should first be filtered.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-debug_002dlanguage"></a>Procedure: <strong>debug-language</strong> <em>pkt</em></dt>
+<dd><p>Most commonly unused, <code>&quot;&quot;</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dservice_002drequest"></a>Procedure: <strong>make-service-request</strong> <em>name</em></dt>
+<dd><p>This constructs a service request packet. The first service requested
+is normally <code>&quot;ssh-userauth&quot;</code>. See <a href="ssh-userauth.html#ssh-userauth">ssh userauth</a>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-service_002drequest_003f"></a>Procedure: <strong>service-request?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is a <code>service-request</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-service_002drequest_002dname"></a>Procedure: <strong>service-request-name</strong> <em>pkt</em></dt>
+<dd><p>This is the name of the service being requested, e.g.
+<code>&quot;ssh-userauth&quot;</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dservice_002daccept"></a>Procedure: <strong>make-service-accept</strong> <em>name</em></dt>
+<dd><p>Constructs a request which indicates that access to a requested
+service was granted.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-service_002daccept_003f"></a>Procedure: <strong>service-accept?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is a <code>service-accept</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-service_002daccept_002dname"></a>Procedure: <strong>service-accept-name</strong> <em>pkt</em></dt>
+<dd><p>This field contains the name of the service to which access was
+granted.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dkexinit"></a>Procedure: <strong>make-kexinit</strong> <em>cookie kex-algorithms server-host-key-algorithms             encryption-algorithms-client-to-server encryption-algorithms-server-to-client             mac-algorithms-client-to-server mac-algorithms-server-to-client             compression-algorithms-client-to-server             compression-algorithms-server-to-client             languages-client-to-server languages-server-to-client             first-kex-packet-follows? reserved</em></dt>
+<dd><p>Constructs a <code>kexinit</code> packet, which is used as part of the key
+exchange algorithm. The arguments are explained below. You probably
+want to use <code>build-kexinit-packet</code> instead of this procedure.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_003f"></a>Procedure: <strong>kexinit?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is a <code>kexinit</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dcookie"></a>Procedure: <strong>kexinit-cookie</strong> <em>pkt</em></dt>
+<dd><p>This field is a random bytevector. It is used in the key exchange to
+make things more difficult for an attacker.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dkex_002dalgorithms"></a>Procedure: <strong>kexinit-kex-algorithms</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported key exchange algorithms (mostly variations on
+Diffie-Hellman).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dserver_002dhost_002dkey_002dalgorithms"></a>Procedure: <strong>kexinit-server-host-key-algorithms</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported host key algorithms.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dencryption_002dalgorithms_002dclient_002dto_002dserver"></a>Procedure: <strong>kexinit-encryption-algorithms-client-to-server</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported encryption algorithms for packets sent from
+the client to the server.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dencryption_002dalgorithms_002dserver_002dto_002dclient"></a>Procedure: <strong>kexinit-encryption-algorithms-server-to-client</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported encryption algorithms for packets sent from
+the server to the client.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dmac_002dalgorithms_002dclient_002dto_002dserver"></a>Procedure: <strong>kexinit-mac-algorithms-client-to-server</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported Message Authentication Code (MAC) algorithms
+for packets sent from the client to the server.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dmac_002dalgorithms_002dserver_002dto_002dclient"></a>Procedure: <strong>kexinit-mac-algorithms-server-to-client</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported Message Authentication Code (MAC) algorithms
+for packets sent from the server to the client.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dcompression_002dalgorithms_002dclient_002dto_002dserver"></a>Procedure: <strong>kexinit-compression-algorithms-client-to-server</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported compression algorithms for packets sent from
+the client to the server. The algorithm <code>&quot;none&quot;</code> is currently the
+only implemented compression algorithm.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dcompression_002dalgorithms_002dserver_002dto_002dclient"></a>Procedure: <strong>kexinit-compression-algorithms-server-to-client</strong> <em>pkt</em></dt>
+<dd><p>A list of the supported compression algorithms for packets sent from
+the server to the client. The algorithm <code>&quot;none&quot;</code> is currently the
+only implemented compression algorithm.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dlanguages_002dclient_002dto_002dserver"></a>Procedure: <strong>kexinit-languages-client-to-server</strong> <em>pkt</em></dt>
+<dd><p>Normally never used. Set to the empty list.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dlanguages_002dserver_002dto_002dclient"></a>Procedure: <strong>kexinit-languages-server-to-client</strong> <em>pkt</em></dt>
+<dd><p>Normally never used. Set to the empty list.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dfirst_002dkex_002dpacket_002dfollows_003f"></a>Procedure: <strong>kexinit-first-kex-packet-follows?</strong> <em>pkt</em></dt>
+<dd><p>If this field is true then the server and client will try to cooperate
+in order to make the key exchange run faster over connections with
+high latency. This optimization only works when the server and client
+both prefer the same algorithms.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-kexinit_002dreserved"></a>Procedure: <strong>kexinit-reserved</strong> <em>pkt</em></dt>
+<dd><p>This field must be zero.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002dnewkeys"></a>Procedure: <strong>make-newkeys</strong></dt>
+<dd><p>Constructs a new <code>newkeys</code> packet. This message is used as part
+of key exchange to notify the remote side that new encryption keys are
+being used.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-newkeys_003f"></a>Procedure: <strong>newkeys?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is a <var>newkeys</var> packet.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="ssh-userauth.html#ssh-userauth" accesskey="n" rel="next">ssh userauth</a>, Previous: <a href="ssh-connection.html#ssh-connection" accesskey="p" rel="prev">ssh connection</a>, Up: <a href="ssh.html#ssh" accesskey="u" rel="up">ssh</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Top (The Industria Libraries Manual)</title>
+
+<meta name="description" content="Top (The Industria Libraries Manual)">
+<meta name="keywords" content="Top (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="../dir/index.html" rel="up" title="(dir)">
+<link href="Getting-started.html#Getting-started" rel="next" title="Getting started">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<h1 class="settitle" align="center">The Industria Libraries Manual</h1>
+
+
+
+
+
+
+<a name="SEC_Contents"></a>
+<h2 class="contents-heading">Table of Contents</h2>
+
+<div class="contents">
+
+<ul class="no-bullet">
+  <li><a name="toc-Getting-started-1" href="Getting-started.html#Getting-started">1 Getting started</a>
+  <ul class="no-bullet">
+    <li><a name="toc-Installation-1" href="Installation.html#Installation">1.1 Installation</a></li>
+    <li><a name="toc-Usage-1" href="Usage.html#Usage">1.2 Usage</a></li>
+  </ul></li>
+  <li><a name="toc-Library-reference-1" href="Library-reference.html#Library-reference">2 Library reference</a>
+  <ul class="no-bullet">
+    <li><a name="toc-Cryptographic-primitives" href="crypto.html#crypto">2.1 Cryptographic primitives</a>
+    <ul class="no-bullet">
+      <li><a name="toc-Advanced-Encryption-Standard" href="crypto-aes.html#crypto-aes">2.1.1 Advanced Encryption Standard</a></li>
+      <li><a name="toc-ARCFOUR-stream-cipher" href="crypto-arcfour.html#crypto-arcfour">2.1.2 ARCFOUR stream cipher</a></li>
+      <li><a name="toc-The-Blowfish-Cipher" href="crypto-blowfish.html#crypto-blowfish">2.1.3 The Blowfish Cipher</a></li>
+      <li><a name="toc-Data-Encryption-Standard" href="crypto-des.html#crypto-des">2.1.4 Data Encryption Standard</a></li>
+      <li><a name="toc-Diffie_002dHellman-key-exchange" href="crypto-dh.html#crypto-dh">2.1.5 Diffie-Hellman key exchange</a></li>
+      <li><a name="toc-Digital-Signature-Algorithm" href="crypto-dsa.html#crypto-dsa">2.1.6 Digital Signature Algorithm</a></li>
+      <li><a name="toc-Elliptic-Curve-Cryptography" href="crypto-ec.html#crypto-ec">2.1.7 Elliptic Curve Cryptography</a></li>
+      <li><a name="toc-Elliptic-Curve-Digital-Signature-Algorithm-_0028ECDSA_0029" href="crypto-ecdsa.html#crypto-ecdsa">2.1.8 Elliptic Curve Digital Signature Algorithm (ECDSA)</a></li>
+      <li><a name="toc-Entropy-and-randomness" href="crypto-entropy.html#crypto-entropy">2.1.9 Entropy and randomness</a></li>
+      <li><a name="toc-RSA-public-key-encryption-and-signatures" href="crypto-rsa.html#crypto-rsa">2.1.10 RSA public key encryption and signatures</a></li>
+    </ul></li>
+    <li><a name="toc-OpenPGP-signature-verification" href="openpgp.html#openpgp">2.2 OpenPGP signature verification</a></li>
+    <li><a name="toc-Off_002dthe_002dRecord-Messaging" href="otr.html#otr">2.3 Off-the-Record Messaging</a></li>
+    <li><a name="toc-Secure-Shell-_0028SSH_0029" href="ssh.html#ssh">2.4 Secure Shell (SSH)</a>
+    <ul class="no-bullet">
+      <li><a name="toc-Secure-Shell-Connection-Protocol" href="ssh-connection.html#ssh-connection">2.4.1 Secure Shell Connection Protocol</a></li>
+      <li><a name="toc-Secure-Shell-Transport-Layer-Protocol" href="ssh-transport.html#ssh-transport">2.4.2 Secure Shell Transport Layer Protocol</a></li>
+      <li><a name="toc-Secure-Shell-Authentication-Protocol" href="ssh-userauth.html#ssh-userauth">2.4.3 Secure Shell Authentication Protocol</a></li>
+      <li><a name="toc-SSH-public-key-format-conversion" href="ssh-public_002dkeys.html#ssh-public_002dkeys">2.4.4 SSH public key format conversion</a></li>
+    </ul></li>
+    <li><a name="toc-Various-utilities" href="misc.html#misc">2.5 Various utilities</a>
+    <ul class="no-bullet">
+      <li><a name="toc-Base-64-encoding-and-decoding" href="base64.html#base64">2.5.1 Base 64 encoding and decoding</a></li>
+      <li><a name="toc-Bytevector-utilities" href="bytevectors.html#bytevectors">2.5.2 Bytevector utilities</a></li>
+      <li><a name="toc-Password-hashing" href="password.html#password">2.5.3 Password hashing</a></li>
+      <li><a name="toc-Basic-TCP-client-connections" href="tcp.html#tcp">2.5.4 Basic TCP client connections</a></li>
+    </ul></li>
+  </ul></li>
+  <li><a name="toc-Demo-programs-1" href="Demo-programs.html#Demo-programs">3 Demo programs</a>
+  <ul class="no-bullet">
+    <li><a name="toc-checksig-_002d_002d-verifies-OpenPGP-signature-files" href="checksig.html#checksig">3.1 checksig &ndash; verifies OpenPGP signature files</a></li>
+    <li><a name="toc-honingsburk-_002d_002d-simple-Secure-Shell-honey-pot" href="honingsburk.html#honingsburk">3.2 honingsburk &ndash; simple Secure Shell honey pot</a></li>
+    <li><a name="toc-secsh_002dclient-_002d_002d-manually-operated-Secure-Shell-client" href="secsh_002dclient.html#secsh_002dclient">3.3 secsh-client &ndash; manually operated Secure Shell client</a></li>
+  </ul></li>
+  <li><a name="toc-Index-1" href="Index.html#Index">Index</a></li>
+</ul>
+</div>
+
+
+<a name="Top"></a>
+<div class="header">
+<p>
+Next: <a href="Getting-started.html#Getting-started" accesskey="n" rel="next">Getting started</a>, Up: <a href="../dir/index.html" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Industria"></a>
+<h1 class="top">Industria</h1>
+
+<p>This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+</p>
+<p>Copyright &copy; 2010, 2011, 2012, 2013, 2016, 2017, 2018 G&ouml;ran Weinholt <a href="mailto:goran@weinholt.se">goran@weinholt.se</a>.
+</p>
+<blockquote>
+<p>Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the &quot;Software&quot;),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+</p>
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+</p></blockquote>
+
+
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Getting-started.html#Getting-started" accesskey="1">Getting started</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Installation and usage
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Library-reference.html#Library-reference" accesskey="2">Library reference</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">How to use the individual libraries
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Demo-programs.html#Demo-programs" accesskey="3">Demo programs</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Demonstrations of some libraries
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Index.html#Index" accesskey="4">Index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Index of concepts, functions, etc
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Getting-started.html#Getting-started" accesskey="n" rel="next">Getting started</a>, Up: <a href="../dir/index.html" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

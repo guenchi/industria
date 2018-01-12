@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>tcp (The Industria Libraries Manual)</title>
+
+<meta name="description" content="tcp (The Industria Libraries Manual)">
+<meta name="keywords" content="tcp (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="misc.html#misc" rel="up" title="misc">
+<link href="Demo-programs.html#Demo-programs" rel="next" title="Demo programs">
+<link href="password.html#password" rel="prev" title="password">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="tcp"></a>
+<div class="header">
+<p>
+Previous: <a href="password.html#password" accesskey="p" rel="prev">password</a>, Up: <a href="misc.html#misc" accesskey="u" rel="up">misc</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Basic-TCP-client-connections"></a>
+<h4 class="subsection">2.5.4 Basic TCP client connections</h4>
+<p>The <code>(industria tcp)</code> provides a simple TCP client. This
+library needs implementation-specific code, so the author is not eager
+to provide more than the bare minimum.
+</p>
+<p>This library should work with Ikarus Scheme, GNU Guile, Larceny (not
+tested with Petit Larceny and Common Larceny), Mosh Scheme, Petite
+Chez Scheme (as long as the nc command is installed), Vicare Scheme,
+and Ypsilon Scheme. Once upon a time it also worked with PLT Scheme,
+but it has not been tested with Racket.
+</p>
+<dl>
+<dt><a name="index-tcp_002dconnect"></a>Procedure: <strong>tcp-connect</strong> <em>hostname portname</em></dt>
+<dd><p>Initiates a TCP connection to the given <var>hostname</var> and
+<var>portname</var> (both of which are strings).
+</p>
+<p>Returns an input-port and an output-port. They are not guaranteed to
+be distinct.
+</p></dd></dl>
+
+
+
+</body>
+</html>

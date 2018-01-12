@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>openpgp (The Industria Libraries Manual)</title>
+
+<meta name="description" content="openpgp (The Industria Libraries Manual)">
+<meta name="keywords" content="openpgp (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Library-reference.html#Library-reference" rel="up" title="Library reference">
+<link href="otr.html#otr" rel="next" title="otr">
+<link href="crypto-rsa.html#crypto-rsa" rel="prev" title="crypto rsa">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="openpgp"></a>
+<div class="header">
+<p>
+Next: <a href="otr.html#otr" accesskey="n" rel="next">otr</a>, Previous: <a href="crypto.html#crypto" accesskey="p" rel="prev">crypto</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="OpenPGP-signature-verification"></a>
+<h3 class="section">2.2 OpenPGP signature verification</h3>
+
+<p>The <code>(industria openpgp)</code> library provides procedures for
+reading OpenPGP keyrings and verifying signatures. OpenPGP signatures
+can be created with e.g. GNU Private Guard (GnuPG) and are often
+used to verify the integrity of software releases.
+</p>
+<p>Version 4 keys and version 3/4 signatures are supported. The
+implemented public key algorithms are RSA and DSA, and it verifies
+signatures made using the message digest algorithms MD5, SHA-1,
+SHA-224, SHA-256, SHA-384 and SHA-512 (all the standard algorithms
+except RIPE-MD160).
+</p>
+<p>An OpenPGP key is actually a list of OpenPGP packets with a certain
+structure: first is the primary key (e.g. an RSA or DSA key), next
+possibly a revocation, then a number of user IDs, attributes,
+signatures and also subkeys (which are just like primary keys, except
+marked as subkeys). See RFC 4880 section 11 for the exact composition.
+This library represents keyrings as hashtables indexed by key ID and
+where the entries are lists of packets in the order they appeared in
+the keyring file.
+</p>
+<p>Please note that this library assumes the program that wrote the
+keyring did due diligence when importing keys, and made sure that
+e.g. subkey binding signatures are verified, and that the order of
+packets is correct.
+</p>
+<dl>
+<dt><a name="index-port_002dascii_002darmored_003f"></a>Procedure: <strong>port-ascii-armored?</strong> <em>port</em></dt>
+<dd><p>Returns false if the data at the beginning of <var>port</var> doesn&rsquo;t look
+like a valid binary OpenPGP packet. The port must be a binary input
+port. The port position is not changed.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-get_002dopenpgp_002dpacket"></a>Procedure: <strong>get-openpgp-packet</strong> <em>port</em></dt>
+<dd><p>Reads an OpenPGP packet from <var>port</var>, which must be a binary input
+port. An error is raised if the packet type is unimplemented.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-get_002dopenpgp_002dkeyring"></a>Procedure: <strong>get-openpgp-keyring</strong> <em>p</em></dt>
+<dd><p>Reads a keyring from the binary input port <var>p</var>. Returns a
+hashtable where all primary keys and subkeys are indexed by their key
+ID (an integer). The values in the hashtable are lists that contain
+all OpenPGP packets associated with each key. No effort at all is made
+to verify that keys have valid signatures.
+</p>
+<p>Warning: this can take a while if the keyring is very big.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-get_002dopenpgp_002dkeyring_002fkeyid"></a>Procedure: <strong>get-openpgp-keyring/keyid</strong> <em>p keyid</em></dt>
+<dd><p>Searches the binary input port <var>p</var> for the public key with the
+given <var>keyid</var>. Returns a hashtable similar to
+<code>get-openpgp-keyring</code>, except it will only contain the primary
+and subkeys associated with the <var>keyid</var>.
+</p>
+<p>The <var>keyid</var> can be either a 64 or 32 bit exact integer.
+</p>
+<p>Warning: this is faster than get-openpgp-keyring, but is still rather
+slow with big keyrings. The speed depends on the SHA-1 implementation.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-get_002dopenpgp_002ddetached_002dsignature_002fascii"></a>Procedure: <strong>get-openpgp-detached-signature/ascii</strong> <em>p</em></dt>
+<dd><p>Reads a detached OpenPGP signature from the textual input port
+<var>p</var>. Returns either an OpenPGP signature object or the end of file
+object.
+</p>
+<p>These signatures can be created with e.g. <code>gpg -a --detach-sign filename</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-verify_002dopenpgp_002dsignature"></a>Procedure: <strong>verify-openpgp-signature</strong> <em>sig keyring p</em></dt>
+<dd><p>Verifies the signature data in <var>sig</var>. The <var>keyring</var> hashtable
+is used to find the public key of the signature issuer. The signed
+data is read from the binary input port <var>p</var>.
+</p>
+<p>This procedure returns two values. These are the possible
+combinations:
+</p><ul>
+<li> <tt>good-signature </tt><em>key-data</em> &ndash; The signature matches
+the data. The <em>key-data</em> contains the public key list that was
+used to verify the signature.
+</li><li> <tt>bad-signature </tt><em>key-data</em> &ndash; The signature does not
+match the data. The <em>key-data</em> is the same as above.
+</li><li> <tt>missing-key </tt><em>key-id</em> &ndash; The issuer public key for the
+signature was not found in the keyring. The <em>key-id</em> is the
+64-bit key ID of the issuer.
+</li></ul>
+</dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dsignature_003f"></a>Procedure: <strong>openpgp-signature?</strong> <em>obj</em></dt>
+<dd><p>True if <var>obj</var> is an OpenPGP signature object. Such objects are
+read with <code>get-openpgp-detached-signature/ascii</code> and are also
+contained in keyring entries.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dsignature_002dissuer"></a>Procedure: <strong>openpgp-signature-issuer</strong> <em>sig</em></dt>
+<dd><p>The 64-bit key ID of the OpenPGP public key that issued the
+signature <var>sig</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dsignature_002dpublic_002dkey_002dalgorithm"></a>Procedure: <strong>openpgp-signature-public-key-algorithm</strong> <em>sig</em></dt>
+<dd><p>Returns the name of the public key algorithm used to create the
+signature <var>sig</var>. This is currently the symbol <code>dsa</code> or
+<em>rsa</em>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dsignature_002dhash_002dalgorithm"></a>Procedure: <strong>openpgp-signature-hash-algorithm</strong> <em>sig</em></dt>
+<dd><p>The name of the message digest algorithm used to create the
+signature <var>sig</var>. This is currently one of <code>md5</code>,
+<code>sha-1</code>, <code>ripe-md160</code> (unsupported), <code>sha-224</code>,
+<code>sha-256</code>, <code>sha-384</code> or <code>sha-512</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dsignature_002dcreation_002dtime"></a>Procedure: <strong>openpgp-signature-creation-time</strong> <em>sig</em></dt>
+<dd><p>An SRFI-19 date object representing the time at which the signature
+<var>sig</var> was created.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dsignature_002dexpiration_002dtime"></a>Procedure: <strong>openpgp-signature-expiration-time</strong> <em>sig</em></dt>
+<dd><p>An SRFI-19 date object representing the time at which the signature
+<var>sig</var> expires. Returns <code>#f</code> if there&rsquo;s no expiration time.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002duser_002did_003f"></a>Procedure: <strong>openpgp-user-id?</strong> <em>obj</em></dt>
+<dd><p>True if <var>obj</var> is an OpenPGP user id.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002duser_002did_002dvalue"></a>Procedure: <strong>openpgp-user-id-value</strong> <em>user-id</em></dt>
+<dd><p>The string value of the <var>user-id</var>. This is often the name of the
+person who owns the key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002duser_002dattribute_003f"></a>Procedure: <strong>openpgp-user-attribute?</strong> <em>obj</em></dt>
+<dd><p>True if <var>obj</var> is an OpenPGP user attribute. Attributes are used to
+encode JPEG images. There&rsquo;s currently no way to access the image.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dpublic_002dkey_003f"></a>Procedure: <strong>openpgp-public-key?</strong> <em>obj</em></dt>
+<dd><p>True if <var>obj</var> is an OpenPGP primary key or subkey.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dpublic_002dkey_002dsubkey_003f"></a>Procedure: <strong>openpgp-public-key-subkey?</strong> <em>key</em></dt>
+<dd><p>True if <var>obj</var> is a subkey.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dpublic_002dkey_002dvalue"></a>Procedure: <strong>openpgp-public-key-value</strong> <em>key</em></dt>
+<dd><p>The DSA or RSA public key contained in the OpenPGP public <var>key</var>.
+The value returned has the same type as the <code>(crypto weinholt
+dsa)</code> or <code>(crypto weinholt rsa)</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dpublic_002dkey_002dfingerprint"></a>Procedure: <strong>openpgp-public-key-fingerprint</strong> <em>key</em></dt>
+<dd><p>The fingerprint of the OpenPGP public <var>key</var> as a bytevector. This
+is an SHA-1 digest based on the public key values.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dformat_002dfingerprint"></a>Procedure: <strong>openpgp-format-fingerprint</strong> <em>bv</em></dt>
+<dd><p>Formats the bytevector <var>bv</var>, which was presumably created by
+<code>openpgp-public-key-fingerprint</code>, as a string in the format
+preferred for PGP public key fingerprints.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-openpgp_002dpublic_002dkey_002did"></a>Procedure: <strong>openpgp-public-key-id</strong> <em>key</em></dt>
+<dd><p>The 64-bit key ID of the OpenPGP public <var>key</var>.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="otr.html#otr" accesskey="n" rel="next">otr</a>, Previous: <a href="crypto.html#crypto" accesskey="p" rel="prev">crypto</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

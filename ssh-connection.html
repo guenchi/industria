@@ -1,0 +1,951 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>ssh connection (The Industria Libraries Manual)</title>
+
+<meta name="description" content="ssh connection (The Industria Libraries Manual)">
+<meta name="keywords" content="ssh connection (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="ssh.html#ssh" rel="up" title="ssh">
+<link href="ssh-transport.html#ssh-transport" rel="next" title="ssh transport">
+<link href="ssh.html#ssh" rel="prev" title="ssh">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="ssh-connection"></a>
+<div class="header">
+<p>
+Next: <a href="ssh-transport.html#ssh-transport" accesskey="n" rel="next">ssh transport</a>, Up: <a href="ssh.html#ssh" accesskey="u" rel="up">ssh</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Secure-Shell-Connection-Protocol"></a>
+<h4 class="subsection">2.4.1 Secure Shell Connection Protocol</h4>
+<p>The <code>(industria ssh connection)</code> library implements record
+types, parsers and formatters for the connection protocol packets in
+SSH.
+</p>
+<p>The connection protocol handles two types of communication: global
+requests and channels. The global requests can be used to setup TCP/IP
+port forwarding. Most communication over SSH passes through channels.
+Channels are opened with the <code>channel-open</code> requests. The client
+and the server each assign an ID number to a channel: one ID is sent
+in the <code>channel-open</code> packet, the other ID in the
+<code>channel-open-confirmation</code> packet. In Industria all packets that
+are directed to a specific channel inherit from the
+<code>channel-packet</code> record type and the ID can be found with the
+<code>channel-packet-recipient</code> procedure.
+</p>
+<p>Strings and bytevectors may be used interchangeably when constructing
+packets. Strings will automatically be converted with
+<code>string-&gt;utf8</code>. When these packets are received the parser will
+either parse those fields either as a string or a bytevector. A
+bytevector will be used when the field can contain more or less
+arbitrary data, e.g. filenames.
+</p>
+<p>The text of this section uses the words &ldquo;packet&rdquo;, &ldquo;message&rdquo; and
+&ldquo;request&rdquo; interchangeably.
+</p>
+<p>See RFC 4254 for a more detailed description of this protocol.
+</p>
+<dl>
+<dt><a name="index-register_002dconnection"></a>Procedure: <strong>register-connection</strong> <em>registrar</em></dt>
+<dd><p>Registers the packet types for the connection protocol so that they
+may be received and sent. A registrar may be obtained from an ssh-conn
+object using <code>ssh-conn-registrar</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dglobal_002drequest"></a>Procedure: <strong>make-global-request</strong> <em>type want-reply?</em></dt>
+<dd><p>Constructs a global request: a connection request not related to any
+channel. Some global requests contain additional fields. These
+requests are represented by the <code>global-request/*</code> packets.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_003f"></a>Procedure: <strong>global-request?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>global-request?</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002dtype"></a>Procedure: <strong>global-request-type</strong> <em>pkt</em></dt>
+<dd><p>This field contains a string identifying the type of the request,
+e.g. <code>&quot;no-more-sessions@openssh.com&quot;</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002dwant_002dreply_003f"></a>Procedure: <strong>global-request-want-reply?</strong> <em>pkt</em></dt>
+<dd><p>This field is true if the sender expects a <code>request-success</code> or
+<code>request-failure</code> record in response.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002dglobal_002drequest_002ftcpip_002dforward"></a>Procedure: <strong>make-global-request/tcpip-forward</strong> <em>want-reply? address port</em></dt>
+<dd><p>Constructs a request that instructs the server to bind a TCP server port
+and forward connections to the client.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002ftcpip_002dforward_003f"></a>Procedure: <strong>global-request/tcpip-forward?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>global-request/tcpip-forward</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002ftcpip_002dforward_002daddress"></a>Procedure: <strong>global-request/tcpip-forward-address</strong> <em>req</em></dt>
+<dd><p>This field is a string that represents the address to which the server
+should bind the TCP server port. Some addresses are given special meaning:
+</p>
+<dl compact="compact">
+<dt><code>&quot;&quot;</code></dt>
+<dd><p>The server should listen to all its addresses on all supported protocols
+(IPv4, IPV6, etc).
+</p></dd>
+<dt><code>&quot;0.0.0.0&quot;</code></dt>
+<dd><p>The server should listen to all its IPv4 addresses.
+</p></dd>
+<dt><code>&quot;::&quot;</code></dt>
+<dd><p>The server should listen to all its IPv6 addresses.
+</p></dd>
+<dt><code>&quot;localhost&quot;</code></dt>
+<dd><p>The server should listen to its loopback addresses on all supported
+protocols.
+</p></dd>
+<dt><code>&quot;127.0.0.1&quot;</code></dt>
+<dd><p>The server should listen to its IPv4 loopback address.
+</p></dd>
+<dt><code>&quot;::1&quot;</code></dt>
+<dd><p>The server should listen to its IPv6 loopback address.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002ftcpip_002dforward_002dport"></a>Procedure: <strong>global-request/tcpip-forward-port</strong> <em>req</em></dt>
+<dd><p>This field is an integer representing the port number to which the
+server should bind the TCP server port. If the number is <code>0</code> and
+<var>want-reply?</var> is true, the server will pick a port number and send
+it to the client in a <code>request-success</code> packet (the port number
+can be recovered with <code>(unpack &quot;!L&quot; (request-success-data
+response))</code>).
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dglobal_002drequest_002fcancel_002dtcpip_002dforward"></a>Procedure: <strong>make-global-request/cancel-tcpip-forward</strong> <em>want-reply? address port</em></dt>
+<dd><p>Constructs a message that undoes the effect of a
+<code>global-request/tcpip-forward</code> request.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002fcancel_002dtcpip_002dforward_003f"></a>Procedure: <strong>global-request/cancel-tcpip-forward?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>global-request/cancel-tcpip-forward</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002fcancel_002dtcpip_002dforward_002daddress"></a>Procedure: <strong>global-request/cancel-tcpip-forward-address</strong> <em>req</em></dt>
+<dd><p>See <code>global-request/tcpip-forward-address</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-global_002drequest_002fcancel_002dtcpip_002dforward_002dport"></a>Procedure: <strong>global-request/cancel-tcpip-forward-port</strong> <em>req</em></dt>
+<dd><p>See <code>global-request/tcpip-forward-port</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002drequest_002dsuccess"></a>Procedure: <strong>make-request-success</strong> <em>data</em></dt>
+<dd><p>Constructs a packet which indicates that the previous
+<code>global-request</code> was successful.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-request_002dsuccess_003f"></a>Procedure: <strong>request-success?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>request-success</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-request_002dsuccess_002ddata"></a>Procedure: <strong>request-success-data</strong> <em>pkt</em></dt>
+<dd><p>This field contains a request-specific bytevector which is mostly
+empty.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002drequest_002dfailure"></a>Procedure: <strong>make-request-failure</strong></dt>
+<dd><p>Returns an object which indicates that a global request failed.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-request_002dfailure_003f"></a>Procedure: <strong>request-failure?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>request-failure</code> packet.
+</p></dd></dl>
+
+
+<p>All requests to open a channel are represented by
+<code>channel-open/*</code> packets.
+</p>
+<dl>
+<dt><a name="index-channel_002dopen_003f"></a>Procedure: <strong>channel-open?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-open</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dtype"></a>Procedure: <strong>channel-open-type</strong> <em>pkt</em></dt>
+<dd><p>A string representing the type of the <code>channel-open</code> request,
+e.g. <code>&quot;session&quot;</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dsender"></a>Procedure: <strong>channel-open-sender</strong> <em>pkt</em></dt>
+<dd><p>This is the ID for the sender side of the channel.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dinitial_002dwindow_002dsize"></a>Procedure: <strong>channel-open-initial-window-size</strong> <em>pkt</em></dt>
+<dd><p>This is the window size of the channel. The window size is used for
+flow-control and it decreases when data is sent over the channel and
+increases when a <code>channel-window-adjust</code> packet is sent. Each
+side of a channel has a window size.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dmaximum_002dpacket_002dsize"></a>Procedure: <strong>channel-open-maximum-packet-size</strong> <em>pkt</em></dt>
+<dd><p>This is the maximum allowed packet size for data sent to a channel. It
+basically limits the size of <code>channel-data</code> and
+<code>channel-extended-data</code> packets.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dopen_002fdirect_002dtcpip"></a>Procedure: <strong>make-channel-open/direct-tcpip</strong> <em>sender-id initial-window-size             connect-address connect-port originator-address originator-port</em></dt>
+<dd><p>Constructs a request to open a new channel which is then connected to
+a TCP port.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fdirect_002dtcpip_003f"></a>Procedure: <strong>channel-open/direct-tcpip?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-open/direct-tcpip</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fdirect_002dtcpip_002dconnect_002daddress"></a>Procedure: <strong>channel-open/direct-tcpip-connect-address</strong> <em>pkt</em></dt>
+<dd><p>This is the hostname or network address that the TCP connection should
+be connected to.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fdirect_002dtcpip_002dconnect_002dport"></a>Procedure: <strong>channel-open/direct-tcpip-connect-port</strong> <em>pkt</em></dt>
+<dd><p>This is the port number that the TCP connection should be connected to.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fdirect_002dtcpip_002doriginator_002daddress"></a>Procedure: <strong>channel-open/direct-tcpip-originator-address</strong> <em>pkt</em></dt>
+<dd><p>This is the network address of the machine that made the request.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fdirect_002dtcpip_002doriginator_002dport"></a>Procedure: <strong>channel-open/direct-tcpip-originator-port</strong> <em>pkt</em></dt>
+<dd><p>This is the port number on which the request was made. This is useful
+when a client implements forwarding of client-local TCP ports.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dopen_002fforwarded_002dtcpip"></a>Procedure: <strong>make-channel-open/forwarded-tcpip</strong> <em>sender-id initial-window-size             maximum-packet-size connected-address connected-port             originator-address originator-port</em></dt>
+<dd><p>This request is used by the server to tell the client that a TCP
+connection has been requested to a port for which the client sent a
+<code>global-request/tcpip-forward</code> request.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fforwarded_002dtcpip_003f"></a>Procedure: <strong>channel-open/forwarded-tcpip?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-open/forwarded-tcpip</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fforwarded_002dtcpip_002dconnected_002daddress"></a>Procedure: <strong>channel-open/forwarded-tcpip-connected-address</strong> <em>pkt</em></dt>
+<dd><p>The address to which the TCP connection was made.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fforwarded_002dtcpip_002dconnected_002dport"></a>Procedure: <strong>channel-open/forwarded-tcpip-connected-port</strong> <em>pkt</em></dt>
+<dd><p>The port to which the TCP connection was made.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fforwarded_002dtcpip_002doriginator_002daddress"></a>Procedure: <strong>channel-open/forwarded-tcpip-originator-address</strong> <em>pkt</em></dt>
+<dd><p>The remote address of the TCP connection.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fforwarded_002dtcpip_002doriginator_002dport"></a>Procedure: <strong>channel-open/forwarded-tcpip-originator-port</strong> <em>pkt</em></dt>
+<dd><p>The remote port of the TCP connection.
+</p></dd></dl>
+
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dopen_002fsession"></a>Procedure: <strong>make-channel-open/session</strong> <em>sender-id initial-window-size             maximum-packet-size</em></dt>
+<dd><p>Construct a request to open a session channel. This type of channel is
+used for interactive logins, remote command execution, etc. After the
+channel has been established the client will send e.g. a
+<code>channel-request/shell</code> or a <code>channel-request/exec</code> request.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fsession_003f"></a>Procedure: <strong>channel-open/session?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-open/session</code> packet.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dopen_002fx11"></a>Procedure: <strong>make-channel-open/x11</strong> <em>type sender-id initial-window-size             maximum-packet-size originator-address originator-port</em></dt>
+<dd><p>Constructs a message that opens an X11 channel. This message can be
+sent after X11 forwarding has been requested.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fx11_003f"></a>Procedure: <strong>channel-open/x11?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-open/x11</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fx11_002doriginator_002daddress"></a>Procedure: <strong>channel-open/x11-originator-address</strong> <em>pkt</em></dt>
+<dd><p>The network address that originated the X11 connection.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002fx11_002doriginator_002dport"></a>Procedure: <strong>channel-open/x11-originator-port</strong> <em>pkt</em></dt>
+<dd><p>The network port that originated the X11 connection.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-channel_002dpacket_003f"></a>Procedure: <strong>channel-packet?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-packet</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dpacket_002drecipient"></a>Procedure: <strong>channel-packet-recipient</strong> <em>pkt</em></dt>
+<dd><p>This field is an integer that identifies the ID of the channel that
+should receive the request.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dopen_002dfailure"></a>Procedure: <strong>make-channel-open-failure</strong> <em>recipient reason-code description language</em></dt>
+<dd><p>Constructs a packet that represents a failure to open a channel. It is
+sent in response to a <code>channel-open/*</code> request.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dfailure_003f"></a>Procedure: <strong>channel-open-failure?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-open-failure</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dfailure_002dreason_002dcode"></a>Procedure: <strong>channel-open-failure-reason-code</strong> <em>pkt</em></dt>
+<dd><dl compact="compact">
+<dt><code>SSH-OPEN-ADMINISTRATIVELY-PROHIBITED</code>
+<a name="index-SSH_002dOPEN_002dADMINISTRATIVELY_002dPROHIBITED"></a>
+</dt>
+<dt><code>SSH-OPEN-CONNECT-FAILED</code>
+<a name="index-SSH_002dOPEN_002dCONNECT_002dFAILED"></a>
+</dt>
+<dt><code>SSH-OPEN-UNKNOWN-CHANNEL-TYPE</code>
+<a name="index-SSH_002dOPEN_002dUNKNOWN_002dCHANNEL_002dTYPE"></a>
+</dt>
+<dt><code>SSH-OPEN-RESOURCE-SHORTAGE</code>
+<a name="index-SSH_002dOPEN_002dRESOURCE_002dSHORTAGE"></a>
+</dt>
+</dl>
+</dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dfailure_002ddescription"></a>Procedure: <strong>channel-open-failure-description</strong> <em>pkt</em></dt>
+<dd><p>This field is a human-readable reason for why the channel could not be
+opened.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dfailure_002dlanguage"></a>Procedure: <strong>channel-open-failure-language</strong> <em>pkt</em></dt>
+<dd><p>This field is most commonly unused and set to <code>&quot;&quot;</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dopen_002dconfirmation"></a>Procedure: <strong>make-channel-open-confirmation</strong> <em>recipient             sender initial-window-size maximum-packet-size</em></dt>
+<dd><p>Constructs a message that indicates a channel was successfully opened
+(identified by <var>recipient</var>). The party that sends this message
+will include its own channel ID (<code>sender</code>).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dconfirmation_003f"></a>Procedure: <strong>channel-open-confirmation?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-open-confirmation</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dconfirmation_002dsender"></a>Procedure: <strong>channel-open-confirmation-sender</strong> <em>pkt</em></dt>
+<dd><p>This field contains the sender&rsquo;s ID for this channel.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dconfirmation_002dinitial_002dwindow_002dsize"></a>Procedure: <strong>channel-open-confirmation-initial-window-size</strong> <em>pkt</em></dt>
+<dd><p>This is the sender&rsquo;s initial window size. Analogous to the initial
+window size in a <code>channel-open/*</code> request.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dopen_002dconfirmation_002dmaximum_002dpacket_002dsize"></a>Procedure: <strong>channel-open-confirmation-maximum-packet-size</strong> <em>pkt</em></dt>
+<dd><p>This is the sender&rsquo;s maximum packet size. Analogous to the maximum
+packet size in a <code>channel-open/*</code> request.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dwindow_002dadjust"></a>Procedure: <strong>make-channel-window-adjust</strong> <em>recipient amount</em></dt>
+<dd><p>This constructs a packet that is used to increment the window size of
+channel <var>recipient</var> by <var>amount</var> octets. It tells the remote
+part that the channel may receive additional data. If the client has
+assigned to a channel a receive buffer of 4096 bytes and the server
+sends 4096 bytes, the server will not be able to successfully send
+more data until the client has processed some of the buffer. When
+there is more room in the buffer the client can send a message of this
+type.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dwindow_002dadjust_003f"></a>Procedure: <strong>channel-window-adjust?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-window-adjust</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dwindow_002dadjust_002damount"></a>Procedure: <strong>channel-window-adjust-amount</strong> <em>pkt</em></dt>
+<dd><p>This field contains the number of bytes that will be added to the
+window size.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002ddata"></a>Procedure: <strong>make-channel-data</strong> <em>recipient value</em></dt>
+<dd><p>This constructs a request that sends data over a channel. 
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002ddata_003f"></a>Procedure: <strong>channel-data?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-data</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002ddata_002dvalue"></a>Procedure: <strong>channel-data-value</strong> <em>pkt</em></dt>
+<dd><p>This field contains a bytevector with data being sent over the
+channel.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dextended_002ddata"></a>Procedure: <strong>make-channel-extended-data</strong> <em>recipient type value</em></dt>
+<dd><p>This constructs a message that works just like <code>channel-data</code>,
+except it contains an additional <var>type</var> field (explained below).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dextended_002ddata_003f"></a>Procedure: <strong>channel-extended-data?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-extended-data</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dextended_002ddata_002dtype"></a>Procedure: <strong>channel-extended-data-type</strong> <em>pkt</em></dt>
+<dd><p>Data sent by a <code>channel-data</code> packet will normally be sent to a
+port connected with standard output. A <code>channel-extended-data</code>
+field is used when the data destination is a different port.
+</p>
+<dl compact="compact">
+<dt><code>SSH-EXTENDED-DATA-STDERR</code>
+<a name="index-SSH_002dEXTENDED_002dDATA_002dSTDERR"></a>
+</dt>
+<dd><p>This constant specifies that the destination is the standard error
+port.
+</p></dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dextended_002ddata_002dvalue"></a>Procedure: <strong>channel-extended-data-value</strong> <em>pkt</em></dt>
+<dd><p>This field contains a bytevector with the data sent over the channel,
+e.g. an error message printed on the standard error port.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002deof"></a>Procedure: <strong>make-channel-eof</strong> <em>recipient</em></dt>
+<dd><p>This constructs a packet that signals the end-of-file condition on the
+channel identified by the <code>recipient</code> ID.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002deof_003f"></a>Procedure: <strong>channel-eof?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-eof</code> packet.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dclose"></a>Procedure: <strong>make-channel-close</strong> <em>recipient</em></dt>
+<dd><p>This constructs a message that is used when a channel is closed.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dclose_003f"></a>Procedure: <strong>channel-close?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-close</code> packet.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dsuccess"></a>Procedure: <strong>make-channel-success</strong> <em>recipient</em></dt>
+<dd><p>This constructs a packet that indicates that the previous request was
+successful. These packets are sent in response to requests where
+<var>want-reply?</var> is true.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dsuccess_003f"></a>Procedure: <strong>channel-success?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-success</code> packet.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002dfailure"></a>Procedure: <strong>make-channel-failure</strong> <em>recipient</em></dt>
+<dd><p>This constructs a packet that indicates that the previous request was
+not successful. These packets are sent in response to requests where
+<var>want-reply?</var> is true.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002dfailure_003f"></a>Procedure: <strong>channel-failure?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-failure</code> packet.
+</p></dd></dl>
+
+
+
+<dl>
+<dt><a name="index-channel_002drequest_003f"></a>Procedure: <strong>channel-request?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002dtype"></a>Procedure: <strong>channel-request-type</strong> <em>req</em></dt>
+<dd><p>This field is a string that identifies the type of the request, e.g.
+<code>&quot;break&quot;</code> or <code>&quot;shell&quot;</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002dwant_002dreply_003f"></a>Procedure: <strong>channel-request-want-reply?</strong> <em>req</em></dt>
+<dd><p>When this field is true the peer will respond with
+<code>channel-success</code> or <code>channel-failure</code>. This field is not
+valid for all requests. Where it is not valid the constructor will not
+include it as an argument.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fbreak"></a>Procedure: <strong>make-channel-request/break</strong> <em>recipient want-reply? length</em></dt>
+<dd><p>This constructs a request that relays a &ldquo;BREAK&rdquo; signal on the
+channel. A &ldquo;BREAK&rdquo; is a signalling mechanism used with serial
+consoles. This request is standardized by RFC 4335.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fbreak_003f"></a>Procedure: <strong>channel-request/break?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/break</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fbreak_002dlength"></a>Procedure: <strong>channel-request/break-length</strong> <em>req</em></dt>
+<dd><p>The length of the signal in milliseconds.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fenv"></a>Procedure: <strong>make-channel-request/env</strong> <em>recipient want-reply? name value</em></dt>
+<dd><p>Constructs a request that can be used before a shell or command has
+been started. It is used to set an environment variable (of the same
+kind that SRFI-98 accesses).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fenv_003f"></a>Procedure: <strong>channel-request/env?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/env</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fenv_002dname"></a>Procedure: <strong>channel-request/env-name</strong> <em>req</em></dt>
+<dd><p>This is a string that identifies the name of the environment variable.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fenv_002dvalue"></a>Procedure: <strong>channel-request/env-value</strong> <em>req</em></dt>
+<dd><p>This is a bytevector that contains the value of the environment
+variable.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fexec"></a>Procedure: <strong>make-channel-request/exec</strong> <em>recipient want-reply? command</em></dt>
+<dd><p>Constructs a request that instructs the server to execute a command.
+The channel identified by <var>recipient</var> will be connected to the
+standard input and output ports of the program started by the server.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexec_003f"></a>Procedure: <strong>channel-request/exec?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/exec</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexec_002dcommand"></a>Procedure: <strong>channel-request/exec-command</strong> <em>req</em></dt>
+<dd><p>This field is a bytevector that contains the command that the server
+should try to execute.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fexit_002dsignal"></a>Procedure: <strong>make-channel-request/exit-signal</strong> <em>recipient name core-dumped?             message language</em></dt>
+<dd><p>This constructs a packet which indicates that the program connected
+to the channel identified by <var>recipient</var> has exited due to an
+operating system signal.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexit_002dsignal_003f"></a>Procedure: <strong>channel-request/exit-signal?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/exit-signal</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexit_002dsignal_002dname"></a>Procedure: <strong>channel-request/exit-signal-name</strong> <em>req</em></dt>
+<dd><p>This is a string that identifies the signal by name. For <small>POSIX</small>
+systems it is one of the following: <code>&quot;ABRT&quot;</code>, <code>&quot;ALRM&quot;</code>,
+<code>&quot;FPE&quot;</code>, <code>&quot;HUP&quot;</code>, <code>&quot;ILL&quot;</code>, <code>&quot;INT&quot;</code>, <code>&quot;KILL&quot;</code>,
+<code>&quot;PIPE&quot;</code>, <code>&quot;QUIT&quot;</code>, <code>&quot;SEGV&quot;</code>, <code>&quot;TERM&quot;</code>,
+<code>&quot;USR1&quot;</code>, <code>&quot;USR2&quot;</code>. Other signal names may be used by
+following the guidelines in section 6.10 of RFC 4254.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexit_002dsignal_002dcore_002ddumped_003f"></a>Procedure: <strong>channel-request/exit-signal-core-dumped?</strong> <em>req</em></dt>
+<dd><p>This field is true when the operating system saved a process image
+(&ldquo;core dump&rdquo;) when it sent the signal.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexit_002dsignal_002dmessage"></a>Procedure: <strong>channel-request/exit-signal-message</strong> <em>req</em></dt>
+<dd><p>This may be a string that explains the signal.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexit_002dsignal_002dlanguage"></a>Procedure: <strong>channel-request/exit-signal-language</strong> <em>req</em></dt>
+<dd><p>This string may identify the language used in
+<code>channel-request/exit-signal-message</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fexit_002dstatus"></a>Procedure: <strong>make-channel-request/exit-status</strong> <em>recipient value</em></dt>
+<dd><p>This constructs a packet which indicates that the program connected
+to the channel identified by <var>recipient</var> has exited voluntarily.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexit_002dstatus_003f"></a>Procedure: <strong>channel-request/exit-status?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/exit-status</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fexit_002dstatus_002dvalue"></a>Procedure: <strong>channel-request/exit-status-value</strong> <em>req</em></dt>
+<dd><p>This is an integer that identifies the exit status of the program. It
+is the same kind of number used by the the Scheme procedure
+<code>exit</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fpty_002dreq"></a>Procedure: <strong>make-channel-request/pty-req</strong> <em>recipient want-reply? term columns rows             width height modes</em></dt>
+<dd><p>Constructs a request that instructs the server to allocate a
+pseudo-terminal (PTY) for the channel identified by <var>recipient</var>.
+A PTY is needed for interactive programs, such as shells and Emacs.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fpty_002dreq_003f"></a>Procedure: <strong>channel-request/pty-req?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/pty-req</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fpty_002dreq_002dterm"></a>Procedure: <strong>channel-request/pty-req-term</strong> <em>req</em></dt>
+<dd><p>This is a string that identifies the type of terminal that this PTY
+will be connected to. If the terminal is compatible with the DEC VT100
+the value would be <code>&quot;vt100&quot;</code>. This value is also the environment
+variable <code>TERM</code>. The set of supported terminal types depends on
+the server. Typically the software running on an SSH server uses the
+&ldquo;terminfo&rdquo; database.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fpty_002dreq_002dcolumns"></a>Procedure: <strong>channel-request/pty-req-columns</strong> <em>req</em></dt>
+<dd><p>This field contains the number of columns the terminal supports, e.g.
+<code>80</code>. The <code>channel-request/window-change</code> request can be
+used to update this value if the terminal supports resizing.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fpty_002dreq_002drows"></a>Procedure: <strong>channel-request/pty-req-rows</strong> <em>req</em></dt>
+<dd><p>This field contains the number of rows the terminal supports, e.g.
+<code>24</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fpty_002dreq_002dwidth"></a>Procedure: <strong>channel-request/pty-req-width</strong> <em>req</em></dt>
+<dd><p>This field specifies the width of the terminal in pixels.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fpty_002dreq_002dheight"></a>Procedure: <strong>channel-request/pty-req-height</strong> <em>req</em></dt>
+<dd><p>This field specifies the height of the terminal in pixels.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fpty_002dreq_002dmodes"></a>Procedure: <strong>channel-request/pty-req-modes</strong> <em>req</em></dt>
+<dd><p>This is a bytevector that encodes POSIX terminal modes. Unlike the
+size of the terminal, it is not possible to change the modes after the
+PTY has been created. The client should emulate a terminal set to
+&ldquo;raw&rdquo; mode and send a correct list of terminal modes. The server
+will then cooperate to handle the rest. This means that, unlike with
+telnet, the client will generally not do local &ldquo;canonical&rdquo; terminal
+processing.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-bytevector_002d_003eterminal_002dmodes"></a>Procedure: <strong>bytevector-&gt;terminal-modes</strong> <em>bv</em></dt>
+<dd><p>Decodes the modes from a <code>channel-request/pty-req</code>. The return
+value is an association list.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-terminal_002dmodes_002d_003ebytevector"></a>Procedure: <strong>terminal-modes-&gt;bytevector</strong> <em>modes</em></dt>
+<dd><p>The inverse of <code>bytevector-&gt;terminal-modes</code>. All modes specified
+by RFC 4254 can be encoded.
+</p>
+<div class="example">
+<pre class="example">(import (industria ssh connection))
+(terminal-modes-&gt;bytevector '((VINTR . 3) (VERASE . 127)))
+&rArr; #vu8(1 0 0 0 3 3 0 0 0 127 0)
+</pre></div>
+</dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fshell"></a>Procedure: <strong>make-channel-request/shell</strong> <em>recipient want-reply?</em></dt>
+<dd><p>Constructs a request that starts a login shell on the channel
+identified by <var>recipient</var>. Normally a PTY must first have been
+connected to the channel.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fshell_003f"></a>Procedure: <strong>channel-request/shell?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/shell</code> packet.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fsignal"></a>Procedure: <strong>make-channel-request/signal</strong> <em>recipient name</em></dt>
+<dd><p>Construct a packet that sends a signal to the program connected to
+the channel identified by <var>recipient</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fsignal_003f"></a>Procedure: <strong>channel-request/signal?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/signal</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fsignal_002dname"></a>Procedure: <strong>channel-request/signal-name</strong> <em>req</em></dt>
+<dd><p>This field contains a signal name of the same type as that used by
+<code>channel-request/exit-signal</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fsubsystem"></a>Procedure: <strong>make-channel-request/subsystem</strong> <em>recipient want-reply? name</em></dt>
+<dd><p>Constructs a request that a subsystem should be connected to the
+channel identified by <var>recipient</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fsubsystem_003f"></a>Procedure: <strong>channel-request/subsystem?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/subsystem</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fsubsystem_002dname"></a>Procedure: <strong>channel-request/subsystem-name</strong> <em>req</em></dt>
+<dd><p>This field identifies the subsystem being requested, e.g. <code>&quot;sftp&quot;</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fwindow_002dchange"></a>Procedure: <strong>make-channel-request/window-change</strong> <em>recipient columns rows width height</em></dt>
+<dd><p>Construct a message that tells the server that the terminal window
+associated with a channel has been resized. The channel should have a
+PTY (see <code>channel-request/pty-req</code>).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fwindow_002dchange_003f"></a>Procedure: <strong>channel-request/window-change?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/window-change</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fwindow_002dchange_002dcolumns"></a>Procedure: <strong>channel-request/window-change-columns</strong> <em>req</em></dt>
+<dd><p>Contains the new character cell width of the terminal window.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fwindow_002dchange_002drows"></a>Procedure: <strong>channel-request/window-change-rows</strong> <em>req</em></dt>
+<dd><p>Contains the new character cell height of the terminal window.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fwindow_002dchange_002dwidth"></a>Procedure: <strong>channel-request/window-change-width</strong> <em>req</em></dt>
+<dd><p>Contains the new pixel width of the terminal window.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fwindow_002dchange_002dheight"></a>Procedure: <strong>channel-request/window-change-height</strong> <em>req</em></dt>
+<dd><p>Contains the new pixel height of the terminal window.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fx11_002dreq"></a>Procedure: <strong>make-channel-request/x11-req</strong> <em>recipient want-reply? single-connection?             protocol cookie screen</em></dt>
+<dd><p>Constructs an X11 (X Window System) forwarding request.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fx11_002dreq_003f"></a>Procedure: <strong>channel-request/x11-req?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/x11-req</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fx11_002dreq_002dsingle_002dconnection_003f"></a>Procedure: <strong>channel-request/x11-req-single-connection?</strong> <em>req</em></dt>
+<dd><p>If this field is true when only one X11 connection should be
+forwarded.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fx11_002dreq_002dprotocol"></a>Procedure: <strong>channel-request/x11-req-protocol</strong> <em>req</em></dt>
+<dd><p>This field identifies an X11 authentication protocol. The most common
+value is <code>&quot;MIT-MAGIC-COOKIE-1&quot;</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fx11_002dreq_002dcookie"></a>Procedure: <strong>channel-request/x11-req-cookie</strong> <em>req</em></dt>
+<dd><p>This is a &ldquo;magic cookie&rdquo; encoded as a hexadecimal string. It is used
+with <code>&quot;MIT-MAGIC-COOKIE-1&quot;</code>. It is recommended by RFC 4254 that
+this cookie should be different from the actual cookie used by the X11
+server. When receiving a <code>channel-open/x11</code> request the cookie
+can be intercepted, verified and replaced with the real one.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fx11_002dreq_002dscreen"></a>Procedure: <strong>channel-request/x11-req-screen</strong> <em>req</em></dt>
+<dd><p>An X11 display can have, in X jargon, multiple screens. Normally this
+field would be <code>0</code>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dchannel_002drequest_002fxon_002dxoff"></a>Procedure: <strong>make-channel-request/xon-xoff</strong> <em>recipient client-can-do?</em></dt>
+<dd><p>Constructs a message that tells the client when it can do local
+processing of terminal flow control (C-s and C-q).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fxon_002dxoff_003f"></a>Procedure: <strong>channel-request/xon-xoff?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>channel-request/xon-xoff</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-channel_002drequest_002fxon_002dxoff_002dclient_002dcan_002ddo_003f"></a>Procedure: <strong>channel-request/xon-xoff-client-can-do?</strong> <em>req</em></dt>
+<dd><p>This flag is true if the client is allowed to do local processing of
+terminal flow control. If the flag is false then flow control is done
+on the server.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="ssh-transport.html#ssh-transport" accesskey="n" rel="next">ssh transport</a>, Up: <a href="ssh.html#ssh" accesskey="u" rel="up">ssh</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

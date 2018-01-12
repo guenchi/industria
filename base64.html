@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>base64 (The Industria Libraries Manual)</title>
+
+<meta name="description" content="base64 (The Industria Libraries Manual)">
+<meta name="keywords" content="base64 (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="misc.html#misc" rel="up" title="misc">
+<link href="bytevectors.html#bytevectors" rel="next" title="bytevectors">
+<link href="misc.html#misc" rel="prev" title="misc">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="base64"></a>
+<div class="header">
+<p>
+Next: <a href="bytevectors.html#bytevectors" accesskey="n" rel="next">bytevectors</a>, Up: <a href="misc.html#misc" accesskey="u" rel="up">misc</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Base-64-encoding-and-decoding"></a>
+<h4 class="subsection">2.5.1 Base 64 encoding and decoding</h4>
+<p>The <code>(industria base64)</code> library provides procedures for
+dealing with the standard Base 64 encoding from RFC 4648 and some
+variations thereof. The Base 64 encoding can be used to represent
+arbitrary bytevectors purely in printable ASCII.
+</p>
+<p>One variation of Base 64 is in the alphabet used. The standard encoding
+uses an alphabet that ends with <code>#\+</code> and <code>#\/</code>, but these
+characters are reserved in some applications. One such application is
+HTTP URLs, so there is a special encoding called base64url that simply
+uses a different alphabet.
+</p>
+<p>The line length can also vary. Some applications will need Base 64
+encoded strings that have no line endings at all, while other
+applications have 64 or 76 characters per line. For these uses the
+line length must be a multiple of four characters. Sometimes there is
+not enough input to get a multiple of four, but then the padding
+character <code>#\=</code> is used. Some applications don&rsquo;t use padding.
+</p>
+<p>Some applications have their own &ldquo;Base 64&rdquo; encodings that encode bits
+in a different order. Such will be deemed magic and shall not work
+with this library.
+</p>
+<dl>
+<dt><a name="index-base64_002dencode"></a>Procedure: <strong>base64-encode</strong> <em>bv [start end line-length no-padding alphabet port]</em></dt>
+<dd><p>Encodes the bytevector <var>bv</var> in Base 64 encoding. Optionally a range
+of bytes can be specified with <var>start</var> and <var>end</var>.
+</p>
+<p>If a maximum line length is required, set <var>line-length</var> to an
+integer multiple of four (the default is <code>#f</code>). To omit padding
+at the end of the data, set <var>no-padding</var> or a non-false value. The
+<var>alphabet</var> is a string of length 64 (by default
+<code>base64-alphabet</code>).
+</p>
+<p>The <var>port</var> is either a textual output port or <code>#f</code>, in which
+case this procedure returns a string.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-base64_002ddecode"></a>Procedure: <strong>base64-decode</strong> <em>str [alphabet port strict?]</em></dt>
+<dd><p>Decodes the correctly padded Base 64 data in <var>str</var>. If
+<var>strict?</var> is true or omitted the string has to contain pure Base 64
+data and no whitespace or other extra characters. The result is
+written to the binary output <var>port</var> or returned as a bytevector if
+<var>port</var> is <code>#f</code> or omitted. The default alphabet is
+<var>base64-alphabet</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-put_002ddelimited_002dbase64"></a>Procedure: <strong>put-delimited-base64</strong> <em>port type bv [line-length]</em></dt>
+<dd><p>Write the Base 64 encoding of <var>bv</var> to the <var>port</var>. The output is
+delimited by BEGIN/END lines that include the <var>type</var>.
+<a name="index-ASCII-Armor"></a>
+</p>
+<div class="example">
+<pre class="example">(import (industria base64))
+(put-delimited-base64 (current-output-port) &quot;EXAMPLE&quot;
+                      (string-&gt;utf8 &quot;POKEY THE PENGUIN&quot;))
+-| -----BEGIN EXAMPLE-----
+-| UE9LRVkgVEhFIFBFTkdVSU4=
+-| -----END EXAMPLE-----
+</pre></div>
+</dd></dl>
+
+<dl>
+<dt><a name="index-get_002ddelimited_002dbase64"></a>Procedure: <strong>get-delimited-base64</strong> <em>port [strict?]</em></dt>
+<dd><p>Reads a delimited Base 64 encoded bytevector and returns two values:
+<var>type</var> (a string) and <var>data</var> (a bytevector). The <var>data</var>
+value is the end-of-file object if <code>port-eof?</code> would return
+<code>#t</code>.
+</p>
+<p><em>Note</em>: This procedure ignores MIME headers. Some delimited
+Base 64 formats have headers on the line after BEGIN, followed by an
+empty line.
+</p>
+<p><em>Note</em>: This procedure ignores the Radix-64 checksum. The
+Radix-64 format (RFC 4880) is based on Base 64, but appends a CRC-24
+(prefixed by <code>#\=</code>) at the end of the data.
+</p>
+<p>The rationale for ignoring headers and checksums is that it follows
+the Principle of Robustness: &ldquo;Be conservative in what you send; be
+liberal in what you accept from others.&rdquo; Lines before the BEGIN line
+are also ignored, because some applications (like OpenSSL) like to
+prepend a human readable version of the data.
+</p>
+<p>You should probably use special parsers if you are reading data with
+headers or checksums. For some applications, e.g. MIME, you would
+also set <var>strict?</var> to <code>#f</code>.
+</p>
+<div class="example">
+<pre class="example">(get-delimited-base64
+ (open-string-input-port
+  &quot;-----BEGIN EXAMPLE-----\n\
+AAECAwQFBg==\n\
+-----END EXAMPLE-----\n&quot;))
+&rArr; &quot;EXAMPLE&quot;
+&rArr; #vu8(0 1 2 3 4 5 6)
+</pre></div>
+</dd></dl>
+
+<dl>
+<dt><a name="index-base64_002dalphabet"></a>Constant: <strong>base64-alphabet</strong></dt>
+<dd><p>The alphabet used by the standard Base 64 encoding. The alphabet is
+<code>#\A</code>&ndash;<code>#\Z</code>, <code>#\a</code>&ndash;<code>#\z</code>,
+<code>#\0</code>&ndash;<code>#\9</code>, <code>#\+</code>, <code>#\/</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-base64url_002dalphabet"></a>Constant: <strong>base64url-alphabet</strong></dt>
+<dd><p>The alphabet used by the base64url encoding. The alphabet is
+<code>#\A</code>&ndash;<code>#\Z</code>, <code>#\a</code>&ndash;<code>#\z</code>,
+<code>#\0</code>&ndash;<code>#\9</code>, <code>#\-</code>, <code>#\_</code>.
+</p></dd></dl>
+
+<p>Version history:
+</p><ul>
+<li> <code>Industria 1.5</code> &ndash; The decoder was optimized and the
+<var>strict?</var> argument was introduced.
+</li></ul>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="bytevectors.html#bytevectors" accesskey="n" rel="next">bytevectors</a>, Up: <a href="misc.html#misc" accesskey="u" rel="up">misc</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

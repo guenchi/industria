@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Installation (The Industria Libraries Manual)</title>
+
+<meta name="description" content="Installation (The Industria Libraries Manual)">
+<meta name="keywords" content="Installation (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Getting-started.html#Getting-started" rel="up" title="Getting started">
+<link href="Usage.html#Usage" rel="next" title="Usage">
+<link href="Getting-started.html#Getting-started" rel="prev" title="Getting started">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Installation"></a>
+<div class="header">
+<p>
+Next: <a href="Usage.html#Usage" accesskey="n" rel="next">Usage</a>, Up: <a href="Getting-started.html#Getting-started" accesskey="u" rel="up">Getting started</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Installation-1"></a>
+<h3 class="section">1.1 Installation</h3>
+
+<p>The simple version: install Akku from
+<a href="https://github.com/weinholt/akku">https://github.com/weinholt/akku</a>. Run <code>akku install</code> in the
+<code>industria</code> directory. This fetches the dependencies recorded in
+<code>Akku.lock</code> and installs everything to <code>.akku</code>. Run
+<code>source .akku/bin/activate</code> to start using Industria in your R6RS
+Scheme of choice.
+</p>
+<p>The longer version: extend your Scheme library search path to include
+the <code>industria</code> directory, e.g. if you&rsquo;re using Chez Scheme on a Unix
+system and you unpacked Industria in <code>~/scheme</code>:
+</p><pre class="verbatim">export CHEZSCHEMELIBDIRS=$HOME/scheme
+</pre>
+<p>Other possible environment variables include <code>IKARUS_LIBRARY_PATH</code>,
+<code>LARCENY_LIBPATH</code>, <code>MOSH_LOADPATH</code> and <code>YPSILON_SITELIB</code>.
+For more details please refer to your Scheme implementation&rsquo;s
+documentation.
+An alternative is to move or symlink the <code>industria</code> directory into a
+directory that already exists in your Scheme&rsquo;s search path.
+Download the dependencies noted in the Akku.lock file and install them
+in the library path.
+</p>
+<p>Releases and the latest source code for Industria are available at
+GitHub <a href="https://github.com/weinholt/industria/">https://github.com/weinholt/industria/</a>.
+<a name="index-development-snapshots"></a>
+</p>
+
+
+
+</body>
+</html>

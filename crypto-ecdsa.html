@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto ecdsa (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto ecdsa (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto ecdsa (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="crypto-entropy.html#crypto-entropy" rel="next" title="crypto entropy">
+<link href="crypto-ec.html#crypto-ec" rel="prev" title="crypto ec">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-ecdsa"></a>
+<div class="header">
+<p>
+Next: <a href="crypto-entropy.html#crypto-entropy" accesskey="n" rel="next">crypto entropy</a>, Previous: <a href="crypto-ec.html#crypto-ec" accesskey="p" rel="prev">crypto ec</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Elliptic-Curve-Digital-Signature-Algorithm-_0028ECDSA_0029"></a>
+<h4 class="subsection">2.1.8 Elliptic Curve Digital Signature Algorithm (ECDSA)</h4>
+<p>The <code>(industria crypto ecdsa)</code> library builds on the
+<code>(industria crypto ec)</code> library and provides an interface similar
+to <code>(industria crypto dsa)</code>. The keys and the operations are
+defined to work with elliptic curves instead of modular
+exponentiation.
+</p>
+<dl>
+<dt><a name="index-make_002decdsa_002dpublic_002dkey"></a>Procedure: <strong>make-ecdsa-public-key</strong> <em>elliptic-curve Q</em></dt>
+<dd><p>Constructs an ECDSA public key object. <var>Q</var> is a point on
+<var>elliptic-curve</var>. <var>Q</var> is only checked to be on the curve if it
+is in bytevector format.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dpublic_002dkey_003f"></a>Procedure: <strong>ecdsa-public-key?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is an ECDSA public key object.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dpublic_002dkey_002dcurve"></a>Procedure: <strong>ecdsa-public-key-curve</strong> <em>ecdsa-public-key</em></dt>
+<dd><p>Returns the curve that <var>ecdsa-public-key</var> uses.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dpublic_002dkey_002dQ"></a>Procedure: <strong>ecdsa-public-key-Q</strong> <em>ecdsa-public-key</em></dt>
+<dd><p>The point on the curve that defines <var>ecdsa-public-key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dpublic_002dkey_002dlength"></a>Procedure: <strong>ecdsa-public-key-length</strong> <em>ecdsa-public-key</em></dt>
+<dd><p>The bitwise length of the ECDSA public key <var>ecdsa-public-key</var>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002decdsa_002dprivate_002dkey"></a>Procedure: <strong>make-ecdsa-private-key</strong> <em>elliptic-curve [d Q]</em></dt>
+<dd><p>Constructs an ECDSA private key object. <var>d</var> is a secret
+multiplier, which gives a public point <var>Q</var> on
+<var>elliptic-curve</var>.
+</p>
+<p>If <var>Q</var> is omitted it is recomputed based on <var>d</var> and the curve.
+If <var>d</var> is omitted a random multiplier is chosen. Please note the
+warning about entropy at the start of this section. See <a href="crypto.html#crypto">crypto</a>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dprivate_002dkey_003f"></a>Procedure: <strong>ecdsa-private-key?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is an ECDSA private key object.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dprivate_002dkey_002dd"></a>Procedure: <strong>ecdsa-private-key-d</strong> <em>ecdsa-private-key</em></dt>
+<dd><p>The secret multiplier of <var>ecdsa-private-key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dprivate_002dkey_002dQ"></a>Procedure: <strong>ecdsa-private-key-Q</strong> <em>ecdsa-private-key</em></dt>
+<dd><p>The public point of <var>ecdsa-private-key</var>.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-ecdsa_002dprivate_002d_003epublic"></a>Procedure: <strong>ecdsa-private-&gt;public</strong> <em>ecdsa-private-key</em></dt>
+<dd><p>Strips <var>ecdsa-private-key</var> of the secret multiplier and returns an
+ECDSA public key object.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-ecdsa_002dprivate_002dkey_002dfrom_002dbytevector"></a>Procedure: <strong>ecdsa-private-key-from-bytevector</strong> <em>bytevector</em></dt>
+<dd><p>Parses <var>bytevector</var> as an ECDSA private key encoded in RFC 5915
+format. A curve identifier is encoded along with the key. Currently
+only the curves secp256r1, secp384r1 and secp521r1 are supported.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-ecdsa_002dverify_002dsignature"></a>Procedure: <strong>ecdsa-verify-signature</strong> <em>hash ecdsa-public-key r s</em></dt>
+<dd><p>Returns <code>#t</code> if the signature (<var>r</var>,<var>s</var>) was made by the
+private key corresponding to <var>ecdsa-public-key</var>. The bytevector
+<var>hash</var> is the message digest that was signed.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dcreate_002dsignature"></a>Procedure: <strong>ecdsa-create-signature</strong> <em>hash ecdsa-private-key</em></dt>
+<dd><p>Creates a signature of the bytevector <var>hash</var> using
+<var>ecdsa-private-key</var>. Returns the values r and s.
+</p></dd></dl>
+
+<p>ECDSA keys are normally defined to work together with some particular
+message digest algorithm. RFC 5656 defines ECDSA with SHA-2 and this
+library provides the record types <code>ecdsa-sha-2-public-key</code> and
+<code>ecdsa-sha-2-private-key</code> so that keys defined to work with SHA-2
+can be distinguished from other keys. Keys of this type are still
+usable for operations that expect the normal ECDSA key types.
+</p>
+<dl>
+<dt><a name="index-make_002decdsa_002dsha_002d2_002dpublic_002dkey"></a>Procedure: <strong>make-ecdsa-sha-2-public-key</strong> <em>elliptic-curve Q</em></dt>
+<dd><p>Performs the same function as <code>make-ecdsa-public-key</code>, but the
+returned key is marked to be used with SHA-2.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dsha_002d2_002dpublic_002dkey_003f"></a>Procedure: <strong>ecdsa-sha-2-public-key?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is an ECDSA public key marked to be
+used with SHA-2.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002decdsa_002dsha_002d2_002dprivate_002dkey"></a>Procedure: <strong>make-ecdsa-sha-2-private-key</strong></dt>
+<dd><p>Performs the same function as <code>make-ecdsa-private-key</code>, but the
+returned key is marked to be used with SHA-2.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dsha_002d2_002dprivate_002dkey_003f"></a>Procedure: <strong>ecdsa-sha-2-private-key?</strong></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is an ECDSA private key marked to be
+used with SHA-2.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dsha_002d2_002dverify_002dsignature"></a>Procedure: <strong>ecdsa-sha-2-verify-signature</strong> <em>message ecdsa-sha2-public-key r s</em></dt>
+<dd><p>The bytevector <var>message</var> is hashed with the appropriate message
+digest algorithm (see RFC 5656) and the signature (<var>r</var>,<var>s</var>) is
+then verified. Returns <code>#t</code> if the signature was made with the
+private key corresponding to <var>ecdsa-sha2-public-key</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dsha_002d2_002dcreate_002dsignature"></a>Procedure: <strong>ecdsa-sha-2-create-signature</strong> <em>message ecdsa-sha2-private-key</em></dt>
+<dd><p>The bytevector <var>message</var> is hashed with the appropriate message
+digest algorithm (see RFC 5656) and a signature is created using
+<var>ecdsa-sha2-private-key</var>. Returns the values r and s.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ecdsa_002dsha_002d2_002dprivate_002dkey_002dfrom_002dbytevector"></a>Procedure: <strong>ecdsa-sha-2-private-key-from-bytevector</strong> <em>bytevector</em></dt>
+<dd><p>Performs the same function as
+<code>ecdsa-private-key-from-bytevector</code>, except the returned value is
+marked to be used with SHA-2.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="crypto-entropy.html#crypto-entropy" accesskey="n" rel="next">crypto entropy</a>, Previous: <a href="crypto-ec.html#crypto-ec" accesskey="p" rel="prev">crypto ec</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

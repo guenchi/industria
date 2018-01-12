@@ -1,0 +1,345 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>otr (The Industria Libraries Manual)</title>
+
+<meta name="description" content="otr (The Industria Libraries Manual)">
+<meta name="keywords" content="otr (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Library-reference.html#Library-reference" rel="up" title="Library reference">
+<link href="ssh.html#ssh" rel="next" title="ssh">
+<link href="openpgp.html#openpgp" rel="prev" title="openpgp">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="otr"></a>
+<div class="header">
+<p>
+Next: <a href="ssh.html#ssh" accesskey="n" rel="next">ssh</a>, Previous: <a href="openpgp.html#openpgp" accesskey="p" rel="prev">openpgp</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Off_002dthe_002dRecord-Messaging"></a>
+<h3 class="section">2.3 Off-the-Record Messaging</h3>
+<p>The <code>(industria otr)</code> library provides Off-the-Record
+Messaging (OTR), which is a security protocol for private chat. It can
+be tunneled over any protocol that guarantees in-order delivery
+(e.g. IRC or XMPP). It provides encryption, authentication,
+deniability and perfect forward secrecy.
+</p>
+<p>This library does not manage user identities, which is something the
+OTR Development Team&rsquo;s C library does. This choice was made to keep
+the implementation simple and focused on the protocol only.
+</p>
+<p>The website for OTR is <a href="http://www.cypherpunks.ca/otr/">http://www.cypherpunks.ca/otr/</a>.
+</p>
+<dl>
+<dt><a name="index-otr_002dmessage_003f"></a>Procedure: <strong>otr-message?</strong> <em>str</em></dt>
+<dd><p>Returns <code>#t</code> if <var>str</var>, which is a message from a remote
+party, contains an OTR message. If it is an OTR message you should
+look up the OTR state that corresponds to the remote party (possibly
+make a new state) and call <code>otr-update!</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002dotr_002dstate"></a>Procedure: <strong>make-otr-state</strong> <em>dsa-key mss [instance-tag [versions]]</em></dt>
+<dd><p>Creates an OTR state value given the private DSA key <var>dsa-key</var> and
+a maximum segment size <var>mss</var>. The state is used to keep track of
+session keys and incoming message fragments.
+</p>
+<p>The <var>dsa-key</var> must have a 160-bit q-parameter because of details
+in the protocol and limitations of other implementations. A 1024-bit
+DSA key will work. See <a href="crypto-dsa.html#crypto-dsa">crypto dsa</a>.
+</p>
+<p>The maximum segment size <var>mss</var> is used to split long OTR messages
+into smaller parts when OTR is used over a protocol with a maximum
+message size, e.g. IRC.
+</p>
+<p>If an <var>instance-tag</var> is specified it must be a 32-bit integer not
+less than <code>#x100</code>. If it is omitted or <code>#f</code> an instance tag
+will be randomly generated. OTR version 3 uses the instance tags to
+identify which OTR state messages belongs to. Be sure to read the
+documentation for <code>otr-state-our-instance-tag</code>. New for Industria
+1.5.
+</p>
+<p>If <var>versions</var> is not omitted it must be a list of acceptable OTR
+protocol versions. The default is <code>(2 3)</code>. New for Industria 1.5.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dupdate_0021"></a>Procedure: <strong>otr-update!</strong> <em>state str</em></dt>
+<dd><p>Processes the <var>str</var> message, which came from the remote party,
+and updates the <var>state</var>. Use <code>otr-empty-queue!</code> to retrieve
+scheduled events.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dsend_002dencrypted_0021"></a>Procedure: <strong>otr-send-encrypted!</strong> <em>state msg</em></dt>
+<dd><p>This is used to send a message to the remote party. It encrypts and
+enqueues the <var>msg</var> bytevector and updates the <var>state</var>.
+Use <code>otr-empty-queue!</code> to retrieve the encrypted and formatted
+messages that should be sent to the remote party.
+</p>
+<p>The <var>msg</var> must not contain a NUL (0) byte.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dauthenticate_0021"></a>Procedure: <strong>otr-authenticate!</strong> <em>state secret [question]</em></dt>
+<dd><p>Initiate or respond to an authentication request.
+After calling this procedure you should use <code>otr-empty-queue!</code>,
+just like with <code>otr-send-encrypted!</code>.
+</p>
+<p>The authentication protocol can be used to verify that both partyies
+know the <var>secret</var> bytevector. The secret is never revealed over
+the network and is not even transmitted in an encrypted form. The
+protocol used is the Socialist Millionaires&rsquo; Protocol (SMP), which is
+based on a series of zero-knowledge proofs.
+<a name="index-Socialist-Millionaires_0027-Protocol"></a>
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dempty_002dqueue_0021"></a>Procedure: <strong>otr-empty-queue!</strong> <em>state</em></dt>
+<dd><p>Returns and clears the event queue. The queue is a list of pairs where
+the symbol in the <code>car</code> of the pair determines its meaning. These
+are the possible types:
+</p>
+<ul>
+<li> <tt>(outgoing . </tt><em>line</em><tt>)</tt> &ndash; The <code>cdr</code> is a string
+that should be sent to the remote party.
+</li><li> <tt>(encrypted . </tt><em>msg</em><tt>)</tt> &ndash; The <code>cdr</code> is a string
+that contains a decrypted message that was sent by the remote party.
+</li><li> <tt>(unencrypted . </tt><em>msg</em><tt>)</tt> &ndash; The <code>cdr</code> is a string that
+was sent <em>unencrypted</em> by the remote party. This happens when a
+whitespace-tagged message is received.
+</li><li> <tt>(session-established . </tt><em>whence</em><tt>)</tt> &ndash; A session has been
+established with the remote party. It is now safe to call
+<code>otr-state-their-dsa-key</code>, <code>otr-state-secure-session-id</code>,
+<code>otr-send-encrypted!</code> and <code>otr-authenticate!</code>. The
+<code>cdr</code> is the symbol <code>from-there</code> if the session was
+initiated by the remote party. Otherwise it is <code>from-here</code>.
+</li><li> <tt>(session-finished . </tt><em>whom</em><tt>)</tt> &ndash; The session is now
+finished and no new messages can be sent over it. The <code>cdr</code> is
+either the symbol <code>by-them</code> or <code>by-us</code>. <em>Note</em>: there
+is currently no way to finish the session from the local side, so
+<code>by-us</code> is not used yet.
+</li><li> <tt>(authentication . expecting-secret)</tt> &ndash; The remote party has
+started the authentication protocol and now expects you to
+call <code>otr-authenticate!</code>.
+</li><li> <tt>(authentication . #t)</tt> &ndash; The authentication protocol has
+succeeded and both parties had the same secret.
+</li><li> <tt>(authentication . #f)</tt> &ndash; The authentication protocol has
+failed. The secrets were not identical.
+</li><li> <tt>(authentication . aborted-by-them)</tt> &ndash; The remote party
+has aborted the authentication protocol.
+</li><li> <tt>(authentication . aborted-by-us)</tt> &ndash; The local party has
+encountered an error and therefore aborted the authentication
+protocol.
+</li><li> <tt>(they-revealed . </tt><em>k</em><tt>)</tt> &ndash; The remote party revealed an old
+signing key. This is a normal part of the protocol and the key is sent
+unencrypted to ensure the deniability property. You might like to
+reveal the key somehow yourself in case you&rsquo;re tunneling OTR over an
+encrypted protocol.
+</li><li> <tt>(we-revealed . </tt><em>k</em><tt>)</tt> &ndash; The local party has revealed an
+old signing key. <em>Note</em>: currently not used.
+</li><li> <tt>(undecipherable-message . #f)</tt> &ndash; An encrypted message was
+received, but it was not possible to decrypt it. This might mean
+e.g. that the remote and local parties have different sessions or
+that a message was sent out of order.
+</li><li> <tt>(remote-error . </tt><em>msg</em><tt>)</tt> &ndash; The remote party encountered a
+protocol error and sent a plaintext error message (probably in
+English).
+</li><li> <tt>(local-error . </tt><em>con</em><tt>)</tt> &ndash; There was an exception raised
+during processing of a message. The <code>cdr</code> is the condition object.
+</li><li> <tt>(symmetric-key-request . </tt><em><tt>(</tt><em>protocol</em><tt> . </tt><em>data</em><tt>)</tt></em><tt>)</tt>
+ &ndash; The remote party has requested that the extra symmetric
+key be used to communicate in some out-of-band protocol. See
+<code>otr-send-symmetric-key-request!</code>. New for Industria 1.5.
+</li></ul>
+
+<p>For forward-compatibility you should ignore any pair with an unknown
+<code>car</code>. Most messages are quite safe to ignore if you don&rsquo;t want
+to handle them.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dtheir_002ddsa_002dkey"></a>Procedure: <strong>otr-state-their-dsa-key</strong> <em>state</em></dt>
+<dd><p>Returns the remote party&rsquo;s public DSA key. This should be used to
+verify the remote party&rsquo;s identity. If the SMP authentication protocol
+succeeds you can remember the hash of the key for the next session.
+The user could also verify the key&rsquo;s hash by cell phone telephone or
+something.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dour_002ddsa_002dkey"></a>Procedure: <strong>otr-state-our-dsa-key</strong> <em>state</em></dt>
+<dd><p>Returns the local party&rsquo;s private DSA key. This is useful when the
+user is on the phone with the remote party. First convert it to a
+public key with <code>dsa-private-&gt;public</code> and then hash it with
+<code>otr-hash-public-key</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dhash_002dpublic_002dkey"></a>Procedure: <strong>otr-hash-public-key</strong> <em>public-dsa-key</em></dt>
+<dd><p>Hashes a public DSA key and formats it so that it can be shown to the
+OTR user.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dsecure_002dsession_002did"></a>Procedure: <strong>otr-state-secure-session-id</strong> <em>state</em></dt>
+<dd><p>Returns the <em>secure session ID</em> associated with the OTR state.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dformat_002dsession_002did"></a>Procedure: <strong>otr-format-session-id</strong> <em>id</em></dt>
+<dd><p>Formats a secure session ID in the format that is recommended when
+the ID should be shown to the OTR user.
+</p>
+<p>The first part of the ID should be shown in bold if the session was
+initiated by the local party. Otherwise the second part should be bold.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dversion"></a>Procedure: <strong>otr-state-version</strong> <em>state</em></dt>
+<dd><p>The OTR protocol version used by the state. This is either the integer
+<code>2</code> or the integer <code>3</code>. New for Industria 1.5.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dmss"></a>Procedure: <strong>otr-state-mss</strong> <em>state</em></dt>
+<dd><p>Returns the current maximum segment size of the OTR state.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dmss_002dset_0021"></a>Procedure: <strong>otr-state-mss-set!</strong> <em>state int</em></dt>
+<dd><p>Sets <var>int</var> as the maximum segment size of the OTR state.
+</p></dd></dl>
+
+<p>OTR protocol version 3 defines an extra symmetric key.
+</p>
+<dl>
+<dt><a name="index-otr_002dsend_002dsymmetric_002dkey_002drequest_0021"></a>Procedure: <strong>otr-send-symmetric-key-request!</strong> <em>state protocol data</em></dt>
+<dd><p>This sends a message to the remote party that requests that it uses
+the extra symmetric key for some out-of-band protocol.
+</p>
+<p>The remote party may ignore this request if the OTR protocol version
+(as returned by <code>otr-state-version</code>) is not at least 3.
+</p>
+<p>The <var>protocol</var> parameter is an unsigned 32-bit integer that
+indicates what the key should be used for. At the time this manual is
+written there are no defined uses. One might expect a list of uses to
+appear in the protocol documentation at
+<a href="http://www.cypherpunks.ca/otr/">http://www.cypherpunks.ca/otr/</a>.
+</p>
+<p>The <var>data</var> parameter is a bytevector containing protocol-dependent
+data.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dsymmetric_002dkey"></a>Procedure: <strong>otr-state-symmetric-key</strong> <em>state</em></dt>
+<dd><p>This returns the extra symmetric key in the form of a 256-bit bytevector.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dtag"></a>Procedure: <strong>otr-tag</strong> <em>whitespace? versions</em></dt>
+<dd><p>Constructs a string that may be sent to a remote party as a request to
+start an OTR session. New for Industria 1.5.
+</p>
+<p>If <var>whitespace?</var> is true then a whitespace tag will be made. This
+tag may be appended to a normal message sent by the user. If the
+recipient&rsquo;s client supports OTR it may start a session, but if it does
+not support OTR then hopefully it will not show the whitespaces.
+</p>
+<p>The <var>versions</var> argument specifies which OTR protocol versions
+should be present in the tag. This can either be a list of version
+numbers or the symbol <code>all</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-otr_002dstate_002dour_002dinstance_002dtag"></a>Procedure: <strong>otr-state-our-instance-tag</strong> <em>state</em></dt>
+<dd><p>This returns the local instance tag. It is new for Industria 1.5.
+</p>
+<p>It is intended for instance tags to be persistent across client
+restarts. If the local party crashes then the remote party may still
+have an OTR session established. If the local client were then to
+change its instance tag on restart it would not receive any messages
+from the remote party and would not send error messages. To the remote
+party it would look like they were being ignored.
+</p></dd></dl>
+
+<p>Isn&rsquo;t this the most boring manual you&rsquo;ve ever read?
+</p>
+<p>Version history:
+</p><ul>
+<li> Industria 1.5 introduced support for protocol version 3. This new
+version of the protocol uses instance tags, which are used to
+distinguish between different OTR sessions. This fixes a problem with
+chat networks that allow multiple logins. The new version also defines
+an extra symmetrical key that can be used by out-of-band protocols.
+</li></ul>
+<hr>
+<div class="header">
+<p>
+Next: <a href="ssh.html#ssh" accesskey="n" rel="next">ssh</a>, Previous: <a href="openpgp.html#openpgp" accesskey="p" rel="prev">openpgp</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

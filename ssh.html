@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>ssh (The Industria Libraries Manual)</title>
+
+<meta name="description" content="ssh (The Industria Libraries Manual)">
+<meta name="keywords" content="ssh (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Library-reference.html#Library-reference" rel="up" title="Library reference">
+<link href="ssh-connection.html#ssh-connection" rel="next" title="ssh connection">
+<link href="otr.html#otr" rel="prev" title="otr">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="ssh"></a>
+<div class="header">
+<p>
+Next: <a href="misc.html#misc" accesskey="n" rel="next">misc</a>, Previous: <a href="otr.html#otr" accesskey="p" rel="prev">otr</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Secure-Shell-_0028SSH_0029"></a>
+<h3 class="section">2.4 Secure Shell (SSH)</h3>
+<p>The <code>(industria ssh)</code> library hierarchy deals with the Secure
+Shell protocol. Both SSH servers and clients can be written with these
+libraries. Some convenient abstractions are currently missing though,
+e.g. a channel abstraction. These libraries hide the details of the
+wire protocol and the cryptographic algorithms. The protocol is
+standardized by a series of RFCs: 4250, 4251, 4252, 4253, 4254, etc.
+</p>
+<p>No TCP server abstraction is provided by Industria. To make a server
+you will probably need to use your implementation&rsquo;s network
+abstractions.
+</p>
+<p>It remains to be seen if this interface can be used for interactive
+applications. One problem is <code>get-ssh</code>, which reads a whole SSH
+packet. This procedure is blocking. R6RS doesn&rsquo;t provide any
+procedures for event-driven programming, so the author has made no
+effort to make this library work in an event-driven setting.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="ssh-connection.html#ssh-connection" accesskey="1">ssh connection</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Secure Shell Connection Protocol
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="ssh-transport.html#ssh-transport" accesskey="2">ssh transport</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Secure Shell Transport Layer Protocol
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="ssh-userauth.html#ssh-userauth" accesskey="3">ssh userauth</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Secure Shell Authentication Protocol
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="ssh-public_002dkeys.html#ssh-public_002dkeys" accesskey="4">ssh public-keys</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Secure Shell Public Keys
+</td></tr>
+</table>
+
+<dl>
+<dt><a name="index-ssh_002ddebugging"></a>Parameter: <strong>ssh-debugging</strong></dt>
+<dd><p>This SRFI-39 parameter controls debug output. It is a bit field with
+three bits currently defined. Bit 0 enables general trace messages,
+bit 1 enables packet traces and bit 2 enables packet hexdumps.
+</p>
+<p><em>Default</em>: <code>#b000</code>
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002ddebugging_002dport"></a>Parameter: <strong>ssh-debugging-port</strong></dt>
+<dd><p>This SRFI-39 parameter controls where debug output is written to. It
+defaults to the error port that was current when the library top-level
+was run.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-identification_002dprotocol_002dversion"></a>Parameter: <strong>identification-protocol-version</strong></dt>
+<dd><p>This SRFI-39 parameter is used when constructing the local
+identification string. It specifies which SSH protocol version number
+is supported.
+</p>
+<p><em>Default</em>: &quot;2.0&quot;
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-identification_002dsoftware_002dversion"></a>Parameter: <strong>identification-software-version</strong></dt>
+<dd><p>This SRFI-39 parameter is used when constructing the local
+identification string. It specifies the name and version of the client
+or server.
+</p>
+<p><em>Default</em>: &quot;Industria_2&quot;
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-identification_002dcomments"></a>Parameter: <strong>identification-comments</strong></dt>
+<dd><p>This SRFI-39 parameter is used when constructing the local
+identification string. It is <code>#f</code> or optionally a string of
+comments. This field is sometimes used to identify a vendor.
+</p>
+<p><em>Default</em>: <code>#f</code>
+</p></dd></dl>
+
+<p>The following parameters are when constructing the local kex exchange
+packet. It lists the preferred algorithms. You may remove and reorder
+the algorithms, but you can&rsquo;t introduce new ones without first adding
+them to <code>(industria ssh algorithms)</code>. The defaults may change
+in the future.
+</p>
+<dl>
+<dt><a name="index-preferred_002dkex_002dalgorithms"></a>Parameter: <strong>preferred-kex-algorithms</strong></dt>
+<dd><p>This is a list of key exchange algorithm names in the order they are
+preferred.
+</p>
+<p><em>Default</em>:
+ (&quot;diffie-hellman-group-exchange-sha256&quot;
+  &quot;diffie-hellman-group-exchange-sha1&quot;
+  &quot;diffie-hellman-group14-sha1&quot;
+  &quot;diffie-hellman-group1-sha1&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dserver_002dhost_002dkey_002dalgorithms"></a>Parameter: <strong>preferred-server-host-key-algorithms</strong></dt>
+<dd><p>This is a list of host key algorithm names in the order they are
+preferred. The server may have more than one host key and this is used
+to decide between them.
+</p>
+<p><em>Default</em>:
+ (&quot;ecdsa-sha2-nistp256&quot;
+  &quot;ecdsa-sha2-nistp384&quot;
+  &quot;ecdsa-sha2-nistp521&quot;
+  &quot;ssh-rsa&quot; &quot;ssh-dss&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dencryption_002dalgorithms_002dclient_002d_003eserver"></a>Parameter: <strong>preferred-encryption-algorithms-client-&gt;server</strong></dt>
+<dd><p>This is a list of encryption algorithm names in the order they are
+preferred for communication from the client to the server.
+</p>
+<p><em>Default</em>:
+ (&quot;aes128-ctr&quot; &quot;aes192-ctr&quot; &quot;aes256-ctr&quot; &quot;aes128-cbc&quot;
+  &quot;aes192-cbc&quot; &quot;aes256-cbc&quot; &quot;blowfish-cbc&quot; &quot;arcfour256&quot;
+  &quot;arcfour128&quot; &quot;3des-cbc&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dencryption_002dalgorithms_002dserver_002d_003eclient"></a>Parameter: <strong>preferred-encryption-algorithms-server-&gt;client</strong></dt>
+<dd><p>This is a list of encryption algorithm names in the order they are
+preferred for communication from the server to the client.
+</p>
+<p><em>Default</em>:
+ (&quot;aes128-ctr&quot; &quot;aes192-ctr&quot; &quot;aes256-ctr&quot; &quot;aes128-cbc&quot;
+  &quot;aes192-cbc&quot; &quot;aes256-cbc&quot; &quot;blowfish-cbc&quot; &quot;arcfour256&quot;
+  &quot;arcfour128&quot; &quot;3des-cbc&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dmac_002dalgorithms_002dclient_002d_003eserver"></a>Parameter: <strong>preferred-mac-algorithms-client-&gt;server</strong></dt>
+<dd><p>This is a list of message authentication code algorithms in the order
+they are preferred for communication from the client to the server.
+</p>
+<p><em>Default</em>: (&quot;hmac-md5&quot; &quot;hmac-sha1&quot; &quot;hmac-sha1-96&quot; &quot;hmac-md5-96&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dmac_002dalgorithms_002dserver_002d_003eclient"></a>Parameter: <strong>preferred-mac-algorithms-server-&gt;client</strong></dt>
+<dd><p>This is a list of message authentication code algorithms in the order
+they are preferred for communication from the server to the client.
+</p>
+<p><em>Default</em>: (&quot;hmac-md5&quot; &quot;hmac-sha1&quot; &quot;hmac-sha1-96&quot; &quot;hmac-md5-96&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dcompression_002dalgorithms_002dclient_002d_003eserver"></a>Parameter: <strong>preferred-compression-algorithms-client-&gt;server</strong></dt>
+<dd><p>This is a list of compression algorithms for packets transmitted from
+the client to the server.
+</p>
+<p><em>Default</em>: (&quot;none&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dcompression_002dalgorithms_002dserver_002d_003eclient"></a>Parameter: <strong>preferred-compression-algorithms-server-&gt;client</strong></dt>
+<dd><p>This is a list of compression algorithms for packets transmitted from
+the server to the client.
+</p>
+<p><em>Default</em>: (&quot;none&quot;)
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dlanguages_002dclient_002d_003eserver"></a>Parameter: <strong>preferred-languages-client-&gt;server</strong></dt>
+<dd><p>This is currently not used.
+</p>
+<p><em>Default</em>: ()
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-preferred_002dlanguages_002dserver_002d_003eclient"></a>Parameter: <strong>preferred-languages-server-&gt;client</strong></dt>
+<dd><p>This is currently not used.
+</p>
+<p><em>Default</em>: ()
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002dssh_002dclient"></a>Procedure: <strong>make-ssh-client</strong> <em>binary-input-port binary-output-port</em></dt>
+<dd><p>Starts an SSH client connection over the two given ports, which should
+be connected to a server via TCP (or some other similar means).
+</p>
+<p>If everything goes right an <code>ssh-conn</code> object is returned.
+The <em>peer identification</em> and <em>kexinit</em> fields are valid.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002dssh_002dserver"></a>Procedure: <strong>make-ssh-server</strong> <em>binary-input-port binary-output-port                                  keys</em></dt>
+<dd><p>Starts an SSH server connection over the two given ports, which should
+be connected to a client via TCP (or some other similar means).
+</p>
+<p><var>keys</var> is a list of host keys. The currently supported key types
+are <code>dsa-private-key</code> and <code>ecdsa-sha-2-private-key</code>.
+</p>
+<p>If everything goes right an <code>ssh-conn</code> object is returned.
+The <em>peer identification</em> and <em>kexinit</em> fields are valid.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002dkey_002dexchange"></a>Procedure: <strong>ssh-key-exchange</strong> <em>ssh-conn</em></dt>
+<dd><p>This runs the negotiated key exchange algorithm on <var>ssh-conn</var>.
+After this is done the client will have received one of the server&rsquo;s
+public keys. The negotiated encryption and MAC algorithms will have
+been activated.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002dconn_002dpeer_002didentification"></a>Procedure: <strong>ssh-conn-peer-identification</strong> <em>ssh-conn</em></dt>
+<dd><p>The identification string the peer sent. This is a string that
+contains the peer&rsquo;s protocol version, software version and optionally
+some comments.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002dconn_002dpeer_002dkexinit"></a>Procedure: <strong>ssh-conn-peer-kexinit</strong> <em>ssh-conn</em></dt>
+<dd><p>This is the peer&rsquo;s key exchange initialization (kexinit) packet. It
+lists the peer&rsquo;s supported algorithms. See <a href="ssh-transport.html#ssh-transport">ssh transport</a>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002dconn_002dhost_002dkey"></a>Procedure: <strong>ssh-conn-host-key</strong> <em>ssh-conn</em></dt>
+<dd><p>The server&rsquo;s public key. This has unspecified contents before the
+<code>ssh-key-exchange</code> procedure returns.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002dconn_002dsession_002did"></a>Procedure: <strong>ssh-conn-session-id</strong> <em>ssh-conn</em></dt>
+<dd><p>The session ID of <var>ssh-conn</var>. This has unspecified contents before
+the <code>ssh-key-exchange</code> procedure returns.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002dconn_002dregistrar"></a>Procedure: <strong>ssh-conn-registrar</strong> <em>ssh-conn</em></dt>
+<dd><p>Returns a procedure that can be used to register parsers and
+formatters for SSH packet types. The returned procedure should be
+given as an argument to <code>register-connection</code> and
+<code>register-userauth</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002derror"></a>Procedure: <strong>ssh-error</strong> <em>ssh-conn who message code irritants ...</em></dt>
+<dd><p>Sends a <code>disconnect</code> packet to the peer. The packet contains the
+message and the code. The connection is then closed and an error is
+raised.
+</p>
+<p>The error code constants are defined elsewhere. See <a href="ssh-transport.html#ssh-transport">ssh transport</a>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-put_002dssh"></a>Procedure: <strong>put-ssh</strong> <em>ssh-conn pkt</em></dt>
+<dd><p>Sends the SSH packet <var>pkt</var> to the peer of <var>ssh-conn</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-get_002dssh"></a>Procedure: <strong>get-ssh</strong> <em>ssh-conn</em></dt>
+<dd><p>Reads an SSH packet object from the peer of <var>ssh-conn</var>. The
+end-of-file object will be returned if the peer has closed the
+connection. The procedure blocks until a message has been received.
+Any messages of the type <code>ignore</code> are ignored.
+</p>
+<p>Packet types must be registered before they can be received. Initially
+only the transport layer types are registered. If an unregistered type
+is received this procedure returns a list of two items: the symbol
+<code>unimplemented</code> and the unparsed contents of the packet. A packet
+of type <var>unimplemented</var> is sent to the peer.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-close_002dssh"></a>Procedure: <strong>close-ssh</strong> <em>ssh-conn</em></dt>
+<dd><p>Flushes the output port of <var>ssh-conn</var>, and then closes both the
+input and output ports.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-flush_002dssh_002doutput"></a>Procedure: <strong>flush-ssh-output</strong> <em>ssh-conn</em></dt>
+<dd><p>Flushes any pending output on <var>ssh-conn</var>.
+</p></dd></dl>
+
+<p>The procedures below are used in the implementation of key
+re-exchange. After the initial key exchange either party can initiate
+a key re-exchange. RFC 4253 has the following to say on the subject:
+</p>
+<blockquote>
+<p>It is RECOMMENDED that the keys be changed after each gigabyte of
+transmitted data or after each hour of connection time, whichever
+comes sooner.  However, since the re-exchange is a public key
+operation, it requires a fair amount of processing power and should
+not be performed too often.
+</p></blockquote>
+
+<p>The demonstration program <code>secsh-client</code> contains an example of
+how to initiate key re-exchange. The server demonstration program
+<code>honingsburk</code> also handles key re-exchange, but does not initiate
+it. See <a href="honingsburk.html#honingsburk">honingsburk</a>.
+</p>
+<dl>
+<dt><a name="index-build_002dkexinit_002dpacket"></a>Procedure: <strong>build-kexinit-packet</strong> <em>ssh-conn</em></dt>
+<dd><p>Constructs and returns a key exchange packet for use by the local
+side.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-key_002dexchange_002dpacket_003f"></a>Procedure: <strong>key-exchange-packet?</strong> <em>pkt</em></dt>
+<dd><p>Returns <code>#t</code> if <var>pkt</var> should be given to
+<code>process-key-exchange-packet</code> for handling by the key exchange
+logic.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-ssh_002dkey_002dre_002dexchange"></a>Procedure: <strong>ssh-key-re-exchange</strong> <em>ssh-conn peer-kex local-kex</em></dt>
+<dd><p>Initiates key re-exchange on <var>ssh-conn</var>. This requires the peer&rsquo;s
+key exchange packet <var>peer-kex</var>, and the local key exchange packet
+<var>local-kex</var>. The procedure returns before the key re-exchange is
+finished. Both sides of the algorithm will need to communicate to
+complete the exchange.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-process_002dkey_002dexchange_002dpacket"></a>Procedure: <strong>process-key-exchange-packet</strong> <em>ssh-conn pkt</em></dt>
+<dd><p>Updates the key exchange logic on <var>ssh-conn</var> with the contents of
+<var>pkt</var>. If the packet is a <code>kexinit</code> packet and <var>ssh-conn</var>
+is a server, then this will automatically initiate the key re-exchange
+algorithm.
+</p>
+<p>The procedure may return the symbol <code>finished</code> to indicate that
+the key exchange algorithm has finished and the new algorithms are
+used for packets sent to the peer.
+</p>
+<p><var>Note</var>: This interface is currently balanced in favor of servers.
+More experience in using the library is needed to determine how to
+make the key re-exchange interface better for clients. Suggestions are
+welcome.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="misc.html#misc" accesskey="n" rel="next">misc</a>, Previous: <a href="otr.html#otr" accesskey="p" rel="prev">otr</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

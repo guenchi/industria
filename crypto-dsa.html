@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto dsa (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto dsa (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto dsa (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="crypto-ec.html#crypto-ec" rel="next" title="crypto ec">
+<link href="crypto-dh.html#crypto-dh" rel="prev" title="crypto dh">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-dsa"></a>
+<div class="header">
+<p>
+Next: <a href="crypto-ec.html#crypto-ec" accesskey="n" rel="next">crypto ec</a>, Previous: <a href="crypto-dh.html#crypto-dh" accesskey="p" rel="prev">crypto dh</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Digital-Signature-Algorithm"></a>
+<h4 class="subsection">2.1.6 Digital Signature Algorithm</h4>
+<p>The <code>(industria crypto dsa)</code> library provides procedures for
+creating and verifying DSA signatures. DSA is a public key signature
+algorithm, which means that it uses private and public key pairs. With
+a private key you can create a signature that can then be verified by
+someone using the corresponding public key. The idea is that it&rsquo;s very
+difficult to create a correct signature without having access to the
+private key, so if the signature can be verified it must have been
+made by someone who has access to the private key.
+</p>
+<p>DSA is standardized by FIPS Publication 186. It is available at this
+web site: <a href="http://csrc.nist.gov/publications/PubsFIPS.html">http://csrc.nist.gov/publications/PubsFIPS.html</a>.
+</p>
+<p>There is currently no procedure to generate a new DSA key. Here is
+how to generate keys with OpenSSL or GnuTLS:
+</p><pre class="verbatim">openssl dsaparam 1024 | openssl gendsa /dev/stdin &gt; dsa.pem
+certtool --dsa --bits 1024 -p &gt; dsa.pem
+</pre>
+<p>The key can then be loaded with <code>dsa-private-key-from-pem-file</code>.
+</p>
+<dl>
+<dt><a name="index-make_002ddsa_002dpublic_002dkey"></a>Procedure: <strong>make-dsa-public-key</strong> <em>p q g y</em></dt>
+<dd><p>Returns a DSA public key value. See the FIPS standard for a
+description of the parameters.
+</p>
+<p>To access the fields use <code>dsa-public-key-p</code>,
+<code>dsa-public-key-q</code>, <code>dsa-public-key-g</code> and
+<code>dsa-public-key-y</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dpublic_002dkey_003f"></a>Procedure: <strong>dsa-public-key?</strong> <em>obj</em></dt>
+<dd><p>True if <var>obj</var> is a DSA public key value.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dpublic_002dkey_002dlength"></a>Procedure: <strong>dsa-public-key-length</strong> <em>key</em></dt>
+<dd><p>Returns the number of bits in the <em>p</em> value of <var>key</var>. This is
+often considered to be the length of the key. The bitwise-length of
+<em>q</em> is also important, it corresponds with the length of the
+hashes used for signatures.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002ddsa_002dprivate_002dkey"></a>Procedure: <strong>make-dsa-private-key</strong> <em>p q g y x</em></dt>
+<dd><p>Returns a DSA private key value. See the FIPS standard for a
+description of the parameters.
+</p>
+<p>To access the fields use <code>dsa-private-key-p</code>,
+<code>dsa-private-key-q</code>, <code>dsa-private-key-g</code>,
+<code>dsa-private-key-y</code> and <code>dsa-private-key-x</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dprivate_002dkey_003f"></a>Procedure: <strong>dsa-private-key?</strong> <em>obj</em></dt>
+<dd><p>Returns <code>#t</code> if <var>obj</var> is a DSA private key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dprivate_002d_003epublic"></a>Procedure: <strong>dsa-private-&gt;public</strong> <em>private-key</em></dt>
+<dd><p>Converts a private DSA key into a public DSA key by removing the
+private fields.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dprivate_002dkey_002dfrom_002dbytevector"></a>Procedure: <strong>dsa-private-key-from-bytevector</strong> <em>bv</em></dt>
+<dd><p>Parses <var>bv</var> as an ASN.1 DER encoded private DSA key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dprivate_002dkey_002dfrom_002dpem_002dfile"></a>Procedure: <strong>dsa-private-key-from-pem-file</strong> <em>filename</em></dt>
+<dd><p>Opens the file and reads a private DSA key. The file should be in
+Privacy Enhanced Mail (PEM) format and contain an ASN.1 DER encoded
+private DSA key.
+</p>
+<p>Encrypted keys are currently not supported.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dsignature_002dfrom_002dbytevector"></a>Procedure: <strong>dsa-signature-from-bytevector</strong> <em>bv</em></dt>
+<dd><p>Parses the bytevector <var>bv</var> as an ASN.1 DER encoded DSA signature.
+The return value is a list with the <var>r</var> and <var>s</var> values that
+make up a DSA signature.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dcreate_002dsignature"></a>Procedure: <strong>dsa-create-signature</strong> <em>hash private-key</em></dt>
+<dd><p>The <var>hash</var> is the message digest (as a bytevector) of the data you
+want to sign. The <var>hash</var> and the <var>private-key</var> are used to
+create a signature which is returned as two values: <code>r</code> and
+<code>s</code>.
+</p>
+<p>The <var>hash</var> can e.g. be an SHA-1 message digest. Such a digest is
+160 bits and the <var>q</var> parameter should then be 160 bits.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-dsa_002dverify_002dsignature"></a>Procedure: <strong>dsa-verify-signature</strong> <em>hash public-key r s</em></dt>
+<dd><p>The <var>hash</var> is the message digest (as a bytevector) of the data
+which the signature is signing.
+</p>
+<p>Returns <code>#t</code> if the signature matches, otherwise <code>#f</code>.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="crypto-ec.html#crypto-ec" accesskey="n" rel="next">crypto ec</a>, Previous: <a href="crypto-dh.html#crypto-dh" accesskey="p" rel="prev">crypto dh</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

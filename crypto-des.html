@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto des (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto des (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto des (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="crypto-dh.html#crypto-dh" rel="next" title="crypto dh">
+<link href="crypto-blowfish.html#crypto-blowfish" rel="prev" title="crypto blowfish">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-des"></a>
+<div class="header">
+<p>
+Next: <a href="crypto-dh.html#crypto-dh" accesskey="n" rel="next">crypto dh</a>, Previous: <a href="crypto-blowfish.html#crypto-blowfish" accesskey="p" rel="prev">crypto blowfish</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Data-Encryption-Standard"></a>
+<h4 class="subsection">2.1.4 Data Encryption Standard</h4>
+<p>The Data Encryption Standard (DES) is older than AES and uses shorter
+keys. To get longer keys the Triple Data Encryption Algorithm (TDEA,
+3DES) is commonly used instead of DES alone.
+<a name="index-Triple-Data-Encryption-Algorithm"></a>
+<a name="index-3DES"></a>
+</p>
+
+<p>The <code>(industria crypto des)</code> library is incredibly inefficient and
+the API is, for no good reason, different from the AES library. You
+should probably use AES instead, if possible.
+</p>
+<dl>
+<dt><a name="index-des_002dkey_002dbad_002dparity_003f"></a>Procedure: <strong>des-key-bad-parity?</strong> <em>key</em></dt>
+<dd><p>Returns <code>#f</code> if the DES <var>key</var> has good parity, or the index
+of the first bad byte. Each byte of the <var>key</var> has one parity bit,
+so even though it is a bytevector of length eight (64 bits), only 56
+bits are used for encryption and decryption. Parity is usually
+ignored.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-des_0021"></a>Procedure: <strong>des!</strong> <em>bv key-schedule [offset E]</em></dt>
+<dd><p>The fundamental DES procedure, which performs both encryption and
+decryption in Electronic Code Book (ECB) mode. The eight bytes
+starting at <var>offset</var> in the bytevector <var>bv</var> are modified
+in-place.
+</p>
+<p>The <var>offset</var> can be omitted, in which case 0 is used.
+</p>
+<p>The <var>E</var> argument will normally be omitted. It is only used by the
+<code>des-crypt</code> procedure.
+</p>
+<div class="example">
+<pre class="example">(import (industria crypto des))
+(let ((buf (string-&gt;utf8 &quot;security&quot;))
+      (sched (permute-key (string-&gt;utf8 &quot;terrible&quot;))))
+  (des! buf sched)
+  buf)
+&rArr; #vu8(106 72 113 111 248 178 225 208)
+</pre></div>
+
+<div class="example">
+<pre class="example">(import (industria crypto des))
+(let ((buf (bytevector-copy #vu8(106 72 113 111 248 178 225 208)))
+      (sched (reverse (permute-key (string-&gt;utf8 &quot;terrible&quot;)))))
+  (des! buf sched)
+  (utf8-&gt;string buf))
+&rArr; &quot;security&quot;
+</pre></div>
+</dd></dl>
+
+<dl>
+<dt><a name="index-permute_002dkey"></a>Procedure: <strong>permute-key</strong> <em>key</em></dt>
+<dd><p>Permutes the DES <var>key</var> into a key schedule. The key schedule is
+then used as an argument to <code>des!</code>. To decrypt, simply reverse
+the key schedule. The return value is a list.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-tdea_002dpermute_002dkey"></a>Procedure: <strong>tdea-permute-key</strong> <em>key1 [key2 key3]</em></dt>
+<dd><p>Permutes a 3DES key into a key schedule. If only one argument is given
+then it must be a bytevector of length 24. If three arguments are given
+they must all be bytevectors of length eight.
+</p>
+<p>The return value&rsquo;s type is unspecified.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-tdea_002dencipher_0021"></a>Procedure: <strong>tdea-encipher!</strong> <em>bv offset key</em></dt>
+<dd><p>Encrypts the eight bytes at <var>offset</var> of <var>bv</var> using the given
+3DES key schedule.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-tdea_002ddecipher_0021"></a>Procedure: <strong>tdea-decipher!</strong> <em>bv offset key</em></dt>
+<dd><p>The inverse of <code>tdea-encipher!</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-tdea_002dcbc_002dencipher_0021"></a>Procedure: <strong>tdea-cbc-encipher!</strong> <em>bv key iv offset count</em></dt>
+<dd><p>Encrypts the <var>count</var> bytes at <var>offset</var> of <var>bv</var> using
+Cipher Block Chaining (CBC) mode.
+</p>
+<p>The <var>iv</var> argument is the <em>Initial Vector</em>, which is XOR&rsquo;d with
+the data before encryption. It is a bytevector of length eight and it
+is modified for each block.
+</p>
+<p>Both <var>offset</var> and <var>count</var> must be a multiples of eight.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-tdea_002dcbc_002ddecipher_0021"></a>Procedure: <strong>tdea-cbc-decipher!</strong> <em>bv key iv offset count</em></dt>
+<dd><p>The inverse of <code>tdea-cbc-encipher!</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-des_002dcrypt"></a>Procedure: <strong>des-crypt</strong> <em>password salt</em></dt>
+<dd><p>This is a password hashing algorithm that used to be very popular on
+Unix systems, but is today too fast (which means brute forcing
+passwords from hashes is fast). The <var>password</var> string is at most
+eight characters.
+</p>
+<p>The algorithm is based on 25 rounds of a slightly modified DES.
+</p>
+<p>The <var>salt</var> must be a string of two characters from the alphabet
+<code>#\A</code>&ndash;<code>#\Z</code>, <code>#\a</code>&ndash;<code>#\z</code>,
+<code>#\0</code>&ndash;<code>#\9</code>, <code>#\.</code> and <code>#\/</code>.
+</p>
+<div class="example">
+<pre class="example">(import (industria crypto des))
+(des-crypt &quot;password&quot; &quot;4t&quot;)
+&rArr; &quot;4tQSEW3lEnOio&quot;
+</pre></div>
+
+<p>A more general interface is also available, see <a href="password.html#password">password</a>.
+</p></dd></dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="crypto-dh.html#crypto-dh" accesskey="n" rel="next">crypto dh</a>, Previous: <a href="crypto-blowfish.html#crypto-blowfish" accesskey="p" rel="prev">crypto blowfish</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

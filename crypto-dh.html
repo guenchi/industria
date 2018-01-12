@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto dh (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto dh (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto dh (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="crypto.html#crypto" rel="up" title="crypto">
+<link href="crypto-dsa.html#crypto-dsa" rel="next" title="crypto dsa">
+<link href="crypto-des.html#crypto-des" rel="prev" title="crypto des">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto-dh"></a>
+<div class="header">
+<p>
+Next: <a href="crypto-dsa.html#crypto-dsa" accesskey="n" rel="next">crypto dsa</a>, Previous: <a href="crypto-des.html#crypto-des" accesskey="p" rel="prev">crypto des</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Diffie_002dHellman-key-exchange"></a>
+<h4 class="subsection">2.1.5 Diffie-Hellman key exchange</h4>
+<p>The <code>(industria crypto dh)</code> library exports procedures and
+constants for Diffie-Hellman (Merkle) key exchange. D-H works by
+generating a pair of numbers, sending one of them to the other party,
+and using the other one and the one you receive to compute a shared
+secret. The idea is that it&rsquo;s difficult for an eavesdropper to deduce
+the shared secret.
+</p>
+<p>The D-H exchange must be protected by e.g. public key encryption
+because otherwise a MITM attack is trivial. It is best to use a
+security protocol designed by an expert.
+<a name="index-Diffie_002dHellman"></a>
+</p>
+<dl>
+<dt><a name="index-make_002ddh_002dsecret"></a>Procedure: <strong>make-dh-secret</strong> <em>generator prime bit-length</em></dt>
+<dd><p>Generates a Diffie-Hellman secret key pair. Returns two values: the
+secret key (of bitwise length <var>bit-length</var>) part and the public
+key part.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-expt_002dmod"></a>Procedure: <strong>expt-mod</strong> <em>base exponent modulus</em></dt>
+<dd><p>Computes <code>(mod (expt <var>base</var> <var>exponent</var>) <var>modulus</var>)</code>.
+This is modular exponentiation, so all the parameters must be
+integers.
+</p>
+<p>The <var>exponent</var> can also be negative (set it to -1 to calculate the
+multiplicative inverse of <var>base</var>).
+</p>
+<div class="example">
+<pre class="example">(import (industria crypto dh))
+(let ((g modp-group15-g) (p modp-group15-p))
+  (let-values (((y Y) (make-dh-secret g p 320))
+               ((x X) (make-dh-secret g p 320)))
+    ;; The numbers being compared are the shared secret
+    (= (expt-mod X y modp-group15-p)
+       (expt-mod Y x modp-group15-p))))
+&rArr; #t
+</pre></div>
+</dd></dl>
+
+<p>This library also exports a few well known modular exponential (MODP)
+Diffie-Hellman groups (generators and primes) that have been defined
+by Internet RFCs. They are named modp-groupN-g (generator) and
+modp-groupN-p (prime) where N is the number of the group. Groups 1, 2,
+5, 14, 15, 16, 17 and 18 are currently exported. They all have
+different lengths and longer primes are more secure but also slower.
+See RFC 3526 for more on this.
+<a name="index-MODP-groups"></a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="crypto-dsa.html#crypto-dsa" accesskey="n" rel="next">crypto dsa</a>, Previous: <a href="crypto-des.html#crypto-des" accesskey="p" rel="prev">crypto des</a>, Up: <a href="crypto.html#crypto" accesskey="u" rel="up">crypto</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

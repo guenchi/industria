@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>secsh-client (The Industria Libraries Manual)</title>
+
+<meta name="description" content="secsh-client (The Industria Libraries Manual)">
+<meta name="keywords" content="secsh-client (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Demo-programs.html#Demo-programs" rel="up" title="Demo programs">
+<link href="Index.html#Index" rel="next" title="Index">
+<link href="honingsburk.html#honingsburk" rel="prev" title="honingsburk">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="secsh_002dclient"></a>
+<div class="header">
+<p>
+Previous: <a href="honingsburk.html#honingsburk" accesskey="p" rel="prev">honingsburk</a>, Up: <a href="Demo-programs.html#Demo-programs" accesskey="u" rel="up">Demo programs</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="secsh_002dclient-_002d_002d-manually-operated-Secure-Shell-client"></a>
+<h3 class="section">3.3 secsh-client &ndash; manually operated Secure Shell client</h3>
+<p>Most SSH clients try to provide a nice user experience. This one is
+instead a command-line based manually operated client. After
+establishing the initial connection you can use a few simplistic
+commands to login, establish a session channel, read and write channel
+data. You can also enable debugging if you&rsquo;d like to see a packet
+trace. This session log shows how to connect to a <code>honingsburk</code>
+running on TCP port 2222:
+</p>
+<div class="example">
+<pre class="example">Industria SSH demo client.
+
+Connecting to localhost port 2222...
+Running key exchange...
+a6:4b:7e:05:38:03:01:29:07:0c:58:a4:fe:c1:d8:02
++---[ECDSA 521]---+
+|*++o..           |
+|ooo .            |
+|Eo   . .         |
+|o +   + .        |
+| + +   oS.       |
+|  o .  o  .      |
+|   .  o  .       |
+|     o ..        |
+|      o.         |
++-----------------+
+
+localhost ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1[...]
+Please verify the above key.
+SSH session established.
+Type help for a list of commands.
+
+localhost=&gt; u &quot;root&quot;
+Your request to use ssh-userauth was accepted.
+You may try these authentication methods: (password)
+localhost=&gt; p &quot;toor&quot;
+You've succesfully authenticated.
+You now have access to the SSH connection protocol.
+localhost=&gt; s
+New session opened.
+Receive side parameters:
+ID: 0 window size: 4096 maximum packet size: 32768
+Send side parameters:
+ID: 0 window size: 32768 maximum packet size: 32768
+localhost=&gt; t 0
+localhost=&gt; r
+Linux darkstar 2.6.35.8 #1 Sat Oct 30 10:43:19 CEST 2010 i686
+
+Welcome to your new account!
+No mail.
+localhost=&gt; r
+
+darkstar:~# 
+localhost=&gt; 
+</pre></div>
+
+
+
+
+</body>
+</html>

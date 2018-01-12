@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>crypto (The Industria Libraries Manual)</title>
+
+<meta name="description" content="crypto (The Industria Libraries Manual)">
+<meta name="keywords" content="crypto (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Library-reference.html#Library-reference" rel="up" title="Library reference">
+<link href="crypto-aes.html#crypto-aes" rel="next" title="crypto aes">
+<link href="Library-reference.html#Library-reference" rel="prev" title="Library reference">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="crypto"></a>
+<div class="header">
+<p>
+Next: <a href="openpgp.html#openpgp" accesskey="n" rel="next">openpgp</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Cryptographic-primitives"></a>
+<h3 class="section">2.1 Cryptographic primitives</h3>
+
+<p>Beware that if you&rsquo;re using some of these libraries for sensitive
+data, let&rsquo;s say passwords, then there is probably no way to make sure
+a password is ever gone from memory. There is no guarantee that the
+passwords will not be swapped out to disk or transmitted by radio.
+There might be other problems as well. The algorithms themselves might
+be weak. Don&rsquo;t pick weak keys. Know what you&rsquo;re doing.
+</p>
+<p>Your Scheme&rsquo;s implementation of <code>(srfi :27 random-bits)</code> might be
+too weak. It&rsquo;s common that it will be initialized from time alone, so
+an attacker can easily guess your <code>random-source</code> internal state
+by trying a few timestamps and checking which one generates the data
+you sent. These libraries try to use <code>/dev/urandom</code> if it exists,
+but if it doesn&rsquo;t they fall back on SRFI-27 and could reveal the
+secret of your heart to the enemy. See RFC4086 for details on how
+randomness works.
+<a name="index-randomness"></a>
+<a name="index-entropy"></a>
+</p>
+<p>And remember what the license says about warranties. Don&rsquo;t come crying
+to me if the enemy deciphers your secret messages and your whole
+convoy blows up. These libraries have not been validated by the NIST
+or the FDA and quite likely aren&rsquo;t allowed for government work.
+<a name="index-security_002c-warning"></a>
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="crypto-aes.html#crypto-aes" accesskey="1">crypto aes</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Advanced Encryption Standard (AES)
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-arcfour.html#crypto-arcfour" accesskey="2">crypto arcfour</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">ARCFOUR stream cipher
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-blowfish.html#crypto-blowfish" accesskey="3">crypto blowfish</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">The Blowfish cipher
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-des.html#crypto-des" accesskey="4">crypto des</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Data Encryption Standard (DES, 3DES)
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-dh.html#crypto-dh" accesskey="5">crypto dh</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Diffie-Hellman key exchange
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-dsa.html#crypto-dsa" accesskey="6">crypto dsa</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Digital Signature Algorithm (DSA)
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-ec.html#crypto-ec" accesskey="7">crypto ec</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Elliptic Curve Cryptography
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-ecdsa.html#crypto-ecdsa" accesskey="8">crypto ecdsa</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Elliptic Curve Digital Signature Algorithm (ECDSA)
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-entropy.html#crypto-entropy" accesskey="9">crypto entropy</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Entropy and randomness
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="crypto-rsa.html#crypto-rsa">crypto rsa</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">RSA public key encryption and signatures
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="openpgp.html#openpgp" accesskey="n" rel="next">openpgp</a>, Up: <a href="Library-reference.html#Library-reference" accesskey="u" rel="up">Library reference</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

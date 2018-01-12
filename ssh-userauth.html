@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- This manual is for the Industria libraries, a collection of
+R6RS Scheme libraries.
+
+Copyright (C) 2010, 2011, 2012, 2013, 2016, 2017, 2018 Go"ran Weinholt goran@weinholt.se.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE. -->
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>ssh userauth (The Industria Libraries Manual)</title>
+
+<meta name="description" content="ssh userauth (The Industria Libraries Manual)">
+<meta name="keywords" content="ssh userauth (The Industria Libraries Manual)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Index.html#Index" rel="index" title="Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="ssh.html#ssh" rel="up" title="ssh">
+<link href="ssh-public_002dkeys.html#ssh-public_002dkeys" rel="next" title="ssh public-keys">
+<link href="ssh-transport.html#ssh-transport" rel="prev" title="ssh transport">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="ssh-userauth"></a>
+<div class="header">
+<p>
+Next: <a href="ssh-public_002dkeys.html#ssh-public_002dkeys" accesskey="n" rel="next">ssh public-keys</a>, Previous: <a href="ssh-transport.html#ssh-transport" accesskey="p" rel="prev">ssh transport</a>, Up: <a href="ssh.html#ssh" accesskey="u" rel="up">ssh</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Secure-Shell-Authentication-Protocol"></a>
+<h4 class="subsection">2.4.3 Secure Shell Authentication Protocol</h4>
+<p>The <code>(industria ssh userauth)</code> library implements record
+types, parsers and formatters for the authentication protocol packets
+in SSH.
+</p>
+<p>See RFC 4252 for a more detailed description of this protocol. In this
+protocol the client sends packets of type <code>userauth-request</code>. The
+type names that start with <code>userauth-request/</code> are sub-types that
+contain user credentials. All other packet types documented here are
+sent by the server.
+</p>
+<p>All user authentication requests contain a user name, a service name
+and a method name. The service name most commonly used is
+<code>&quot;ssh-connection&quot;</code>, which requests access to the connection
+protocol. See <a href="ssh-connection.html#ssh-connection">ssh connection</a>.
+</p>
+<dl>
+<dt><a name="index-register_002duserauth"></a>Procedure: <strong>register-userauth</strong> <em>registrar</em></dt>
+<dd><p>Registers the packet types for the authentication protocol so that
+they may be received and sent. A registrar may be obtained using
+<code>ssh-conn-registrar</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-register_002duserauth_002dpassword"></a>Procedure: <strong>register-userauth-password</strong> <em>registrar</em></dt>
+<dd><p>Registers the packet types for the password authentication protocol.
+This is a supplement to <code>register-userauth</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-register_002duserauth_002dpublic_002dkey"></a>Procedure: <strong>register-userauth-public-key</strong> <em>registrar</em></dt>
+<dd><p>Registers the packet types for the public key authentication protocol.
+This is a supplement to <code>register-userauth</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-deregister_002duserauth"></a>Procedure: <strong>deregister-userauth</strong> <em>registrar</em></dt>
+<dd><p>Deregisters all authentication protocol packet types.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002duserauth_002drequest"></a>Procedure: <strong>make-userauth-request</strong> <em>username service method</em></dt>
+<dd><p>Constructs a new user authentication request. This particular
+procedure is only good for constructing requests that use the
+<code>&quot;none&quot;</code> method. When such a request is sent to the server it
+will respond with a list of available authentication methods. To make
+a proper request use one of the <code>make-userauth-request/*</code>
+procedures below. Those procedures automatically include the correct
+<var>method</var> in the request. The <var>service</var> is normally
+<code>&quot;ssh-connection&quot;</code>. See <a href="ssh-connection.html#ssh-connection">ssh connection</a>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_003f"></a>Procedure: <strong>userauth-request?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-request</code> packet. This
+includes <code>userauth-request/password</code> packets, and so on.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002dusername"></a>Procedure: <strong>userauth-request-username</strong> <em>request</em></dt>
+<dd><p>This returns the user name field of <var>request</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002dservice"></a>Procedure: <strong>userauth-request-service</strong> <em>request</em></dt>
+<dd><p>This returns the service name field of <var>request</var>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002dmethod"></a>Procedure: <strong>userauth-request-method</strong> <em>request</em></dt>
+<dd><p>This returns the method name field of <var>request</var>. Examples include
+<code>&quot;none&quot;</code>, <code>&quot;password&quot;</code> and <code>&quot;publickey&quot;</code>.
+</p></dd></dl>
+
+<p>If the server does not like the credentials provided in a
+<code>userauth-request</code> it will send a <code>userauth-failure</code> packet.
+</p>
+<dl>
+<dt><a name="index-make_002duserauth_002dfailure"></a>Procedure: <strong>make-userauth-failure</strong> <em>can-continue partial?</em></dt>
+<dd><p>Constructs a message that indicates to the client that the user
+authentication request was not successful.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dfailure_003f"></a>Procedure: <strong>userauth-failure?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-failure</code> packet. These
+packets indicate the the client was denied access to the requested
+service. The credentials might be incorrect or the server might be
+requesting additional authentication requests (see below).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dfailure_002dcan_002dcontinue"></a>Procedure: <strong>userauth-failure-can-continue</strong> <em>failure</em></dt>
+<dd><p>This returns a list of authentication methods that &ldquo;can continue&rdquo;,
+i.e. methods that might be successful given that correct credentials
+are provided.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dfailure_002dpartial_003f"></a>Procedure: <strong>userauth-failure-partial?</strong> <em>failure</em></dt>
+<dd><p>This is a boolean that indicates partial success. The server might
+require multiple successful authentication requests (see RFC 4252).
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002duserauth_002dsuccess"></a>Procedure: <strong>make-userauth-success</strong></dt>
+<dd><p>Constructs a packet that indicates to the client that the user
+authentication was successful. The client can now use the requested
+service (e.g. the connection protocol). This message has no fields.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dsuccess_003f"></a>Procedure: <strong>userauth-success?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-success</code> packet.
+</p></dd></dl>
+
+<p>The server can send a banner before the user authenticates. The banner
+might often contain a warning about unauthorized access.
+</p>
+<dl>
+<dt><a name="index-make_002duserauth_002dbanner"></a>Procedure: <strong>make-userauth-banner</strong> <em>message language</em></dt>
+<dd><p>This constructs a textual message that the server can send to the
+client. The client software can then display it to the user. This
+happens before user authentication is attempted and often contains a
+warning about unauthorized accesss.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dbanner_003f"></a>Procedure: <strong>userauth-banner?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-banner</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dbanner_002dmessage"></a>Procedure: <strong>userauth-banner-message</strong> <em>banner</em></dt>
+<dd><p>This field is a message that the client can show to the user.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dbanner_002dlanguage"></a>Procedure: <strong>userauth-banner-language</strong> <em>banner</em></dt>
+<dd><p>This field might indicate the language of the text in the banner, but
+is most commonly empty and not used.
+</p></dd></dl>
+
+<p>The client can try to authenticate with a password. Note that the
+unencrypted password is seen by the server. It&rsquo;s important to check
+hosts keys to make sure you&rsquo;re connecting to the right server.
+</p>
+<dl>
+<dt><a name="index-make_002duserauth_002drequest_002fpassword"></a>Procedure: <strong>make-userauth-request/password</strong> <em>username service password</em></dt>
+<dd><p>Constructs a user authentication request. This is a normal attempt to
+login with a user name and password. There is an alternative protocol
+for these types of login requests: the <code>&quot;keyboard-interactive&quot;</code>
+method (support is planned).
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpassword_003f"></a>Procedure: <strong>userauth-request/password?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-request/password</code>
+packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpassword_002dvalue"></a>Procedure: <strong>userauth-request/password-value</strong> <em>request</em></dt>
+<dd><p>Returns the password field for this user authentication request.
+</p></dd></dl>
+
+<p>The server can request that the client should change its password.
+</p>
+<dl>
+<dt><a name="index-make_002duserauth_002dpassword_002dchangereq"></a>Procedure: <strong>make-userauth-password-changereq</strong> <em>prompt language</em></dt>
+<dd><p>This constructs a password change request. Some servers might send
+this packet if e.g. they use a password expiry system.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dpassword_002dchangereq_003f"></a>Procedure: <strong>userauth-password-changereq?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-request/changereq</code>
+packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dpassword_002dchangereq_002dprompt"></a>Procedure: <strong>userauth-password-changereq-prompt</strong> <em>changereq</em></dt>
+<dd><p>This is the message to show the user when prompting for the new
+password.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dpassword_002dchangereq_002dlanguage"></a>Procedure: <strong>userauth-password-changereq-language</strong> <em>changereq</em></dt>
+<dd><p>This is the language used in the password change request prompt.
+</p></dd></dl>
+
+<p>After having received a request to change its password a client may
+send a <code>userauth-request/password-change</code> packet.
+</p>
+<dl>
+<dt><a name="index-make_002duserauth_002drequest_002fpassword_002dchange"></a>Procedure: <strong>make-userauth-request/password-change</strong> <em>username service old new</em></dt>
+<dd><p>Constructs a request to authenticate the user and at the same time
+change the user&rsquo;s password. This message may be sent without having
+received a <code>userauth-request/changereq</code> packet. Please see
+section 8 of RFC 4252 for the meaning of the packet that the server
+will send in response to this packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpassword_002dchange_003f"></a>Procedure: <strong>userauth-request/password-change?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-request/password-change</code>
+packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpassword_002dchange_002dold"></a>Procedure: <strong>userauth-request/password-change-old</strong> <em>request</em></dt>
+<dd><p>This field contains the user&rsquo;s current password.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpassword_002dchange_002dnew"></a>Procedure: <strong>userauth-request/password-change-new</strong> <em>request</em></dt>
+<dd><p>This field contains the user&rsquo;s new password.
+</p></dd></dl>
+
+
+<dl>
+<dt><a name="index-make_002duserauth_002drequest_002fpublic_002dkey_002dquery"></a>Procedure: <strong>make-userauth-request/public-key-query</strong> <em>username service key</em></dt>
+<dd><p>Before performing a potentially expensive private key operation the
+client may ask the server if a specific key might be used to
+authenticate.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpublic_002dkey_002dquery_003f"></a>Procedure: <strong>userauth-request/public-key-query?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-request/public-key-query</code>
+packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpublic_002dkey_002dquery_002dalgorithm"></a>Procedure: <strong>userauth-request/public-key-query-algorithm</strong> <em>request</em></dt>
+<dd><p>This field is automatically filled in by
+<code>make-userauth-request/public-key-query</code> to contain the public
+key algorithm name of the key contained in the query.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpublic_002dkey_002dquery_002dkey"></a>Procedure: <strong>userauth-request/public-key-query-key</strong> <em>request</em></dt>
+<dd><p>This field contains an SSH public key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002duserauth_002dpublic_002dkey_002dok"></a>Procedure: <strong>make-userauth-public-key-ok</strong> <em>algorithm key</em></dt>
+<dd><p>The server sends <code>userauth-public-key-ok</code> to indicate that the
+user may try to authenticate with the given key.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dpublic_002dkey_002dok_003f"></a>Procedure: <strong>userauth-public-key-ok?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-public-key-ok</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dpublic_002dkey_002dok_002dalgorithm"></a>Procedure: <strong>userauth-public-key-ok-algorithm</strong> <em>request</em></dt>
+<dd><p>This is a copy of the algorithm name contained in the
+<code>userauth-request/public-key-query</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002dpublic_002dkey_002dok_002dkey"></a>Procedure: <strong>userauth-public-key-ok-key</strong> <em>request</em></dt>
+<dd><p>This is a copy of the public key contained in the
+<code>userauth-request/public-key-query</code> packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-make_002duserauth_002drequest_002fpublic_002dkey"></a>Procedure: <strong>make-userauth-request/public-key</strong> <em>username service public-key</em></dt>
+<dd><p>This procedure creates an <em>unsigned</em> request to authenticate with
+public key cryptography. The client may try to authenticate itself by
+sending a signed request to the server. The server will have a copy of
+the public key on file, e.g. stored in the user&rsquo;s
+<code>authorized_keys</code> file. By using the public key it can confirm
+that the client is possession of the corresponding private key. The
+packet returned by this procedure may be signed with
+<code>sign-userauth-request/public-key</code>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpublic_002dkey_003f"></a>Procedure: <strong>userauth-request/public-key?</strong> <em>obj</em></dt>
+<dd><p>Returns true if <var>obj</var> is a <code>userauth-request/public-key</code>
+packet.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpublic_002dkey_002dalgorithm"></a>Procedure: <strong>userauth-request/public-key-algorithm</strong> <em>request</em></dt>
+<dd><p>This field indicates the public key algorithm name of the public key
+in the request. It is automatically filled in when the request is
+constructed.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-userauth_002drequest_002fpublic_002dkey_002dkey"></a>Procedure: <strong>userauth-request/public-key-key</strong> <em>request</em></dt>
+<dd><p>This field contains an SSH public key object.
+See <a href="ssh-public_002dkeys.html#ssh-public_002dkeys">ssh public-keys</a>.
+</p></dd></dl>
+
+<dl>
+<dt><a name="index-sign_002duserauth_002drequest_002fpublic_002dkey"></a>Procedure: <strong>sign-userauth-request/public-key</strong> <em>request session-id private-key</em></dt>
+<dd><p>This generates a signed <code>userauth-request/public-key</code> packet. It
+needs an unsigned <var>request</var>, which may be created with
+<code>make-userauth-request/public-key</code>. The <var>session-id</var> can be
+recovered with <code>ssh-conn-session-id</code>. The <var>private-key</var> must
+be a private DSA or ECDSA key (support for RSA signing is planned).
+The signed request uses the SSH connection&rsquo;s session ID and can
+therefore not be used with any other connection.
+</p></dd></dl>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="ssh-public_002dkeys.html#ssh-public_002dkeys" accesskey="n" rel="next">ssh public-keys</a>, Previous: <a href="ssh-transport.html#ssh-transport" accesskey="p" rel="prev">ssh transport</a>, Up: <a href="ssh.html#ssh" accesskey="u" rel="up">ssh</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Index.html#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
