@@ -4,7 +4,7 @@
 
 Industria is a collection of portable R6RS Scheme libraries for
 cryptography. It implements low-level algorithms like AES, RSA, DSA,
-ECDSA, etc and high-level protocols such as OpenPGP, Off-The-Record
+ECDSA, etc and the high-level protocols OpenPGP, Off-The-Record
 messaging, DNS and Secure Shell (SSH).
 
 Many of the libraries that were previously part of Industria have been

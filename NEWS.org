@@ -1,6 +1,6 @@
 -*- mode: org; coding: utf-8 -*-
 
-* Changes in version 2.0.0 (not released)
+* Changes in version 2.0.0 (SemVer, not released)
 
 ** Removed libraries
 
@@ -63,27 +63,42 @@ its dependencies in known good revisions.
 
 More about Akku: https://github.com/weinholt/akku
 
-** (industria ssh public-key): Fingerprints use SHA-256
+** Incompatible changes
+
+*** (industria ssh public-key): Fingerprints use SHA-256
 
 The fingerprint algorithms now use SHA-256, which is aligned with
 OpenSSH. The old MD5 algorithm is supported with an optional argument.
 
-** (industria ssh random-art): Extra footer argument
+** Bug fixes
+
+*** (industria otr): Fix random exponent size in SMP
+
+Due to an error in the OTR protocol documentation the exponents picked
+for the initial SMP message were only 128 bits instead of 1536 bits.
+These smaller exponents were only used when initiating an SMP
+authentication, not when responding to one.
+
+Reference:
+  http://lists.cypherpunks.ca/pipermail/otr-dev/2013-August/001817.html
+  http://permalink.gmane.org/gmane.comp.security.otr.devel/1790
+
+** New features
+
+*** (industria ssh random-art): Extra footer argument
 
 The random-art procedure takes an extra footer argument, which shows
 the algorithm that computed the digest.
 
-* Changes in version 1.5
-
-** (weinholt net otr): Support for OTR version 3
+*** (industria otr): Support for OTR version 3
 
 This release supports Off-the-Record Messaging Protocol version 3.
-This new version of the protocol uses instance tags, which are used to
+This version of the protocol uses instance tags, which are used to
 distinguish between different OTR sessions. This fixes a problem with
-chat networks that allow multiple logins. The new version also defines
-an extra symmetrical key that can be used by out-of-band protocols.
+chat networks that allow multiple logins. This version also defines an
+extra symmetrical key that can be used by out-of-band protocols.
 
-** (weinholt text base64): Optimized decoder and new non-strict mode
+*** (industria base64): Optimized decoder and new non-strict mode
 
 The Base 64 decoder has been optimized and is approximately six times
 faster. In addition it can optionally ignore non-alphabet characters.
