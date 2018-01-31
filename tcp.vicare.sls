@@ -1,5 +1,5 @@
 ;; -*- mode: scheme; coding: utf-8 -*-
-;; Copyright © 2010 Göran Weinholt <goran@weinholt.se>
+;; Copyright © 2010, 2018 Göran Weinholt <goran@weinholt.se>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software"),
@@ -22,4 +22,9 @@
 
 (library (industria tcp)
   (export tcp-connect)
-  (import (only (ikarus) tcp-connect)))
+  (import (rnrs)
+          (only (vicare posix) tcp-connect/binary))
+
+  (define (tcp-connect hostname service)
+    (let ((s (tcp-connect/binary hostname service)))
+      (values s s))))
