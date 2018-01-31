@@ -10,9 +10,9 @@ env:
 
 matrix:
   allow_failures:
+    - env: SCHEME="Larceny"
     - env: SCHEME="SagittariusScheme"
     - env: SCHEME="Ypsilon"
-  fast_finish: true
 
 sudo: false
 dist: trusty

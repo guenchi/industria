@@ -1,6 +1,6 @@
 -*- mode: org; coding: utf-8 -*-
 
-* Changes in version 2.0.0 (SemVer, not released)
+* Changes in version 2.0.0 (SemVer)
 
 ** Removed libraries
 
