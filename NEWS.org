@@ -22,6 +22,11 @@ represent a sequence of bits.
 The sint->bytevector, bytevector->sint and bytevector-for-each
 procedures have been added.
 
+** (industria crypto rsa): New procedures for creating PKCS signatures
+
+The rsa-pkcs1-encrypt-digest procedure is used to create DER encoded
+signatures and the rsa-pkcs1-encrypt-signature encrypts a raw digest.
+
 * Changes in version 2.0.0 (SemVer)
 
 ** Removed libraries

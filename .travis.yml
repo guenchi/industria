@@ -68,3 +68,4 @@ script:
   - tests/punycode.sps
   - tests/ssh-kex.sps
   - tests/random-art.sps
+  - tests/rsa.sps

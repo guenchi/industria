@@ -962,9 +962,24 @@ integer by using the @var{public-key}. The signature initially
 contains PKCS #1 padding, but this is removed.
 @end deffn
 
+@deffn Procedure rsa-pkcs1-encrypt-signature digest private-key
+Sign the bytevector @var{digest} using @var{private-key}. The inverse
+of @code{rsa-pkcs1-decrypt-signature}.
+@end deffn
+
 @deffn Procedure rsa-pkcs1-decrypt-digest signature public-key
 This performs the same operation as
 @code{rsa-pkcs1-decrypt-signature}, except it then treats the
 decrypted signature as a DER encoded DigestInfo. The return value is a
 list containing a digest algorithm specifier and a digest.
+@end deffn
+
+@deffn Procedure rsa-pkcs1-encrypt-digest algorithm digest private-key
+Create a DER encoded DigestInfo signature (inverse of
+@code{rsa-pkcs1-decrypt-digest}). The @var{digest} must be a
+bytevector and should have a length appropriate for the
+@var{algorithm}, which may be either an object ID or one of these
+symbols: md5, sha-1, sha-224, sha-256, sha-384, sha-512, sha-512-224,
+sha-512-256, sha3-224, sha3-256, sha3-384, sha3-512, shake-128,
+shake-256.
 @end deffn
