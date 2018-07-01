@@ -4,11 +4,11 @@
 (projects
   ((name "chez-srfi")
     (location (git "https://github.com/weinholt/chez-srfi.git"))
-    (revision "fc892dada9f2dc707e984901829a889a526edf80"))
+    (revision "df8c43d5ce5b006abce812bf3f0c1b9b5f94fa91"))
   ((name "hashing")
     (location (git "https://github.com/weinholt/hashing.git"))
-    (tag "v1.0.0")
-    (revision "de6aa096166bb026eb927b56f763707180ec0330"))
+    (tag "v1.2.0")
+    (revision "f138deaec38d54ddb621c082764ece276deebe7f"))
   ((name "ip-address")
     (location
       (git "https://github.com/weinholt/ip-address.git"))
@@ -17,8 +17,8 @@
   ((name "struct-pack")
     (location
       (git "https://github.com/weinholt/struct-pack.git"))
-    (tag "v1.0.0")
-    (revision "eec155b069d03c12be62444754514a8fff34d4ea"))
+    (tag "v1.1.0")
+    (revision "6c583e744154e31b529445824f858f734e6ad66e"))
   ((name "xitomatl")
     (location (git "https://github.com/weinholt/xitomatl.git"))
-    (revision "b9babf030c13d9fc81fe1482aa49ff0b8fa0fee6")))
+    (revision "62a82439fc802950abb33cd19c5d8c6963cbefda")))

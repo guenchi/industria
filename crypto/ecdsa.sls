@@ -29,6 +29,7 @@
           ecdsa-public-key-length
 
           make-ecdsa-private-key ecdsa-private-key?
+          ecdsa-private-key-curve
           ecdsa-private-key-d
           ecdsa-private-key-Q
 

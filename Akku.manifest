@@ -1,8 +1,12 @@
 #!r6rs ; -*- mode: scheme; coding: utf-8 -*-
 (import (akku format manifest))
 
-(akku-package ("industria" "2.0.0")
+(akku-package ("industria" "2.1.0-beta.0")
   (synopsis "Cryptography, OTR, SSH, OpenPGP, etc.")
+  (description "Industria is a collection of portable R6RS Scheme libraries for
+cryptography. It implements low-level algorithms like AES, RSA, DSA,
+ECDSA, etc and the high-level protocols OpenPGP, Off-The-Record
+messaging, DNS and Secure Shell (SSH).")
   (authors "Göran Weinholt <goran@weinholt.se>")
   (license "MIT")
   (depends

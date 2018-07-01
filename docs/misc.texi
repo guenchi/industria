@@ -5,6 +5,7 @@
 
 @menu
 * base64::                Base64 encoder/decoder
+* bit-strings::           Bit-string data type
 * bytevectors::           Bytevector utilities
 * password::              Password hashing
 * tcp::                   Basic TCP client connections
@@ -129,6 +130,45 @@ Version history:
 @end itemize
 
 
+@node bit-strings
+@subsection Bit-string data type
+The @code{(industria bit-strings)} library provides a data type for
+representing strings of bits.
+
+@deffn Procedure make-bit-string length bytevector
+Returns a new bit-string of @var{length} bits, which are aligned to
+the start of the @var{bytevector} (with zero padding bits at the end).
+@end deffn
+
+@deffn Procedure bit-string-unused bit-string
+Return the number of unused bits at the end of the bytevector
+representation of @var{bit-string}.
+@end deffn
+
+@deffn Procedure bit-string->integer bit-string
+Return the integer representation of @var{bit-string} (a non-negative
+exact integer).
+@end deffn
+
+@deffn Procedure bit-string-bit-set? bit-string idx
+True if bit @var{idx} of @var{bit-string} is set.
+@end deffn
+
+@deffn Procedure bytevector->bit-string bytevector length
+Same as @code{make-bit-string}.
+@end deffn
+
+@deffn Procedure integer->bit-string int length
+Return a new bit-string of @var{length} bits which represents the
+integer @var{int}.
+@end deffn
+
+@deffn Procedure bit-string=? bit-string0 bit-string1
+True if @var{bit-string0} equals @var{bit-string1} (same length and
+bit values) and false otherwise.
+@end deffn
+
+
 @node bytevectors
 @subsection Bytevector utilities
 The @code{(industria bytevectors)} library contains utilities for
@@ -146,6 +186,11 @@ Appends the given bytevectors.
 Analogous to @code{substring}. Returns a new bytevector containing the
 bytes of @var{bytevector} from index @code{start} to @var{end}
 (exclusive).
+@end deffn
+
+@deffn Procedure bytevector-for-each proc bytevector
+Apply @var{proc} to each byte in @var{bytevector}, in left-to-right
+order.
 @end deffn
 
 @deffn Procedure bytevector-u8-index bytevector byte [start end]
@@ -166,6 +211,12 @@ byte order and is converted to an integer. The empty bytevector is
 treated as zero.
 @end deffn
 
+@deffn Procedure bytevector->sint bytevector
+@var{bytevector} is interpreted as a signed integer in big endian
+byte order and is converted to an integer. The empty bytevector is
+treated as zero.
+@end deffn
+
 @deffn Procedure uint->bytevector integer
 @var{integer} is converted to an unsigned integer in big endian byte
 order. The returned bytevector has the minimum possible length. Zero
@@ -179,6 +230,12 @@ is converted to the empty bytevector.
 @result{} #vu8(255)
 @end example
 @end deffn
+
+@deffn Procedure sint->bytevector integer
+@var{integer} is converted to an signed integer in big endian byte
+order. The returned bytevector has the minimum possible length (it
+needs one more bit than @code{uint->bytevector}). Zero is converted to
+the empty bytevector.
 
 @deffn Procedure bytevector=?/constant-time bytevector1 bytevector2
 True if @var{bytevector1} and @var{bytevector2} are of equal length

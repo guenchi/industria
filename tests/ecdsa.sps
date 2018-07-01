@@ -1,31 +1,16 @@
 #!/usr/bin/env scheme-script
 ;; -*- mode: scheme; coding: utf-8 -*- !#
 ;; Copyright © 2011, 2018 Göran Weinholt <goran@weinholt.se>
-
-;; Permission is hereby granted, free of charge, to any person obtaining a
-;; copy of this software and associated documentation files (the "Software"),
-;; to deal in the Software without restriction, including without limitation
-;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
-;; and/or sell copies of the Software, and to permit persons to whom the
-;; Software is furnished to do so, subject to the following conditions:
-
-;; The above copyright notice and this permission notice shall be included in
-;; all copies or substantial portions of the Software.
-
-;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-;; THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-;; FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-;; DEALINGS IN THE SOFTWARE.
+;; SPDX-License-Identifier: MIT
 #!r6rs
 
-(import (rnrs)
-        (srfi :64 testing)
-        (industria crypto ec)
-        (industria crypto ecdsa)
-        (hashing sha-1))
+(import
+  (rnrs (6))
+  (srfi :64 testing)
+  (hashing sha-1)
+  (industria base64)
+  (industria crypto ec)
+  (industria crypto ecdsa))
 
 ;; Test from SECG's GEC 2
 
@@ -55,6 +40,16 @@
                ((key) (make-ecdsa-private-key secp256r1))
                ((r s) (ecdsa-create-signature data key)))
    (ecdsa-verify-signature data (ecdsa-private->public key) r s)))
+
+(define sample-private-key
+  (base64-decode "MHcCAQEEIKgM8/Dvw8+2turI8q3gssyFC0qv2O3qGgaWohcMdUahoAoGCCqGSM49AwEHoUQDQgAEocljqkKwpHB4K9/LUHptDKPHbcs4tBZo8sgeR7jKsWLNm9jvwyE8RcRTIfrl6GWPQWLeaLQPNE2iLfvZ7Prv2Q=="))
+
+(let ((key (ecdsa-private-key-from-bytevector sample-private-key)))
+  (test-equal secp256r1 (ecdsa-private-key-curve key))
+  (test-equal 76011444346765753920874724660285434223367613700067411323239518944589029656225
+              (ecdsa-private-key-d key))
+  (test-equal 62104687544328297897454217652338518469103144788232680486632155746116502849683244307583428075076255244115567050738992847409342346676093524214243771509567449
+              (ecdsa-private-key-Q key)))
 
 (test-end)
 

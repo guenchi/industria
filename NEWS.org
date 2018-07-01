@@ -1,5 +1,27 @@
 -*- mode: org; coding: utf-8 -*-
 
+* Changes in version 2.1.0 (SemVer)
+** (industria der): Multiple bug fixes
+
+The bit-string-length procedure previously returned the length of the
+bit-string padded to bytes rather than the length in bits.
+
+The internal DER representation (only meant to be passed to the
+translate procedure) has received a few fixes.
+
+There is also a new DER encoder, but it is not yet meant for public
+use.
+
+** (industria bit-strings): New library for bit-strings
+
+This data type previously lived in the DER library. It is used to
+represent a sequence of bits.
+
+** (industria bytevectors): New procedures
+
+The sint->bytevector, bytevector->sint and bytevector-for-each
+procedures have been added.
+
 * Changes in version 2.0.0 (SemVer)
 
 ** Removed libraries
@@ -32,7 +54,7 @@ These libraries have been moved to here:
  - https://github.com/weinholt/irc-protocol
  - https://github.com/weinholt/machine-code
  - https://github.com/weinholt/struct-pack
- - https://github.com/weinholt/TerribleTLS
+ - https://gitlab.com/weinholt/TerribleTLS
  - https://github.com/weinholt/uuid
 
 ** Library renaming
