@@ -50,13 +50,19 @@ The @var{port} is either a textual output port or @code{#f}, in which
 case this procedure returns a string.
 @end deffn
 
-@deffn Procedure base64-decode str [alphabet port strict?]
-Decodes the correctly padded Base 64 data in @var{str}. If
-@var{strict?} is true or omitted the string has to contain pure Base 64
-data and no whitespace or other extra characters. The result is
-written to the binary output @var{port} or returned as a bytevector if
-@var{port} is @code{#f} or omitted. The default alphabet is
-@var{base64-alphabet}.
+@deffn Procedure base64-decode str [alphabet port strict? strict-padding?]
+Decodes the Base 64 data in @var{str}. The result is written to the
+binary output @var{port} or returned as a bytevector if @var{port} is
+@code{#f} or omitted.
+
+If @var{strict?} is true or omitted then the string has to contain
+pure Base 64 data and no whitespace or other extra characters.
+Otherwise non-alphabet characters are ignored.
+
+If @var{strict-padding?} is true or omitted then the string has to
+be padded to a multiple of four characters.
+
+The default alphabet is @var{base64-alphabet}.
 @end deffn
 
 @deffn Procedure put-delimited-base64 port type bv [line-length]

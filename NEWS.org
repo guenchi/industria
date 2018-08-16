@@ -1,16 +1,12 @@
 -*- mode: org; coding: utf-8 -*-
 
 * Changes in version 2.1.0 (SemVer)
-** (industria der): Multiple bug fixes
 
-The bit-string-length procedure previously returned the length of the
-bit-string padded to bytes rather than the length in bits.
+** (industria base64): Optional support for inputs without padding
 
-The internal DER representation (only meant to be passed to the
-translate procedure) has received a few fixes.
-
-There is also a new DER encoder, but it is not yet meant for public
-use.
+The Base 64 decoder now sports an additional argument that enables
+decoding of inputs that are missing the padding characters, as in e.g.
+RFC 7515.
 
 ** (industria bit-strings): New library for bit-strings
 
@@ -26,6 +22,17 @@ procedures have been added.
 
 The rsa-pkcs1-encrypt-digest procedure is used to create DER encoded
 signatures and the rsa-pkcs1-encrypt-signature encrypts a raw digest.
+
+** (industria der): Multiple bug fixes
+
+The bit-string-length procedure previously returned the length of the
+bit-string padded to bytes rather than the length in bits.
+
+The internal DER representation (only meant to be passed to the
+translate procedure) has received a few fixes.
+
+There is also a new DER encoder, but it is not yet meant for public
+use.
 
 * Changes in version 2.0.0 (SemVer)
 

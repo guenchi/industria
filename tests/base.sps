@@ -31,36 +31,45 @@
 ;; From RFC 4658
 
 (test-begin "base64-rfc4658")
-
 (test-equal "" (string->base64 ""))
-
 (test-equal "Zg==" (string->base64 "f"))
-
 (test-equal "Zm8=" (string->base64 "fo"))
-
 (test-equal "Zm9v" (string->base64 "foo"))
-
 (test-equal "Zm9vYg==" (string->base64 "foob"))
-
 (test-equal "Zm9vYmE=" (string->base64 "fooba"))
-
 (test-equal "Zm9vYmFy" (string->base64 "foobar"))
-
 (test-end)
 
 ;; Non-strict mode
 
 (test-begin "base64-non-strict")
-
 (test-equal #vu8(0 16) (base64-decode "ABC= " base64-alphabet #f #f))
-
 (test-equal #vu8(0 16) (base64-decode "ABC =" base64-alphabet #f #f))
-
 (test-equal #vu8(0 16) (base64-decode "AB==C=" base64-alphabet #f #f))
-
 (test-equal #vu8(0 16) (base64-decode "AB==C =" base64-alphabet #f #f))
-
 (test-equal #vu8(0 16) (base64-decode "A B = = C = " base64-alphabet #f #f))
+(test-end)
+
+;; Decoding inputs with no padding
+
+(define (base64->string/nopad x)
+  (utf8->string (base64-decode x base64-alphabet #f #t #f)))
+
+(test-begin "base64-decode-nopadding")
+
+;; Example from rfc7515
+(test-equal "{\"iss\":\"joe\",\r\n \"exp\":1300819380,\r\n \"http://example.com/is_root\":true}"
+            (utf8->string
+             (base64-decode "eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ"
+                            base64url-alphabet #f #t #f)))
+
+(test-equal "" (base64->string/nopad ""))
+(test-equal "f" (base64->string/nopad "Zg"))
+(test-equal "fo" (base64->string/nopad "Zm8"))
+(test-equal "foo" (base64->string/nopad "Zm9v"))
+(test-equal "foob" (base64->string/nopad "Zm9vYg"))
+(test-equal "fooba" (base64->string/nopad "Zm9vYmE"))
+(test-equal "foobar" (base64->string/nopad "Zm9vYmFy"))
 
 (test-end)
 
